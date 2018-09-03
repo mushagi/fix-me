@@ -28,7 +28,7 @@ public abstract class AbstractClient {
         openConnection();
         ByteBuffer byteBuffer = ByteBuffer.wrap(message.getBytes());
         try {
-            Thread.sleep(10);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

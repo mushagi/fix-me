@@ -13,7 +13,7 @@ class AsynchronousRouterTest {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                IRouter router = new AsynchronousRouter();
+                IRouter router = new AsynchronousRouter("localhost", 5002);
                 try {
                     router.run();
                 } catch (InterruptedException e) {

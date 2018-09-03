@@ -9,11 +9,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class AsynchronousRouter implements IRouter{
+    private String hostName;
+    private int portNumber;
+
     private AsynchronousServerSocketChannel  serverSocketChannel;
     private Future<AsynchronousSocketChannel> acceptResult;
     private AsynchronousSocketChannel clientChannel;
 
-
+    public AsynchronousRouter(String hostName, int portNumber) {
+        this.hostName = hostName;
+        this.portNumber = portNumber;
+    }
 
     public void run() throws InterruptedException, ExecutionException, IOException {
         initialise();
@@ -26,9 +32,12 @@ public class AsynchronousRouter implements IRouter{
             Future<Integer> result = clientChannel.read(byteBuffer);
 
             while (!result.isDone()) {
+
             }
+
             String message = new String(byteBuffer.array());
-            System.out.println("Server says : " + message.trim());
+            if (message.contains("am"))
+                System.out.println("Server says : " + message.trim());
 
             byteBuffer.clear();
         }
@@ -36,7 +45,7 @@ public class AsynchronousRouter implements IRouter{
 
     public void initialise() throws IOException, ExecutionException, InterruptedException {
         serverSocketChannel = AsynchronousServerSocketChannel.open();
-        serverSocketChannel.bind(new InetSocketAddress("127.0.0.1", 5002));
+        serverSocketChannel.bind(new InetSocketAddress(hostName, portNumber));
 
         acceptResult = serverSocketChannel.accept();
         clientChannel = acceptResult.get();
