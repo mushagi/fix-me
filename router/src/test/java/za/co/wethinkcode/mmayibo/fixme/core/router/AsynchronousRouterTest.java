@@ -30,6 +30,6 @@ class AsynchronousRouterTest {
         thread.start();
 
         AbstractClient client = new AbstractClient("localhost", 5002) {};
-        client.sendMessage("hello");
+        client.sendMessage("bhello");
     }
 }

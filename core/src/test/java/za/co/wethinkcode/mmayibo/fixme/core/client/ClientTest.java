@@ -8,7 +8,7 @@ public class ClientTest {
 
     public static void main(String args[]) throws InterruptedException, ExecutionException, IOException {
         Scanner scanner = new Scanner(System.in);
-        AbstractClient client = new AbstractClient("localhost", 5002) {};
+        AbstractClient client = new AbstractClient("localhost", 5003) {};
 
         while (true)
         {
