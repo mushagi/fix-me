@@ -8,5 +8,5 @@ public interface IRouter {
     void initialise() throws IOException, ExecutionException, InterruptedException;
     void handleBrokerMessage(String message);
     void handleMarketMessage(String message);
-    void runServer() throws ExecutionException, InterruptedException;
+    void runServer() throws ExecutionException, InterruptedException, IOException;
 }

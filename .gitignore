@@ -44,6 +44,8 @@ flycheck_*.el
 
 # projectiles files
 .projectile
+.idea/*
+.idea
 
 # directory configuration
 .dir-locals.el

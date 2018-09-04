@@ -13,7 +13,7 @@ class AsynchronousRouterTest {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                IRouter router = new AsynchronousRouter("localhost", 5002);
+                IRouter router = new AsynchronousRouter("localhost", 5001);
                 try {
                     router.run();
                 } catch (InterruptedException e) {
@@ -29,7 +29,7 @@ class AsynchronousRouterTest {
         Thread thread = new Thread(runnable);
         thread.start();
 
-        AbstractClient client = new AbstractClient("localhost", 5002) {};
+        AbstractClient client = new AbstractClient("localhost", 5001) {};
         client.sendMessage("bhello");
     }
 }

@@ -33,7 +33,7 @@ public abstract class AbstractClient {
     public void sendMessage(String message) throws IOException, ExecutionException, InterruptedException {
 	    openConnection();
 	    ByteBuffer byteBuffer = ByteBuffer.wrap(message.getBytes());
-	    logger.info("Sending message to broker " + byteBuffer);
+	    logger.info("Sending message to broker " + new String(byteBuffer.array()));
 	    client.write(byteBuffer);
 	    client.close();
 	

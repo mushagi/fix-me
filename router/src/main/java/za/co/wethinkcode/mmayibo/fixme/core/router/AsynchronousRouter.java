@@ -1,7 +1,5 @@
 package za.co.wethinkcode.mmayibo.fixme.core.router;
 
-import sun.rmi.runtime.Log;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -20,7 +18,7 @@ public class AsynchronousRouter implements IRouter{
     private Future<AsynchronousSocketChannel> acceptResult;
     private AsynchronousSocketChannel clientChannel;
 
-    public AsynchronousRouter(String hostName, int portNumber) {
+    AsynchronousRouter(String hostName, int portNumber) {
         this.hostName = hostName;
         this.portNumber = portNumber;
     }
@@ -30,36 +28,42 @@ public class AsynchronousRouter implements IRouter{
         runServer();
     }
 
-    public void runServer() throws ExecutionException, InterruptedException {
-        while (clientChannel != null && clientChannel.isOpen()) {
+    public void runServer() throws ExecutionException, InterruptedException, IOException {
+        logger.info("Starting server loop ");
+
+        do {
+            acceptResult = serverSocketChannel.accept();
+            clientChannel = acceptResult.get();
+
             ByteBuffer byteBuffer = ByteBuffer.allocate(32);
             Future<Integer> result = clientChannel.read(byteBuffer);
-	        result.get();
-	        
-            while (!result.isDone()) {
-            }
+            result.get();
 
-            String message = new String(byteBuffer.array());
+            byteBuffer.flip();
+
+            String message = new String(byteBuffer.array()).trim();
+
             routeMessage(message);
-            
             byteBuffer.clear();
-        }
+        } while (true);
     }
     
-    private void routeMessage(String message) {
-        if (message.startsWith("b"))
+    private void routeMessage(String message) throws IOException {
+        if (message.startsWith("stop"))
+        {
+            clientChannel.close();
+            System.exit(0);
+        }
+
+        if (message.contains("b"))
             handleBrokerMessage(message.trim());
     }
     
     public void initialise() throws IOException, ExecutionException, InterruptedException {
         serverSocketChannel = AsynchronousServerSocketChannel.open();
         serverSocketChannel.bind(new InetSocketAddress(hostName, portNumber));
-        
-        logger.info("Server channel open. Binded to Hostname: " + hostName + " port number: "+ portNumber);
-        
-        acceptResult = serverSocketChannel.accept();
-        clientChannel = acceptResult.get();
-        
+
+        logger.info("Server listening on: " + hostName + " port number: "+ portNumber);
     }
 
     public void handleBrokerMessage(String message) {
