@@ -1,12 +1,16 @@
 package za.co.wethinkcode.mmayibo.fixme.broker;
 
-import za.co.wethinkcode.mmayibo.fixme.core.client.AbstractClient;
+import io.netty.channel.ChannelHandlerContext;
+import za.co.wethinkcode.mmayibo.fixme.core.client.Client;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
+public class Broker extends Client {
+    Broker(String host, int port) {
+        super(host, port);
+    }
 
-public class Broker extends AbstractClient {
-    public Broker(String hostName, int portNumber) throws InterruptedException, ExecutionException, IOException {
-        super(hostName, portNumber);
+    @Override
+    public void messageRead(ChannelHandlerContext ctx, String message) {
+
+        System.out.println(message);
     }
 }
