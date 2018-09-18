@@ -1,21 +1,23 @@
 package za.co.wethinkcode.mmayibo.fixme.core.router;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
-import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.ChannelGroup;;
+import io.netty.util.concurrent.DefaultPromise;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import io.netty.util.concurrent.Promise;
+import za.co.wethinkcode.mmayibo.fixme.core.ResponseFuture;
 import za.co.wethinkcode.mmayibo.fixme.core.server.Server;
+import za.co.wethinkcode.mmayibo.fixme.core.server.ServerHandler;
 
-import java.nio.BufferOverflowException;
+
 import java.util.Iterator;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
 
 public class BrokerRouter extends Server {
-
-    private BlockingQueue<ChannelPromise> messageList = new ArrayBlockingQueue<>(16);
 
     BrokerRouter(String host, int port) {
         super(host, port);
@@ -23,46 +25,27 @@ public class BrokerRouter extends Server {
     }
 
     @Override
-    public void messageRead(final ChannelHandlerContext ctx, String message) {
-        ChannelGroup group = State.marketChannels;
+    public void messageRead(final ChannelHandlerContext ctx, final String message) {
+        final Channel channel =  getChannel(State.marketChannels, message);
+        final ResponseFuture responseFuture = new ResponseFuture();
 
-        if (State.marketChannels != null) {
-            final Channel channel = getChannel(State.marketChannels, message);
-            if (channel != null)
-                channel.writeAndFlush(message + "\r\n").addListener(
-                        new GenericFutureListener<Future<? super Void>>() {
-                        @Override
-                        public void operationComplete(Future<? super Void> future) {
-                            ctx.writeAndFlush("done bro\r\n");
-                          //ctx.writeAndFlush("server says " + message + "\r\n");
-                     }
-                     });
+        channel.pipeline().get(ServerHandler.class).setResponseFuture(responseFuture);
+        channel.writeAndFlush(message + "\r\n");
+
+        String reply = "not set";
+        try {
+            reply =  responseFuture.get();
+        } catch (InterruptedException e) {
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-    }
+        ctx.writeAndFlush("from broker to server" + reply + "\r\n");
 
-    public ChannelPromise sendMessage(ChannelHandlerContext ctx, String message) {
-        if(ctx == null)
-            throw new IllegalStateException();
-        return sendMessage(ctx, message, ctx.newPromise());
-    }
-
-    public ChannelPromise sendMessage(ChannelHandlerContext ctx, String message, ChannelPromise prom) {
-        synchronized(this){
-            if(messageList == null) {
-                // Connection closed
-                prom.setFailure(new IllegalStateException());
-            } else if(messageList.offer(prom)) {
-                // Connection open and message accepted
-                ctx.writeAndFlush(message);
-            } else {
-                // Connection open and message rejected
-                prom.setFailure(new BufferOverflowException());
-            }
-            return prom;
-        }
     }
 
     private Channel getChannel(ChannelGroup marketChannels, String message) {
+
         if (marketChannels.size() != 0)
         {
             Iterator<Channel> iterable = marketChannels.iterator();
@@ -72,4 +55,5 @@ public class BrokerRouter extends Server {
 
         return null;
     }
+
 }

@@ -12,11 +12,20 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import io.netty.util.concurrent.Promise;
 import lombok.Getter;
+import lombok.Setter;
+import za.co.wethinkcode.mmayibo.fixme.core.ResponseFuture;
+
+import java.util.concurrent.SynchronousQueue;
 
 public abstract class Server implements Runnable{
 
-    private Channel lastChannel;
+    protected final SynchronousQueue<Promise<String>> queue = new SynchronousQueue<>();
+
+    @Getter
+    private ResponseFuture responseFuture;
+    protected Channel lastChannel;
     private final String HOST;
     private final int PORT;
 

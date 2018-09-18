@@ -10,7 +10,6 @@ public class Broker extends Client {
 
     @Override
     public void messageRead(ChannelHandlerContext ctx, String message) {
-
         System.out.println(message);
     }
 }
