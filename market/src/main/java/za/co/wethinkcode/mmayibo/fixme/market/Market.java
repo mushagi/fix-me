@@ -11,12 +11,8 @@ public class Market extends Client {
 
     @Override
     public void messageRead(ChannelHandlerContext ctx, String message) {
-        System.out.println(message);
-        if (message.contains("bro"))
-        {
+        //ctx.writeAndFlush("I got it bro" + message + "\r\n") ;
 
-            ctx.writeAndFlush("I got it bro" + message + "\r\n") ;
-            System.out.println("sent back");
-        }
+
     }
 }
