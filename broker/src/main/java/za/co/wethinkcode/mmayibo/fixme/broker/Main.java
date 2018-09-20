@@ -9,7 +9,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String input = scanner.nextLine();
-            broker.sendMessage(input +  "|" + "message");
+            broker.sendMessage(input);
         }
     }
 }

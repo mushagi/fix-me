@@ -2,7 +2,6 @@ package za.co.wethinkcode.mmayibo.fixme.core.server;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
@@ -10,20 +9,21 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
+import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
 
-public class ServerInitializer extends ChannelInitializer<SocketChannel> {
+class ServerInitializer extends ChannelInitializer<SocketChannel> {
     private final Server server;
-    int MAX_THREADS = 10;
+    private final ChannelGroupHashed channels;
 
-    public ServerInitializer(ChannelGroup channels, Server server) {
+    public ServerInitializer(ChannelGroupHashed channels, Server server) {
         this.channels = channels;
         this.server = server;
     }
 
-    ChannelGroup channels;
 
     @Override
-    protected void initChannel(SocketChannel socketChannel) throws Exception {
+    protected void initChannel(SocketChannel socketChannel) {
+        int MAX_THREADS = 10;
         final EventExecutorGroup executorGroup = new DefaultEventExecutorGroup(MAX_THREADS);
 
         ChannelPipeline pipeline = socketChannel.pipeline();

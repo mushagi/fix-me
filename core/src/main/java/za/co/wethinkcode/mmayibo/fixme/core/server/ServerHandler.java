@@ -2,27 +2,26 @@ package za.co.wethinkcode.mmayibo.fixme.core.server;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.group.ChannelGroup;
+import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
 
 
-public class ServerHandler extends SimpleChannelInboundHandler<String> {
-    private final ChannelGroup channels;
+class ServerHandler extends SimpleChannelInboundHandler<String> {
+    private final ChannelGroupHashed channels;
     private final Server server;
 
-    ServerHandler(ChannelGroup channels, Server server) {
+    ServerHandler(ChannelGroupHashed channels, Server server) {
         this.channels = channels;
         this.server = server;
     }
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        ctx.writeAndFlush("Welcome client\r\n");
+        System.out.println(ctx.channel().id().toString());
         channels.add(ctx.channel());
     }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) {
-
         server.messageRead(ctx, msg);
     }
 

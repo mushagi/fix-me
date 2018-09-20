@@ -1,7 +1,10 @@
 package za.co.wethinkcode.mmayibo.fixme.market;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.core.client.Client;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
 
 public class Market extends Client {
 
@@ -11,8 +14,14 @@ public class Market extends Client {
 
     @Override
     public void messageRead(ChannelHandlerContext ctx, String message) {
-        //ctx.writeAndFlush("I got it bro" + message + "\r\n") ;
 
+        FixMessage fixMessage = new FixMessageBuilder()
+                .build(message)
+                .withSender(ctx.channel().toString())
+                .getFixMessage();
 
+        System.out.println(message);
+
+        ctx.writeAndFlush(fixMessage.getReceiverChannelID() + "| from market" + message + "\r\n") ;
     }
 }

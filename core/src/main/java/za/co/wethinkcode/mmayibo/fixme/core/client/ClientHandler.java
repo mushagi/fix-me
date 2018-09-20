@@ -3,7 +3,7 @@ package za.co.wethinkcode.mmayibo.fixme.core.client;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-public class ClientHandler extends SimpleChannelInboundHandler<String> {
+class ClientHandler extends SimpleChannelInboundHandler<String> {
     private final Client client;
 
     ClientHandler(Client client) {

@@ -38,6 +38,7 @@ public abstract class Client implements Runnable {
 
             channel = b.connect(HOST, PORT).sync().channel();
             lastChannel = channel;
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -53,7 +54,7 @@ public abstract class Client implements Runnable {
     }
 
     public void sendMessage(String message){
-        channel.writeAndFlush(message + "\r\n");
+        channel.writeAndFlush(message +"|" + "fhf" + "\r\n");
     }
 
 

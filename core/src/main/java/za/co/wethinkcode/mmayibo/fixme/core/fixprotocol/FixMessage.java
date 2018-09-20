@@ -1,6 +1,5 @@
 package za.co.wethinkcode.mmayibo.fixme.core.fixprotocol;
 
-import io.netty.channel.ChannelId;
 import lombok.Getter;
 
 public class FixMessage {
@@ -9,8 +8,8 @@ public class FixMessage {
     String message;
 
     @Getter
-    int receiverChannelID;
+    String receiverChannelID;
 
     @Getter
-    int senderChannelID;
+    String senderChannelID;
 }

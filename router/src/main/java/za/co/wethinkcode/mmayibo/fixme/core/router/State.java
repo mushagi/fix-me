@@ -1,10 +1,9 @@
 package za.co.wethinkcode.mmayibo.fixme.core.router;
 
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
 
 class State {
-    static ChannelGroup brokerChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    static ChannelGroup marketChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    static final ChannelGroupHashed brokerChannels = new ChannelGroupHashed(GlobalEventExecutor.INSTANCE);
+    static final ChannelGroupHashed marketChannels = new ChannelGroupHashed(GlobalEventExecutor.INSTANCE);
 }

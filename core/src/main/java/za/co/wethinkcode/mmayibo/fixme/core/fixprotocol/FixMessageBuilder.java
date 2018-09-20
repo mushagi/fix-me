@@ -1,24 +1,29 @@
 package za.co.wethinkcode.mmayibo.fixme.core.fixprotocol;
 
-import io.netty.channel.ChannelId;
+import lombok.Getter;
 
 public class FixMessageBuilder {
-    private FixMessage fixMessage = new FixMessage();
+    @Getter
+    private final FixMessage fixMessage = new FixMessage();
 
-    public FixMessage withID(int id) {
-   //     fixMessage.receiverChannelID = get;
-        return  fixMessage;
+    private void withReceiverID(String id) {
+        fixMessage.receiverChannelID = id;
     }
-    public FixMessage withMessage(String message) {
+    private void withMessage(String message) {
         fixMessage.message = message;
-        return  fixMessage;
+    }
+
+    public FixMessageBuilder withSender(String id) {
+        fixMessage.senderChannelID = id;
+        return  this;
     }
 
 
-    public FixMessage build(String message) {
+
+    public FixMessageBuilder build(String message) {
         String[] fixStrings = message.split("\\|");
-        withID(Integer.parseInt(fixStrings[0]));
+        withReceiverID(fixStrings[0]);
         withMessage(fixStrings[1]);
-        return fixMessage;
+        return this;
     }
 }

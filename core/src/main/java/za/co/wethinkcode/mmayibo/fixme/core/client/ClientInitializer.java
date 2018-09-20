@@ -10,9 +10,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
 
-public class ClientInitializer extends ChannelInitializer<SocketChannel> {
+class ClientInitializer extends ChannelInitializer<SocketChannel> {
     private final Client client;
-    private int MAX_THREADS = 10;
 
     ClientInitializer(Client client) {
         this.client = client;
@@ -20,6 +19,7 @@ public class ClientInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel socketChannel) {
+        int MAX_THREADS = 10;
         final EventExecutorGroup executorGroup = new DefaultEventExecutorGroup(MAX_THREADS);
 
         ChannelPipeline pipeline = socketChannel.pipeline();
