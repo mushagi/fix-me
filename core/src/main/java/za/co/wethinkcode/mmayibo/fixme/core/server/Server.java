@@ -49,7 +49,7 @@ public abstract class Server implements Runnable{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
+   }
 
-    public abstract void messageRead(ChannelHandlerContext ctx, String message);
+   public abstract void messageRead(ChannelHandlerContext ctx, String message);
 }

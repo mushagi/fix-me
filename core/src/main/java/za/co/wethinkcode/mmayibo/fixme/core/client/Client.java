@@ -57,6 +57,5 @@ public abstract class Client implements Runnable {
         channel.writeAndFlush(message +"|" + "fhf" + "\r\n");
     }
 
-
     public abstract void messageRead(ChannelHandlerContext ctx, String message);
 }

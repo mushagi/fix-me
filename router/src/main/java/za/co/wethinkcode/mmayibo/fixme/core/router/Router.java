@@ -15,11 +15,11 @@ public class Router extends Server {
 
     @Override
     public void messageRead(final ChannelHandlerContext ctx, final String message) {
-
         FixMessage fixMessage = new FixMessageBuilder()
                 .build(message)
                 .withSender(ctx.channel().id().toString())
                 .getFixMessage();
+
         System.out.println(message);
 
         final Channel channel =  responseChannels.find(fixMessage.getReceiverChannelID());

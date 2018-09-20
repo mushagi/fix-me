@@ -15,10 +15,8 @@ public class FixMessageBuilder {
 
     public FixMessageBuilder withSender(String id) {
         fixMessage.senderChannelID = id;
-        return  this;
+        return this;
     }
-
-
 
     public FixMessageBuilder build(String message) {
         String[] fixStrings = message.split("\\|");

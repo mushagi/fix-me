@@ -7,6 +7,7 @@ public class Main {
         Broker broker = new Broker("localhost", 5031);
         new Thread(broker).start();
         Scanner scanner = new Scanner(System.in);
+
         while (true) {
             String input = scanner.nextLine();
             broker.sendMessage(input);

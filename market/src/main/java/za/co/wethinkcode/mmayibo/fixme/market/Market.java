@@ -8,13 +8,12 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
 
 public class Market extends Client {
 
-    public Market(String host, int port) {
+    Market(String host, int port) {
         super(host, port);
     }
 
     @Override
     public void messageRead(ChannelHandlerContext ctx, String message) {
-
         FixMessage fixMessage = new FixMessageBuilder()
                 .build(message)
                 .withSender(ctx.channel().toString())

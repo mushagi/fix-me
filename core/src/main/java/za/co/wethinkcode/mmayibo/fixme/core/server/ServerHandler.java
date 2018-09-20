@@ -4,7 +4,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
 
-
 class ServerHandler extends SimpleChannelInboundHandler<String> {
     private final ChannelGroupHashed channels;
     private final Server server;
@@ -30,6 +29,4 @@ class ServerHandler extends SimpleChannelInboundHandler<String> {
         cause.printStackTrace();
         ctx.close();
     }
-
-
 }

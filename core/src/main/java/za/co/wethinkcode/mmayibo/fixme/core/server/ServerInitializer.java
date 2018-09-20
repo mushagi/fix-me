@@ -15,7 +15,7 @@ class ServerInitializer extends ChannelInitializer<SocketChannel> {
     private final Server server;
     private final ChannelGroupHashed channels;
 
-    public ServerInitializer(ChannelGroupHashed channels, Server server) {
+    ServerInitializer(ChannelGroupHashed channels, Server server) {
         this.channels = channels;
         this.server = server;
     }

@@ -8,12 +8,10 @@ import io.netty.util.concurrent.EventExecutor;
 import java.util.HashMap;
 
 public class ChannelGroupHashed extends DefaultChannelGroup {
-
     private final HashMap<String, ChannelId> channelIdHashMap = new HashMap<>();
 
     public Channel find(String hashedCode) {
         ChannelId channelId = channelIdHashMap.get(hashedCode);
-
         return channelId == null ? null :  find(channelId);
     }
 
