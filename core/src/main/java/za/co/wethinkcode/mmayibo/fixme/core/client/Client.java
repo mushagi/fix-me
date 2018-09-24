@@ -7,6 +7,9 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import sun.rmi.runtime.Log;
+
+import java.util.logging.Logger;
 
 public abstract class Client implements Runnable {
     private final String HOST;
@@ -14,6 +17,7 @@ public abstract class Client implements Runnable {
 
     private Channel lastChannel;
     private Channel channel;
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     public Client(String host, int port) {
         HOST = System.getProperty("host", host);
@@ -54,7 +58,8 @@ public abstract class Client implements Runnable {
     }
 
     public void sendMessage(String message){
-        channel.writeAndFlush(message +"|" + "fhf" + "\r\n");
+        logger.finest("Really not important");
+    //  channel.writeAndFlush(message + "\r\n");
     }
 
     public abstract void messageRead(ChannelHandlerContext ctx, String message);

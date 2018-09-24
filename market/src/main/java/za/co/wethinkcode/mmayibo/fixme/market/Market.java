@@ -1,10 +1,8 @@
 package za.co.wethinkcode.mmayibo.fixme.market;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.core.client.Client;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
 
 public class Market extends Client {
 

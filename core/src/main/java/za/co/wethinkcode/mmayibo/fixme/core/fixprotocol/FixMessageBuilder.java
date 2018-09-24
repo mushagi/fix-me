@@ -2,26 +2,75 @@ package za.co.wethinkcode.mmayibo.fixme.core.fixprotocol;
 
 import lombok.Getter;
 
+import java.util.HashMap;
+
+import static za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixTags.*;
+
 public class FixMessageBuilder {
     @Getter
     private final FixMessage fixMessage = new FixMessage();
+    private final HashMap<Integer, String> tagsValuesMap = fixMessage.getTagsValuesMap();
 
-    private void withReceiverID(String id) {
-        fixMessage.receiverChannelID = id;
+    public FixMessageBuilder withMessageType(String value) {
+        fixMessage.messageType = value;
+        tagsValuesMap.put(MESSAGE_TYPE.tag, value);
+        return  this;
     }
-    private void withMessage(String message) {
-        fixMessage.message = message;
+    public FixMessageBuilder withBeginString(String value) {
+        fixMessage.beginString = value;
+        tagsValuesMap.put(BEGIN_STRING.tag, value);
+
+        return  this;
+    }
+    public FixMessageBuilder withBodyLength(String value) {
+        fixMessage.bodyLength = value;
+        tagsValuesMap.put(BODY_LENGTH.tag, value);
+        return  this;
+    }
+    public FixMessageBuilder withSenderCompId(String value) {
+        fixMessage.senderCompId = value;
+        tagsValuesMap.put(SENDER_COMP_ID.tag, value);
+        return  this;
     }
 
-    public FixMessageBuilder withSender(String id) {
-        fixMessage.senderChannelID = id;
-        return this;
+    public FixMessageBuilder withTargetCompId(String value) {
+        fixMessage.targetCompId = value;
+        tagsValuesMap.put(TARGET_COMP_ID.tag, value);
+        return  this;
     }
-
-    public FixMessageBuilder build(String message) {
-        String[] fixStrings = message.split("\\|");
-        withReceiverID(fixStrings[0]);
-        withMessage(fixStrings[1]);
-        return this;
+    public FixMessageBuilder withSendingTime(String value) {
+        fixMessage.sendingTime = value;
+        tagsValuesMap.put(SENDING_TIME.tag, value);
+        return  this;
+    }
+    public FixMessageBuilder withOrderQuantity(String value) {
+        fixMessage.orderQuantity = value;
+        tagsValuesMap.put(ORDER_QUANTITY.tag, value);
+        return  this;
+    }
+    public FixMessageBuilder withOrderType(String value) {
+        fixMessage.orderType = value;
+        tagsValuesMap.put(ORDER_TYPE.tag, value);
+        return  this;
+    }
+    public FixMessageBuilder withClOrderId(String value) {
+        fixMessage.clOrderId = value;
+        tagsValuesMap.put(CL_ORDER_ID.tag, value);
+        return  this;
+    }
+    public FixMessageBuilder withSide(String value) {
+        fixMessage.side = value;
+        tagsValuesMap.put(SIDE.tag, value);
+        return  this;
+    }
+    public FixMessageBuilder withCheckSum(String value) {
+        fixMessage.checkSum = value;
+        tagsValuesMap.put(CHECK_SUM.tag, value);
+        return  this;
+    }
+    public FixMessageBuilder withPrice(String value) {
+        fixMessage.price = value;
+        tagsValuesMap.put(PRICE.tag, value);
+        return  this;
     }
 }

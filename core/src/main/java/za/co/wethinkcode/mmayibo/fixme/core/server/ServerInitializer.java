@@ -20,7 +20,6 @@ class ServerInitializer extends ChannelInitializer<SocketChannel> {
         this.server = server;
     }
 
-
     @Override
     protected void initChannel(SocketChannel socketChannel) {
         int MAX_THREADS = 10;
