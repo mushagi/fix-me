@@ -7,7 +7,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import sun.rmi.runtime.Log;
 
 import java.util.logging.Logger;
 
@@ -32,17 +31,16 @@ public abstract class Client implements Runnable {
     private void startClient() {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
-            Bootstrap b = new Bootstrap();
+            Bootstrap bootstrap = new Bootstrap();
 
-            b.group(group)
+            bootstrap.group(group)
                     .channel(NioSocketChannel.class)
                     .handler(new ClientInitializer(this))
                     .option(ChannelOption.TCP_NODELAY, true)
                     .option(ChannelOption.SO_KEEPALIVE, true);
 
-            channel = b.connect(HOST, PORT).sync().channel();
+            channel = bootstrap.connect(HOST, PORT).sync().channel();
             lastChannel = channel;
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
