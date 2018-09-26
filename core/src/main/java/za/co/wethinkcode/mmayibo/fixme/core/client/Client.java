@@ -14,7 +14,7 @@ public abstract class Client implements Runnable {
     private final String HOST;
     private final int PORT;
 
-    private Channel lastChannel;
+    protected Channel lastChannel;
     private Channel channel;
     private final Logger logger = Logger.getLogger(getClass().getName());
 

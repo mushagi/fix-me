@@ -1,15 +1,15 @@
 package za.co.wethinkcode.mmayibo.fixme.core.router;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixDecoder;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
 import za.co.wethinkcode.mmayibo.fixme.core.server.Server;
 
-public class Router extends Server {
+public class BrokerRouter extends Server {
 
-    Router(String host, int port, ChannelGroupHashed channels, ChannelGroupHashed responseChannels) {
+    BrokerRouter(String host, int port, ChannelGroupHashed channels, ChannelGroupHashed responseChannels) {
         super(host, port, channels, responseChannels);
     }
 
@@ -18,10 +18,14 @@ public class Router extends Server {
 
         FixMessage fixMessage = FixDecoder.decode(message);
         System.out.println(message);
+        FixMessageHandler fixMessageHandler = FixMessageTool.getMessageHandler(fixMessage);
+        if (fixMessageHandler != null)
+            fixMessageHandler.handleMessage(fixMessage, ctx.channel(), responseChannels);
 
-        final Channel channel =  responseChannels.find(fixMessage.getTargetCompId());
+    }
 
-        if (channel != null)
-            channel.writeAndFlush(message + "\r\n");
+    @Override
+    protected void channelActive(ChannelHandlerContext ctx) {
+
     }
 }

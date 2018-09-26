@@ -17,6 +17,7 @@ class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void channelActive(final ChannelHandlerContext ctx) {
         System.out.println(ctx.channel().id().toString());
         channels.add(ctx.channel());
+        server.channelActive(ctx);
     }
 
     @Override

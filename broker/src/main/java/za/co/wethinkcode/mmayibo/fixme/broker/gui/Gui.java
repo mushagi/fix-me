@@ -5,21 +5,25 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 
 public class Gui extends Application {
+    Broker broker;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-window.fxml"));
 
+        broker = new Broker("localhost", 5031);
+        new Thread(broker).start();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-window.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("Broker");
         primaryStage.setScene(new Scene(root, 1200, 700));
-
-      //  MainWindowController mainWindowController = root.i
         primaryStage.show();
 
-
+        MainWindowController controller = loader.getController();
+        controller.setUpStartUp(broker);
     }
 
     public static void main(String args[]) {

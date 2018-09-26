@@ -1,18 +1,20 @@
 package za.co.wethinkcode.mmayibo.fixme.core.fixprotocol;
 
 public enum FixTags {
-    BEGIN_STRING(9),
-    BODY_LENGTH(10),
-    CHECK_SUM(11),
-    CL_ORDER_ID(35),
-    MESSAGE_TYPE (38),
+    BEGIN_STRING(8),
+    BODY_LENGTH(9),
+    CHECK_SUM(10),
+    CL_ORDER_ID(0),
+    MESSAGE_TYPE (35),
     ORDER_QUANTITY(40),
     ORDER_TYPE(44),
     PRICE(49),
     SENDER_COMP_ID(52),
     SENDING_TIME(54),
     SIDE(56),
-    TARGET_COMP_ID(49);
+    TARGET_COMP_ID(49),
+    RESPONSE_TYPE(200),
+    MESSAGE(201);
 
     public final int tag;
 

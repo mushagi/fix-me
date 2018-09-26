@@ -8,7 +8,7 @@ import java.util.HashMap;
 @Getter @Setter
 public class FixMessage {
     HashMap<Integer, String> tagsValuesMap = new HashMap<>();
-    String messageType;
+    char messageType;
     String beginString;
     String bodyLength;
     String senderCompId;
@@ -20,4 +20,6 @@ public class FixMessage {
     String side;
     String checkSum;
     String price;
+    String requestOrResponse;
+    String message;
 }

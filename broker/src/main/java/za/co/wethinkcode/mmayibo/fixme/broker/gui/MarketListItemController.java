@@ -3,21 +3,20 @@ package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.AnchorPane;
+
 import java.io.IOException;
 
-public class Data
+public class MarketListItemController
 {
     @FXML
-    private HBox hBox;
+    private AnchorPane root;
     @FXML
-    private Label label1;
-    @FXML
-    private Label label2;
+    private Label name;
 
-    public Data()
+    public MarketListItemController()
     {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/listCellItem.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/marketlistitem.fxml"));
         fxmlLoader.setController(this);
         try
         {
@@ -31,12 +30,11 @@ public class Data
 
     public void setInfo(String string)
     {
-        label1.setText(string);
-        label2.setText(string);
+        name.setText(string);
     }
 
-    public HBox getBox()
+    public AnchorPane getBox()
     {
-        return hBox;
+        return root;
     }
 }

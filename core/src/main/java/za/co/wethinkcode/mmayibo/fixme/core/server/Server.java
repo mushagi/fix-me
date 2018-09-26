@@ -52,6 +52,6 @@ public abstract class Server implements Runnable{
         }
 
    }
-
    public abstract void messageRead(ChannelHandlerContext ctx, String message);
+    protected abstract void channelActive(ChannelHandlerContext ctx);
 }

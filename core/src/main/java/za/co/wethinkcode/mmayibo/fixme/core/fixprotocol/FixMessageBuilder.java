@@ -12,8 +12,13 @@ public class FixMessageBuilder {
     private final HashMap<Integer, String> tagsValuesMap = fixMessage.getTagsValuesMap();
 
     public FixMessageBuilder withMessageType(String value) {
-        fixMessage.messageType = value;
+        fixMessage.messageType = value.charAt(0);
         tagsValuesMap.put(MESSAGE_TYPE.tag, value);
+        return  this;
+    }
+    public FixMessageBuilder withResponseType(String value) {
+        fixMessage.requestOrResponse = value;
+        tagsValuesMap.put(RESPONSE_TYPE.tag, value);
         return  this;
     }
     public FixMessageBuilder withBeginString(String value) {
@@ -72,5 +77,11 @@ public class FixMessageBuilder {
         fixMessage.price = value;
         tagsValuesMap.put(PRICE.tag, value);
         return  this;
+    }
+
+    public FixMessageBuilder withMessage(String value) {
+        fixMessage.message = value;
+        tagsValuesMap.put(MESSAGE.tag, value);
+        return this;
     }
 }
