@@ -22,4 +22,5 @@ public class FixMessage {
     String price;
     String requestOrResponse;
     String message;
+    String mDReqID;
 }

@@ -84,4 +84,10 @@ public class FixMessageBuilder {
         tagsValuesMap.put(MESSAGE.tag, value);
         return this;
     }
+
+    public FixMessageBuilder withMDReqID(String value) {
+        fixMessage.mDReqID = value;
+        tagsValuesMap.put(MESSAGE.tag, value);
+        return this;
+    }
 }

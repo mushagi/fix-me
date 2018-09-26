@@ -10,7 +10,7 @@ public class MarketDataResponseHandler implements FixMessageHandlerResponse {
 
     @Override
     public void next(FixMessageHandler next) {
-    //    next.handleMessage(fixMessage, ctx.channel(), responseChannels);
+        //next.handleMessage(fixMessage, ctx.channel(), responseChannels);
     }
 
     @Override
@@ -27,13 +27,18 @@ public class MarketDataResponseHandler implements FixMessageHandlerResponse {
 
         if (message != null) {
             String strings[] = message.split(",");
-            if (message.length() > 0 ) {
+            if (message.length() > 0) {
                 ArrayList<MarketData> markets = new ArrayList<>();
                 for (String string : strings) {
                     MarketData marketData = new MarketData();
                     marketData.setId(string);
                     marketData.setName("");
                     markets.add(marketData);
+
+                    marketData.getInstruments().add(new Instrument("randy"));
+                    marketData.getInstruments().add(new Instrument("whatever"));
+                    marketData.getInstruments().add(new Instrument("rasdad"));
+
                 }
                 return markets;
             }

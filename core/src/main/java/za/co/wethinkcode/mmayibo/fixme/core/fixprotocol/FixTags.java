@@ -14,7 +14,8 @@ public enum FixTags {
     SIDE(56),
     TARGET_COMP_ID(49),
     RESPONSE_TYPE(200),
-    MESSAGE(201);
+    MESSAGE(201),
+    MD_REQ_ID(262);
 
     public final int tag;
 
