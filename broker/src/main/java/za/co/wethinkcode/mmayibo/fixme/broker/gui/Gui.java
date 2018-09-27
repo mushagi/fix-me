@@ -12,7 +12,6 @@ public class Gui extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         broker = new Broker("localhost", 5031);
         new Thread(broker).start();
 

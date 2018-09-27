@@ -1,4 +1,4 @@
-package za.co.wethinkcode.mmayibo.fixme.core.router;
+package za.co.wethinkcode.mmayibo.fixme.router.messagehandlers;
 
 import io.netty.channel.Channel;
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
@@ -6,6 +6,7 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.router.State;
 
 public class MarketsDataRequestHandler implements FixMessageHandler {
     FixMessage fixMessage;
@@ -18,20 +19,17 @@ public class MarketsDataRequestHandler implements FixMessageHandler {
     public void handleMessage(FixMessage fixMessage, Channel channel, ChannelGroupHashed responseChannels) {
         this.fixMessage = fixMessage;
 
-        if (fixMessage.getRequestOrResponse().equals("0")) {
-            String markets = getMarkets();
+        String markets = getMarkets();
 
-            FixMessage responseMessage = new FixMessageBuilder()
-                    .withBeginString("sdasd")
-                    .withBodyLength("dasda")
-                    .withMessageType("V")
-                    .withResponseType("1")
-                    .withMessage(markets)
-                    .getFixMessage();
+        FixMessage responseMessage = new FixMessageBuilder()
+                .newFixMessage()
+                .withMessageType("N")
+                .withMessage(markets)
+                .getFixMessage();
 
-            String fixString = FixEncode.encode(responseMessage);
-            channel.writeAndFlush(fixString + "\r\n");
-        }
+        String fixString = FixEncode.encode(responseMessage);
+        channel.writeAndFlush(fixString + "\r\n");
+
 
     }
 

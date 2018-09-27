@@ -8,19 +8,26 @@ import static za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixTags.*;
 
 public class FixMessageBuilder {
     @Getter
-    private final FixMessage fixMessage = new FixMessage();
-    private final HashMap<Integer, String> tagsValuesMap = fixMessage.getTagsValuesMap();
+    private  FixMessage fixMessage;
+    private  HashMap<Integer, String> tagsValuesMap;
 
+    public FixMessageBuilder existingMessage(FixMessage fixMessage) {
+        this.fixMessage = fixMessage;
+        tagsValuesMap = fixMessage.getTagsValuesMap();
+        return this;
+    }
+
+    public FixMessageBuilder newFixMessage() {
+         fixMessage= new FixMessage();
+         tagsValuesMap = fixMessage.getTagsValuesMap();
+         return this;
+    }
     public FixMessageBuilder withMessageType(String value) {
         fixMessage.messageType = value.charAt(0);
         tagsValuesMap.put(MESSAGE_TYPE.tag, value);
         return  this;
     }
-    public FixMessageBuilder withResponseType(String value) {
-        fixMessage.requestOrResponse = value;
-        tagsValuesMap.put(RESPONSE_TYPE.tag, value);
-        return  this;
-    }
+
     public FixMessageBuilder withBeginString(String value) {
         fixMessage.beginString = value;
         tagsValuesMap.put(BEGIN_STRING.tag, value);
@@ -53,11 +60,7 @@ public class FixMessageBuilder {
         tagsValuesMap.put(ORDER_QUANTITY.tag, value);
         return  this;
     }
-    public FixMessageBuilder withOrderType(String value) {
-        fixMessage.orderType = value;
-        tagsValuesMap.put(ORDER_TYPE.tag, value);
-        return  this;
-    }
+
     public FixMessageBuilder withClOrderId(String value) {
         fixMessage.clOrderId = value;
         tagsValuesMap.put(CL_ORDER_ID.tag, value);
@@ -87,7 +90,20 @@ public class FixMessageBuilder {
 
     public FixMessageBuilder withMDReqID(String value) {
         fixMessage.mDReqID = value;
-        tagsValuesMap.put(MESSAGE.tag, value);
+        tagsValuesMap.put(MD_REQ_ID.tag, value);
+        return this;
+    }
+
+
+    public FixMessageBuilder withMDName(String value) {
+        fixMessage.mdName = value;
+        tagsValuesMap.put(MD_NAME.tag, value);
+        return this;
+    }
+
+    public FixMessageBuilder withSymbol(String value) {
+        fixMessage.symbol = value;
+        tagsValuesMap.put(SYMBOL.tag, value);
         return this;
     }
 }

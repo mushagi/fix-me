@@ -23,4 +23,6 @@ public class FixMessage {
     String requestOrResponse;
     String message;
     String mDReqID;
+    String symbol;
+    String mdName;
 }

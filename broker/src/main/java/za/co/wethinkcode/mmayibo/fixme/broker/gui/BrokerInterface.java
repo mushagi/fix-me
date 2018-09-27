@@ -1,7 +1,8 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 
-import java.util.Collection;
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 
 public interface BrokerInterface {
-    void updateMarkets(Collection<MarketData> markets);
+
+    void updateMarketSnapShot(MarketData marketData);
 }

@@ -1,9 +1,10 @@
-package za.co.wethinkcode.mmayibo.fixme.core.router;
+package za.co.wethinkcode.mmayibo.fixme.router;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.*;
+import za.co.wethinkcode.mmayibo.fixme.router.messagehandlers.FixMessageTool;
 import za.co.wethinkcode.mmayibo.fixme.core.server.Server;
 
 public class MarketRouter extends Server {
@@ -26,10 +27,10 @@ public class MarketRouter extends Server {
     @Override
     protected void channelActive(ChannelHandlerContext ctx) {
         FixMessage responseMessage = new FixMessageBuilder()
+                .newFixMessage()
                 .withBeginString("sdasd")
                 .withBodyLength("dasda")
-                .withMessageType("V")
-                .withResponseType("1")
+                .withMessageType("N")
                 .withMessage(getMarkets())
                 .getFixMessage();
 

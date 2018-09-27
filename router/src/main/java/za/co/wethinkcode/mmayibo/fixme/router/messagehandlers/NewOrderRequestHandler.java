@@ -1,4 +1,4 @@
-package za.co.wethinkcode.mmayibo.fixme.core.router;
+package za.co.wethinkcode.mmayibo.fixme.router.messagehandlers;
 
 import io.netty.channel.Channel;
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;

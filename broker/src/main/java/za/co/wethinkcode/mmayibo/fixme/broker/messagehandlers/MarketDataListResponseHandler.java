@@ -1,26 +1,24 @@
-package za.co.wethinkcode.mmayibo.fixme.broker.gui;
+package za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers;
 
+import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
+import za.co.wethinkcode.mmayibo.fixme.broker.gui.BrokerInterface;
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
 
 import java.util.ArrayList;
 
-public class MarketDataResponseHandler implements FixMessageHandlerResponse {
-    FixMessage fixMessage;
+public class MarketDataListResponseHandler implements FixMessageHandlerResponse {
+    Broker broker;
 
     @Override
     public void next(FixMessageHandler next) {
-        //next.handleMessage(fixMessage, ctx.channel(), responseChannels);
     }
 
     @Override
-    public void handleMessage(FixMessage fixMessage, BrokerInterface brokerInterface) {
-        if (fixMessage.getRequestOrResponse().equals("1"))
-        {
-            ArrayList<MarketData> markets = getMarkets(fixMessage.getMessage());
-            brokerInterface.updateMarkets(markets);
-        }
-
+    public void handleMessage(FixMessage fixMessage, BrokerInterface brokerInterface, Broker broker) {
+        this.broker = broker;
+        ArrayList<MarketData> markets = getMarkets(fixMessage.getMessage());
     }
 
     private ArrayList<MarketData> getMarkets(String message) {
@@ -34,11 +32,7 @@ public class MarketDataResponseHandler implements FixMessageHandlerResponse {
                     marketData.setId(string);
                     marketData.setName("");
                     markets.add(marketData);
-
-                    marketData.getInstruments().add(new Instrument("randy"));
-                    marketData.getInstruments().add(new Instrument("whatever"));
-                    marketData.getInstruments().add(new Instrument("rasdad"));
-
+                    broker.requestMarketData(marketData);
                 }
                 return markets;
             }

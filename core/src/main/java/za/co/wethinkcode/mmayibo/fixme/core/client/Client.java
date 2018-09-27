@@ -61,4 +61,6 @@ public abstract class Client implements Runnable {
     }
 
     public abstract void messageRead(ChannelHandlerContext ctx, String message);
+    public abstract void channelActive(ChannelHandlerContext ctx);
+
 }

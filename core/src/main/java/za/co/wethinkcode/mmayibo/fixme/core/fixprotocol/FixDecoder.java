@@ -40,14 +40,45 @@ public class FixDecoder {
             case 9 :
                 fixMessage.bodyLength = value;
                 break;
+            case 10 :
+                fixMessage.checkSum = value;
+                break;
             case 35:
                 fixMessage.messageType = value.charAt(0);
+                break;
+            case 37 :
+                fixMessage.clOrderId = value;
+                break;
+            case 38 :
+                fixMessage.orderQuantity = value;
+                break;
+            case 44 :
+                fixMessage.price = value;
+                break;
+            case 49 :
+                fixMessage.senderCompId = value;
+                break;
+            case 52 :
+                fixMessage.sendingTime = value;
+                break;
+            case 54 :
+                fixMessage.side = value;
+                break;
+            case 55 :
+                fixMessage.symbol = value;
+                break;
+            case 56 :
+                fixMessage.targetCompId = value;
                 break;
             case 200:
                 fixMessage.requestOrResponse = value;
                 break;
             case 201:
                 fixMessage.message = value;
+            case 262:
+                fixMessage.mDReqID = value;
+            case 500:
+                fixMessage.mdName = value;
                 break;
         }
     }

@@ -1,14 +1,14 @@
-package za.co.wethinkcode.mmayibo.fixme.broker.gui;
+package za.co.wethinkcode.mmayibo.fixme.market.messagehandlers;
 
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 
-public class BrokerMessageHandlerTool {
+public class MarketMessageHandlerTool {
 
     public static FixMessageHandlerResponse getMessageHandler(FixMessage fixMessage) {
         if (fixMessage.getMessageType() == 'D')
-            return new MarketDataResponseHandler();
+            return new NewOrderResponseHandler();
         else if (fixMessage.getMessageType() == 'V')
-            return new MarketDataResponseHandler();
+            return new MarketDataSnapShotResponseHandler();
         return null;
     }
 }

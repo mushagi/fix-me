@@ -1,4 +1,4 @@
-package za.co.wethinkcode.mmayibo.fixme.broker.gui;
+package za.co.wethinkcode.mmayibo.fixme.core.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +12,13 @@ public class MarketData {
     private String name;
     private String id;
 
-    MarketData() {
+    public MarketData() {
         instruments = new ArrayList<>();
+    }
+
+    public MarketData(String name, String id) {
+        this.name = name;
+        this.id = id;
     }
 
     @Override

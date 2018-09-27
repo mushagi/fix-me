@@ -1,10 +1,11 @@
-package za.co.wethinkcode.mmayibo.fixme.core.router;
+package za.co.wethinkcode.mmayibo.fixme.router;
 
 import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixDecoder;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.router.messagehandlers.FixMessageTool;
 import za.co.wethinkcode.mmayibo.fixme.core.server.Server;
 
 public class BrokerRouter extends Server {
