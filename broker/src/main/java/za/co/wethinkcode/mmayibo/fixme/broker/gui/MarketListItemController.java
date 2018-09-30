@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.util.Callback;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 
 import java.io.IOException;
@@ -46,11 +48,9 @@ public class MarketListItemController extends ListCell<MarketData> {
         markertData = item;
         if(empty) {
             setText(null);
-            setContentDisplay(ContentDisplay.TEXT_ONLY);
         }
         else {
-            name.setText(item.getId());
-            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            name.setText(item.getName());
         }
     }
 }

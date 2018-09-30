@@ -41,6 +41,7 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandlerRespo
                 instruments.add(new Instrument(name, price));
             }
         }
-        return instruments;
+
+    return instruments;
     }
 }

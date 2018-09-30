@@ -93,7 +93,7 @@
         
                         <TextField alignment="CENTER" layoutX="23.0" layoutY="62.0" prefHeight="28.0" prefWidth="152.0" />
                         <Text layoutX="51.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Amount" wrappingWidth="114.21744537353516" />
-                        <Button layoutX="22.0" layoutY="147.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="63.0" text="Buy" />
+                        <Button fx:id="buyButton" layoutX="22.0" layoutY="147.0" mnemonicParsing="false" onAction="#buyAction" prefHeight="32.0" prefWidth="63.0" text="Buy" />
                         <Button layoutX="121.0" layoutY="147.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="63.0" text="Sell" />
                      </children>
                   </Pane>

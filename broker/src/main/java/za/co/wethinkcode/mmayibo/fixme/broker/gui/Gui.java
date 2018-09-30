@@ -12,7 +12,7 @@ public class Gui extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        broker = new Broker("localhost", 5031);
+        broker = new Broker("localhost", 5001);
         new Thread(broker).start();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-window.fxml"));

@@ -13,20 +13,23 @@ public class Market extends Client {
 
     Market(String host, int port) {
         super(host, port);
+        marketData.getInstruments().add(new Instrument("bdfgd", 1));
+        marketData.getInstruments().add(new Instrument("dsaddass", 2));
+        marketData.getInstruments().add(new Instrument("sdassadsad", 3));
+        marketData.getInstruments().add(new Instrument("dasdasddsaasd", 4));
+
     }
     MarketData marketData = new MarketData();
+
+
     @Override
     public void messageRead(ChannelHandlerContext ctx, String message) {
         FixMessage fixMessage = FixDecoder.decode(message);
         FixMessageHandlerResponse messageHandler = MarketMessageHandlerTool.getMessageHandler(fixMessage);
         assert messageHandler != null;
 
-        marketData.setId("4689");
+        marketData.setId(fixMessage.getMDReqID());
         marketData.setName("dgdsg");
-        marketData.getInstruments().add(new Instrument("bdfgd", 1));
-        marketData.getInstruments().add(new Instrument("dsaddass", 2));
-        marketData.getInstruments().add(new Instrument("sdassadsad", 3));
-        marketData.getInstruments().add(new Instrument("dasdasddsaasd", 4));
 
         messageHandler.handleMessage(ctx, fixMessage, marketData);
 
