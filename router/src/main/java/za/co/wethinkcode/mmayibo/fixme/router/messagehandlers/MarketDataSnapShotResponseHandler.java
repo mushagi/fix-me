@@ -15,11 +15,14 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandler {
 
     @Override
     public void handleMessage(FixMessage fixMessage, Channel channel, ChannelGroupHashed responseChannels) {
-        Channel respondChannel = responseChannels.find(fixMessage.getTargetCompId());
-
         String fixString = FixEncode.encode(fixMessage);
 
-        if (respondChannel != null)
-            respondChannel.writeAndFlush(  fixString + "\r\n");
+        if (fixMessage.getTargetCompId().equals("all"))
+            responseChannels.writeAndFlush(fixString + "\r\n");
+        else {
+            Channel respondChannel = responseChannels.find(fixMessage.getTargetCompId());
+            if (respondChannel != null)
+                respondChannel.writeAndFlush(fixString + "\r\n");
+        }
     }
 }

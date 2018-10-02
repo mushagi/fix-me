@@ -1,20 +1,23 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 
-import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.core.model.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 
+import java.lang.reflect.InaccessibleObjectException;
 
-public class MainWindowController implements BrokerInterface{
-    ObservableList observableList = FXCollections.observableArrayList();
+
+public class MainWindowController {
     private ObservableList  observableInstruments = FXCollections.observableArrayList();;
 
     @FXML
@@ -24,33 +27,29 @@ public class MainWindowController implements BrokerInterface{
     private ListView marketListView;
     private Broker broker;
 
+    @FXML
+    private Label instrumentDetailTextInLine;
+
+
     public void setUpStartUp(Broker broker) {
         this.broker = broker;
 
-        broker.setBrokerInterface(this);
-        broker.requestMarkets();
-
         instrumentDropDown.setItems(observableInstruments);
-        marketListView.setItems(observableList);
-        marketListView.setCellFactory(new Callback<ListView<MarketData>, MarketListItemController>()
-        {
-            @Override
-            public MarketListItemController call(ListView<MarketData> listView)
+        instrumentDropDown.valueProperty().addListener((obs, oldItem, newItem) -> {
+            if (newItem instanceof Instrument)
             {
-                return new MarketListItemController(MainWindowController.this);
+                Instrument item = (Instrument) newItem;
+                instrumentDetailTextInLine.setText("Name " + item.getName() +"\n" + "Price "+ item.getPrice() );
             }
         });
-    }
 
-    @Override
-    public void updateMarketSnapShot(MarketData marketData) {
-        if (!observableList.contains(marketData))
-            observableList.add(marketData);
+
+        marketListView.setItems(broker.markets);
+        marketListView.setCellFactory((Callback<ListView<MarketData>, MarketListItemController>) listView -> new MarketListItemController(MainWindowController.this));
     }
 
     @FXML
     void buyAction(ActionEvent event) {
-
 
     }
 
@@ -62,9 +61,10 @@ public class MainWindowController implements BrokerInterface{
         if (marketData != null && marketData.getInstruments() != null)
         {
             for (Instrument instrument: marketData.getInstruments())
-                observableInstruments.add(instrument.getName());
+                observableInstruments.add(instrument);
             instrumentDropDown.getSelectionModel().select(0);
         }
-
     }
+
+
 }

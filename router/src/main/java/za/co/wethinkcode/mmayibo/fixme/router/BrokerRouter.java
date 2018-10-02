@@ -16,13 +16,11 @@ public class BrokerRouter extends Server {
 
     @Override
     public void messageRead(final ChannelHandlerContext ctx, final String message) {
-
         FixMessage fixMessage = FixDecoder.decode(message);
         System.out.println(message);
         FixMessageHandler fixMessageHandler = FixMessageTool.getMessageHandler(fixMessage);
         if (fixMessageHandler != null)
             fixMessageHandler.handleMessage(fixMessage, ctx.channel(), responseChannels);
-
     }
 
     @Override

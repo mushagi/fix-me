@@ -12,7 +12,6 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -90,11 +89,9 @@
                      <children>
                         <Separator layoutX="-1.0" layoutY="14.0" prefWidth="200.0" />
                         <Separator layoutX="15.0" layoutY="197.0" prefHeight="3.0" prefWidth="169.0" />
-        
-                        <TextField alignment="CENTER" layoutX="23.0" layoutY="62.0" prefHeight="28.0" prefWidth="152.0" />
-                        <Text layoutX="51.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Amount" wrappingWidth="114.21744537353516" />
                         <Button fx:id="buyButton" layoutX="22.0" layoutY="147.0" mnemonicParsing="false" onAction="#buyAction" prefHeight="32.0" prefWidth="63.0" text="Buy" />
                         <Button layoutX="121.0" layoutY="147.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="63.0" text="Sell" />
+                        <Label fx:id="instrumentDetailTextInLine" layoutX="18.0" layoutY="24.0" prefHeight="106.0" prefWidth="161.0" />
                      </children>
                   </Pane>
                </children>

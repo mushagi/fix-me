@@ -2,6 +2,9 @@ package za.co.wethinkcode.mmayibo.fixme.core.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
 
 class ClientHandler extends SimpleChannelInboundHandler<String> {
     private final Client client;
@@ -25,6 +28,16 @@ class ClientHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
+
+        FixMessage responseIdBackToChannelFixMessage = new FixMessageBuilder()
+                .newFixMessage()
+                .withMessageType("1")
+                .withMDReqID(ctx.channel().id().toString())
+                .getFixMessage();
+
+        String fixStringResponseBackToChannel = FixEncode.encode(responseIdBackToChannelFixMessage);
+        ctx.channel().writeAndFlush(fixStringResponseBackToChannel + "\r\n");
+
         client.channelActive(ctx);
     }
 }

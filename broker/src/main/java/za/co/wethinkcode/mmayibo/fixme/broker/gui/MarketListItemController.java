@@ -1,5 +1,6 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
@@ -45,6 +46,7 @@ public class MarketListItemController extends ListCell<MarketData> {
     @Override
     protected void updateItem(MarketData item, boolean empty) {
         super.updateItem(item, empty);
+
         markertData = item;
         if(empty) {
             setText(null);
@@ -52,5 +54,6 @@ public class MarketListItemController extends ListCell<MarketData> {
         else {
             name.setText(item.getName());
         }
+
     }
 }

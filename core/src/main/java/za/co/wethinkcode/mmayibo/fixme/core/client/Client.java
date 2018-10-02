@@ -7,6 +7,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 
 import java.util.logging.Logger;
 

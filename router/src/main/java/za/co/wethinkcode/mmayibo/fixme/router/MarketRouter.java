@@ -1,6 +1,5 @@
 package za.co.wethinkcode.mmayibo.fixme.router;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.*;
@@ -26,24 +25,6 @@ public class MarketRouter extends Server {
 
     @Override
     protected void channelActive(ChannelHandlerContext ctx) {
-        FixMessage responseMessage = new FixMessageBuilder()
-                .newFixMessage()
-                .withBeginString("sdasd")
-                .withBodyLength("dasda")
-                .withMessageType("N")
-                .withMessage(getMarkets())
-                .getFixMessage();
 
-        String fixString = FixEncode.encode(responseMessage);
-        responseChannels.writeAndFlush(fixString + "\r\n");
-    }
-
-    private String getMarkets() {
-        StringBuilder builder = new StringBuilder();
-
-        for (Channel channel: State.marketChannels)
-            builder.append(channel.id().toString()).append(",");
-
-        return builder.toString();
     }
 }
