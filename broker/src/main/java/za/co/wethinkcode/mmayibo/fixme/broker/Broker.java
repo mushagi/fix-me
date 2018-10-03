@@ -17,8 +17,8 @@ public class Broker extends Client {
         super(host, port);
     }
 
-
     public ObservableList<MarketData> markets = FXCollections.observableArrayList();
+
 
     @Override
     public void messageRead(ChannelHandlerContext ctx, String message) {
@@ -36,14 +36,16 @@ public class Broker extends Client {
     }
 
     public void updateMarkets(MarketData marketData) {
+
         if (!markets.contains(marketData))
             markets.add(marketData);
         else {
-            for (MarketData localMarketData: markets)
+            for (MarketData localMarketData: markets) {
                 if (localMarketData.equals(marketData)) {
-                    localMarketData.setInstruments(marketData.getInstruments());
+                    localMarketData.updateInstruments(marketData.getInstruments());
                     break;
                 }
+            }
         }
     }
 }

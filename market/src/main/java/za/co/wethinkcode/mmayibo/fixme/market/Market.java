@@ -28,10 +28,10 @@ public class Market extends Client {
 
 
         marketData.setName("Name");
-        marketData.getInstruments().add(new Instrument("bdfgd", 1));
-        marketData.getInstruments().add(new Instrument("dsaddass", 2));
-        marketData.getInstruments().add(new Instrument("sdassadsad", 3));
-        marketData.getInstruments().add(new Instrument("dasdasddsaasd", 4));
+        marketData.getInstruments().put("bdfgd", new Instrument("bdfgd", 1));
+        marketData.getInstruments().put("dsaddass", new Instrument("dsaddass", 2));
+        marketData.getInstruments().put("sdassadsad", new Instrument("sdassadsad", 3));
+        marketData.getInstruments().put("dasdasddsaasd", new Instrument("dasdasddsaasd", 4));
 
     }
 
@@ -50,7 +50,7 @@ public class Market extends Client {
     };
 
     private void generatePriceForInstruments() {
-        for (Instrument instrument: marketData.getInstruments())
+        for (Instrument instrument: marketData.getInstruments().values())
             generateRandomPrice(instrument);
     }
 
@@ -79,7 +79,7 @@ public class Market extends Client {
     }
 
     public void sendMarketDataSnapShot(String senderCompId, Channel channel) {
-        String symbol = encodeInstruments(marketData.getInstruments());
+        String symbol = encodeInstruments(marketData.getInstruments().values());
 
         FixMessage responseMessage = new FixMessageBuilder()
                 .newFixMessage()

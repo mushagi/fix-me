@@ -7,6 +7,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 
@@ -15,9 +16,12 @@ import java.io.IOException;
 public class MarketListItemController extends ListCell<MarketData> {
 
     private final MainWindowController mainWindowController;
+
     @FXML
     private Label name;
+
     private MarketData markertData;
+    private VBox box;
 
     public MarketListItemController(MainWindowController mainWindowController) {
         loadFXML();
@@ -40,17 +44,17 @@ public class MarketListItemController extends ListCell<MarketData> {
     public void updateSelected(boolean selected) {
         super.updateSelected(selected);
         if (selected)
-            mainWindowController.updateMarketPanel(markertData);
+            mainWindowController.updateMarketPanel();
     }
 
     @Override
     protected void updateItem(MarketData item, boolean empty) {
         super.updateItem(item, empty);
 
-        markertData = item;
-        if(empty) {
-            setText(null);
+        if(empty || item == null) {
+            name.setText("");
         }
+
         else {
             name.setText(item.getName());
         }

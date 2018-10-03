@@ -7,6 +7,7 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MarketDataSnapShotResponseHandler implements FixMessageHandlerResponse{
 
@@ -21,15 +22,15 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandlerRespo
 
         marketData.setId(fixMessage.getMDReqID());
 
-        ArrayList<Instrument> instruments = getInstruments(fixMessage.getSymbol());
+        HashMap<String, Instrument> instruments = getInstruments(fixMessage.getSymbol());
         marketData.setInstruments(instruments);
         marketData.setName(fixMessage.getMdName());
 
         broker.updateMarkets(marketData);
     }
 
-    private ArrayList<Instrument> getInstruments(String symbol) {
-        ArrayList<Instrument> instruments = new ArrayList<>();
+    private HashMap<String, Instrument> getInstruments(String symbol) {
+        HashMap<String, Instrument> instruments = new HashMap<>();
         String[] strings = symbol.split("%");
 
         for (String line: strings) {
@@ -37,7 +38,7 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandlerRespo
             if (nameAndPrice.length == 2) {
                 String name = nameAndPrice[0];
                 double price = Double.parseDouble(nameAndPrice[1]);
-                instruments.add(new Instrument(name, price));
+                instruments.put(name, new Instrument(name, price));
             }
         }
 

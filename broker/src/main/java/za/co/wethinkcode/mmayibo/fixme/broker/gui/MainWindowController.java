@@ -1,7 +1,6 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,8 +12,6 @@ import javafx.util.Callback;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.core.model.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
-
-import java.lang.reflect.InaccessibleObjectException;
 
 
 public class MainWindowController {
@@ -30,16 +27,19 @@ public class MainWindowController {
     @FXML
     private Label instrumentDetailTextInLine;
 
+    ObservableList<MarketData> markets;
 
     public void setUpStartUp(Broker broker) {
         this.broker = broker;
+        this.markets = broker.markets;
 
         instrumentDropDown.setItems(observableInstruments);
+        
         instrumentDropDown.valueProperty().addListener((obs, oldItem, newItem) -> {
             if (newItem instanceof Instrument)
             {
                 Instrument item = (Instrument) newItem;
-                instrumentDetailTextInLine.setText("Name " + item.getName() +"\n" + "Price "+ item.getPrice() );
+                instrumentDetailTextInLine.setText("Name " + item.getName() +"\n" + "Price "+ item.getPrice());
             }
         });
 
@@ -52,19 +52,17 @@ public class MainWindowController {
     void buyAction(ActionEvent event) {
 
     }
+    void updateMarketPanel() {
 
+        Platform.runLater(() -> {
+            MarketData marketData = (MarketData) marketListView.getSelectionModel().getSelectedItem();
 
-    void updateMarketPanel(MarketData marketData) {
-        observableInstruments.clear();
-        observableInstruments.add("Select an instrument");
+            if (marketData != null && marketData.getInstruments() != null) {
+                observableInstruments.clear();
+                observableInstruments.setAll(marketData.getInstruments().values());
+                instrumentDropDown.getSelectionModel().select(0);
+            }
+        });
 
-        if (marketData != null && marketData.getInstruments() != null)
-        {
-            for (Instrument instrument: marketData.getInstruments())
-                observableInstruments.add(instrument);
-            instrumentDropDown.getSelectionModel().select(0);
-        }
     }
-
-
 }
