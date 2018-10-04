@@ -1,14 +1,10 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 
 import java.io.IOException;
@@ -44,7 +40,7 @@ public class MarketListItemController extends ListCell<MarketData> {
     public void updateSelected(boolean selected) {
         super.updateSelected(selected);
         if (selected)
-            mainWindowController.updateMarketPanel();
+            mainWindowController.updateSelectedMarket();
     }
 
     @Override

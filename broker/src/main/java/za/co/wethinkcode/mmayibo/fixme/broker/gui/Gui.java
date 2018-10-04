@@ -8,11 +8,10 @@ import javafx.stage.Stage;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 
 public class Gui extends Application {
-    Broker broker;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        broker = new Broker("localhost", 5001);
+        Broker broker = new Broker("localhost", 5001);
         new Thread(broker).start();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-window.fxml"));
@@ -22,7 +21,8 @@ public class Gui extends Application {
         primaryStage.show();
 
         MainWindowController controller = loader.getController();
-        controller.setUpStartUp(broker);
+
+        controller.registerBroker(broker);
     }
 
     public static void main(String args[]) {

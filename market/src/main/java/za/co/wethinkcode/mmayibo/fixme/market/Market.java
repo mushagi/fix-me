@@ -11,6 +11,7 @@ import za.co.wethinkcode.mmayibo.fixme.core.model.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 import za.co.wethinkcode.mmayibo.fixme.market.messagehandlers.FixMessageHandlerResponse;
 import za.co.wethinkcode.mmayibo.fixme.market.messagehandlers.MarketMessageHandlerTool;
+import za.co.wethinkcode.mmayibo.fixme.market.model.MarketInstrument;
 
 import java.util.Collection;
 import java.util.Random;
@@ -28,10 +29,10 @@ public class Market extends Client {
 
 
         marketData.setName("Name");
-        marketData.getInstruments().put("bdfgd", new Instrument("bdfgd", 1));
-        marketData.getInstruments().put("dsaddass", new Instrument("dsaddass", 2));
-        marketData.getInstruments().put("sdassadsad", new Instrument("sdassadsad", 3));
-        marketData.getInstruments().put("dasdasddsaasd", new Instrument("dasdasddsaasd", 4));
+        marketData.getInstruments().put("bdfgd", new MarketInstrument("bdfgd", 1));
+        marketData.getInstruments().put("dsaddass", new MarketInstrument("dsaddass", 2));
+        marketData.getInstruments().put("sdassadsad", new MarketInstrument("sdassadsad", 3));
+        marketData.getInstruments().put("dasdasddsaasd", new MarketInstrument("dasdasddsaasd", 4));
 
     }
 
@@ -51,10 +52,10 @@ public class Market extends Client {
 
     private void generatePriceForInstruments() {
         for (Instrument instrument: marketData.getInstruments().values())
-            generateRandomPrice(instrument);
+            generateRandomPrice((MarketInstrument) instrument);
     }
 
-    private void generateRandomPrice(Instrument instrument) {
+    private void generateRandomPrice(MarketInstrument instrument) {
         double randomValue = instrument.getMinPrice() + (instrument.getMaxPrice() - instrument.getMinPrice() ) * random.nextDouble();
         instrument.setPrice(randomValue);
     }

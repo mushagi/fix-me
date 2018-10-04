@@ -4,13 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Objects;
+import java.util.Stack;
 
 @Getter @Setter
 public class Instrument {
-    private  String name;
-    private  double price;
-    private double maxPrice = 100;
-    private double minPrice = 0;
+    protected  String name;
+    protected   double price;
+
 
     public Instrument(String name, double price) {
         this.name = name;

@@ -5,16 +5,25 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.BrokerInstrument;
 import za.co.wethinkcode.mmayibo.fixme.core.model.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
-public class MainWindowController {
+
+public class MainWindowController implements Initializable, BrokerUI{
     private ObservableList  observableInstruments = FXCollections.observableArrayList();;
 
     @FXML
@@ -22,47 +31,102 @@ public class MainWindowController {
 
     @FXML
     private ListView marketListView;
-    private Broker broker;
 
     @FXML
     private Label instrumentDetailTextInLine;
 
-    ObservableList<MarketData> markets;
+    @FXML
+    private LineChart<Number, Number> marketLineChart;
 
-    public void setUpStartUp(Broker broker) {
-        this.broker = broker;
-        this.markets = broker.markets;
+    private ObservableList<MarketData> markets;
+
+    private MarketData selectedMarket;
+    private BrokerInstrument selectedInstrument;
+
+    XYChart.Series<Number, Number> marketDataSeries = new XYChart.Series<>();
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        marketLineChart.getData().add(marketDataSeries);
 
         instrumentDropDown.setItems(observableInstruments);
-        
+
         instrumentDropDown.valueProperty().addListener((obs, oldItem, newItem) -> {
-            if (newItem instanceof Instrument)
-            {
-                Instrument item = (Instrument) newItem;
-                instrumentDetailTextInLine.setText("Name " + item.getName() +"\n" + "Price "+ item.getPrice());
+            if (newItem instanceof Instrument) {
+
+                selectedInstrument = (BrokerInstrument) newItem;
+
+                resetLineGraphWithInstrumentHistory();
+                updateUI();
             }
         });
 
-
-        marketListView.setItems(broker.markets);
         marketListView.setCellFactory((Callback<ListView<MarketData>, MarketListItemController>) listView -> new MarketListItemController(MainWindowController.this));
     }
+
+    private void resetLineGraphWithInstrumentHistory() {
+        Platform.runLater(() -> {
+            if (selectedInstrument != null) {
+
+                marketDataSeries.getData().clear();
+                for (int i = 0; i < selectedInstrument.getPricesHistory().size(); i++)
+                    marketDataSeries.getData().add(new XYChart.Data<>(i, selectedInstrument.getPricesHistory().get(i)));
+            }
+        });
+    }
+
 
     @FXML
     void buyAction(ActionEvent event) {
 
     }
-    void updateMarketPanel() {
+    void updateSelectedMarket() {
 
         Platform.runLater(() -> {
-            MarketData marketData = (MarketData) marketListView.getSelectionModel().getSelectedItem();
+             selectedMarket = (MarketData) marketListView.getSelectionModel().getSelectedItem();
 
-            if (marketData != null && marketData.getInstruments() != null) {
+            if (selectedMarket != null && selectedMarket.getInstruments() != null) {
                 observableInstruments.clear();
-                observableInstruments.setAll(marketData.getInstruments().values());
+                observableInstruments.setAll(selectedMarket.getInstruments().values());
                 instrumentDropDown.getSelectionModel().select(0);
             }
         });
+
+    }
+
+    @Override
+    public void registerBroker(Broker broker) {
+        markets = broker.markets;
+        marketListView.setItems(markets);
+        broker.register(this);
+    }
+
+    @Override
+    public void update() {
+        updateUI();
+    }
+
+    private void updateUI() {
+        Platform.runLater(() -> {
+            if (selectedInstrument != null){
+                instrumentDetailTextInLine.setText("Name " + selectedInstrument.getName() +"\n" + "Price "+ selectedInstrument.getPrice());
+                ArrayList<Double> pricesHistory = selectedInstrument.getPricesHistory();
+                int size = pricesHistory.size()  - 1;
+                Double firstValue = selectedInstrument.getPricesHistory().get(size);
+                Double lastValue = selectedInstrument.getPricesHistory().get(0);
+
+                if (marketDataSeries.getData().size() >= 20)
+                    marketDataSeries.getData().remove(0);
+                marketDataSeries.getData().add(new XYChart.Data<>(size,firstValue ));
+                NumberAxis xAxis = (NumberAxis) marketLineChart.getXAxis();
+
+            }
+            else
+                instrumentDetailTextInLine.setText("");
+
+        });
+
+
 
     }
 }

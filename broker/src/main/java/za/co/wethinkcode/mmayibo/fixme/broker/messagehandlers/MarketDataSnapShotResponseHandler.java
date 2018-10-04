@@ -1,6 +1,7 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers;
 
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.BrokerInstrument;
 import za.co.wethinkcode.mmayibo.fixme.core.model.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
@@ -38,7 +39,7 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandlerRespo
             if (nameAndPrice.length == 2) {
                 String name = nameAndPrice[0];
                 double price = Double.parseDouble(nameAndPrice[1]);
-                instruments.put(name, new Instrument(name, price));
+                instruments.put(name, new BrokerInstrument(name, price));
             }
         }
 
