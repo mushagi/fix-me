@@ -13,16 +13,13 @@ import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 
 import java.util.ArrayList;
 
-
 public class Broker extends Client {
-
     public Broker(String host, int port) {
         super(host, port);
     }
 
-    public ArrayList<BrokerUI> userInterfaces = new ArrayList<>();
+    private ArrayList<BrokerUI> userInterfaces = new ArrayList<>();
     public ObservableList<MarketData> markets = FXCollections.observableArrayList();
-
 
     @Override
     public void messageRead(ChannelHandlerContext ctx, String message) {
@@ -40,7 +37,6 @@ public class Broker extends Client {
     }
 
     public void updateMarkets(MarketData marketData) {
-
         if (!markets.contains(marketData))
             markets.add(marketData);
         else {
@@ -58,5 +54,7 @@ public class Broker extends Client {
     public void register(BrokerUI userInterface) {
         if (!userInterfaces.contains(userInterface))
             userInterfaces.add(userInterface);
+
+
     }
 }

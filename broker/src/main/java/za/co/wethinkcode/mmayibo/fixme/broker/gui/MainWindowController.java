@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -21,6 +22,7 @@ import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
 
 
 public class MainWindowController implements Initializable, BrokerUI{
@@ -36,7 +38,7 @@ public class MainWindowController implements Initializable, BrokerUI{
     private Label instrumentDetailTextInLine;
 
     @FXML
-    private LineChart<Number, Number> marketLineChart;
+    private AreaChart<Number, Number> marketLineChart;
 
     private ObservableList<MarketData> markets;
 
@@ -47,6 +49,7 @@ public class MainWindowController implements Initializable, BrokerUI{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         marketLineChart.getData().add(marketDataSeries);
 
         instrumentDropDown.setItems(observableInstruments);
@@ -113,20 +116,21 @@ public class MainWindowController implements Initializable, BrokerUI{
                 ArrayList<Double> pricesHistory = selectedInstrument.getPricesHistory();
                 int size = pricesHistory.size()  - 1;
                 Double firstValue = selectedInstrument.getPricesHistory().get(size);
-                Double lastValue = selectedInstrument.getPricesHistory().get(0);
 
-                if (marketDataSeries.getData().size() >= 20)
+                if (size >= 19){
                     marketDataSeries.getData().remove(0);
-                marketDataSeries.getData().add(new XYChart.Data<>(size,firstValue ));
-                NumberAxis xAxis = (NumberAxis) marketLineChart.getXAxis();
+                    for (XYChart.Data<Number, Number> data: marketDataSeries.getData()) {
+                        data.setXValue(data.getXValue().intValue() - 1);
+                    }
+                }
+                marketDataSeries.getData().add(new XYChart.Data<>(size,firstValue));
 
             }
             else
                 instrumentDetailTextInLine.setText("");
 
         });
-
-
-
     }
+
+
 }
