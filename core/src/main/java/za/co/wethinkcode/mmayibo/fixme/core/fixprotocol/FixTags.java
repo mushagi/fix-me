@@ -15,7 +15,9 @@ public enum FixTags {
     TARGET_COMP_ID(56),
     MESSAGE(201),
     MD_REQ_ID(262),
-    MD_NAME(500),;
+    MD_NAME(500),
+    CLIENTID(501),
+    WALLET(502),;
 
 
     public final int tag;

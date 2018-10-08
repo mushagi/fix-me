@@ -7,8 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -18,11 +16,11 @@ import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.BrokerInstrument;
 import za.co.wethinkcode.mmayibo.fixme.core.model.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
+import za.co.wethinkcode.mmayibo.fixme.core.model.Wallet;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executor;
 
 
 public class MainWindowController implements Initializable, BrokerUI{
@@ -45,7 +43,7 @@ public class MainWindowController implements Initializable, BrokerUI{
     private MarketData selectedMarket;
     private BrokerInstrument selectedInstrument;
 
-    XYChart.Series<Number, Number> marketDataSeries = new XYChart.Series<>();
+    private XYChart.Series<Number, Number> marketDataSeries = new XYChart.Series<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -107,6 +105,11 @@ public class MainWindowController implements Initializable, BrokerUI{
     @Override
     public void update() {
         updateUI();
+    }
+
+    @Override
+    public void updateWallet(Wallet wallet) {
+        System.out.println(wallet.getAvailableFunds());
     }
 
     private void updateUI() {

@@ -6,12 +6,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.UserClientData;
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 
 public class Gui extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Broker broker = new Broker("localhost", 5001);
+        UserClientData userClientData = new UserClientData();
+        Broker broker = new Broker("localhost", 5001,userClientData );
         new Thread(broker).start();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-window.fxml"));

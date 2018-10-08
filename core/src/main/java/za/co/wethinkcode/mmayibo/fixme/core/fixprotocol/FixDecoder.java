@@ -79,6 +79,10 @@ public class FixDecoder {
                 fixMessage.mDReqID = value;
             case 500:
                 fixMessage.mdName = value;
+            case 501:
+                fixMessage.clientId = value;
+            case 502:
+                fixMessage.walletResponse = value;
                 break;
         }
     }

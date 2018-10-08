@@ -25,4 +25,6 @@ public class FixMessage {
     String mDReqID;
     String symbol;
     String mdName;
+    String walletResponse;
+    String clientId;
 }

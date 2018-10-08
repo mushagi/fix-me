@@ -19,9 +19,10 @@ public class MarketListItemController extends ListCell<MarketData> {
     private MarketData markertData;
     private VBox box;
 
-    public MarketListItemController(MainWindowController mainWindowController) {
-        loadFXML();
+    MarketListItemController(MainWindowController mainWindowController) {
         this.mainWindowController = mainWindowController;
+        loadFXML();
+
     }
 
     private void loadFXML() {

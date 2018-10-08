@@ -106,4 +106,15 @@ public class FixMessageBuilder {
         tagsValuesMap.put(SYMBOL.tag, value);
         return this;
     }
+
+    public FixMessageBuilder withClientIId(String value) {
+        fixMessage.clientId = value;
+        tagsValuesMap.put(CLIENTID.tag, value);
+        return this;
+    }
+    public FixMessageBuilder withWallet(String value) {
+        fixMessage.walletResponse = value;
+        tagsValuesMap.put(WALLET.tag, value);
+        return this;
+    }
 }
