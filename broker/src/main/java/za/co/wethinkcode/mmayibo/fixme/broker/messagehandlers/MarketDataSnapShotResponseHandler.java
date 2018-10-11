@@ -1,13 +1,12 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers;
 
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
-import za.co.wethinkcode.mmayibo.fixme.broker.model.BrokerInstrument;
-import za.co.wethinkcode.mmayibo.fixme.core.model.Instrument;
-import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.BrokerInstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MarketDataSnapShotResponseHandler implements FixMessageHandlerResponse{
@@ -19,19 +18,19 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandlerRespo
 
     @Override
     public void handleMessage(FixMessage fixMessage, Broker broker) {
-        MarketData marketData = new MarketData();
+        MarketModel marketModel = new MarketModel();
 
-        marketData.setId(fixMessage.getMDReqID());
+        marketModel.setId(fixMessage.getMDReqID());
 
-        HashMap<String, Instrument> instruments = getInstruments(fixMessage.getSymbol());
-        marketData.setInstruments(instruments);
-        marketData.setName(fixMessage.getMdName());
+        HashMap<String, InstrumentModel> instruments = getInstruments(fixMessage.getSymbol());
+        marketModel.setInstruments(instruments);
+        marketModel.setName(fixMessage.getMdName());
 
-        broker.updateMarkets(marketData);
+        broker.updateMarkets(marketModel);
     }
 
-    private HashMap<String, Instrument> getInstruments(String symbol) {
-        HashMap<String, Instrument> instruments = new HashMap<>();
+    private HashMap<String, InstrumentModel> getInstruments(String symbol) {
+        HashMap<String, InstrumentModel> instruments = new HashMap<>();
         String[] strings = symbol.split("%");
 
         for (String line: strings) {
@@ -39,7 +38,7 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandlerRespo
             if (nameAndPrice.length == 2) {
                 String name = nameAndPrice[0];
                 double price = Double.parseDouble(nameAndPrice[1]);
-                instruments.put(name, new BrokerInstrument(name, price));
+                instruments.put(name, new BrokerInstrumentModel(name, price));
             }
         }
 

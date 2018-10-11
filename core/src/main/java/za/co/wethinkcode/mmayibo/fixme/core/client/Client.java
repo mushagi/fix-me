@@ -7,7 +7,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
 
 import java.util.logging.Logger;
 
@@ -57,8 +56,7 @@ public abstract class Client implements Runnable {
     }
 
     public void sendMessage(String message){
-        logger.finest("Really not important");
-    //  channel.writeAndFlush(message + "\r\n");
+        lastChannel.writeAndFlush(message + "\r\n");
     }
 
     public abstract void messageRead(ChannelHandlerContext ctx, String message);

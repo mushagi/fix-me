@@ -14,6 +14,7 @@ public class IdResponseHandler implements FixMessageHandlerResponse {
 
     @Override
     public void handleMessage(FixMessage fixMessage, Broker broker) {
+        broker.id = fixMessage.getMDReqID();
         System.out.println("Broker Id " + fixMessage.getMDReqID());
     }
 }

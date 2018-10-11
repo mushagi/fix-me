@@ -50,10 +50,10 @@ public class FixDecoder {
                 fixMessage.clOrderId = value;
                 break;
             case 38 :
-                fixMessage.orderQuantity = value;
+                fixMessage.orderQuantity = Integer.parseInt(value);
                 break;
             case 44 :
-                fixMessage.price = value;
+                fixMessage.price = Double.parseDouble(value);
                 break;
             case 49 :
                 fixMessage.senderCompId = value;

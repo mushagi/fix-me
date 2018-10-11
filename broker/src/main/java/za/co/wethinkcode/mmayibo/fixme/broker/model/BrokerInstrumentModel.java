@@ -1,15 +1,15 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.model;
 
 import lombok.Getter;
-import za.co.wethinkcode.mmayibo.fixme.core.model.Instrument;
+import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
 
 import java.util.ArrayList;
 
-public class BrokerInstrument extends Instrument {
+public class BrokerInstrumentModel extends InstrumentModel {
     @Getter
     private ArrayList<Double> pricesHistory = new ArrayList<>();
 
-    public BrokerInstrument(String name, double price) {
+    public BrokerInstrumentModel(String name, double price) {
         super(name, price);
         addToHistory(price);
     }

@@ -7,32 +7,32 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixDecoder;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
-import za.co.wethinkcode.mmayibo.fixme.core.model.Instrument;
-import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
+import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
 import za.co.wethinkcode.mmayibo.fixme.market.messagehandlers.FixMessageHandlerResponse;
 import za.co.wethinkcode.mmayibo.fixme.market.messagehandlers.MarketMessageHandlerTool;
-import za.co.wethinkcode.mmayibo.fixme.market.model.MarketInstrument;
+import za.co.wethinkcode.mmayibo.fixme.market.model.MarketInstrumentModel;
 
 import java.util.Collection;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Market extends Client {
-    public MarketData marketData = new MarketData();
+public class MarketClient extends Client {
+    public MarketModel marketModel = new MarketModel();
     Timer timer = new Timer("Timer");
     Random random = new Random();
 
-    Market(String host, int port) {
+    MarketClient(String host, int port) {
         super(host, port);
 
 
 
-        marketData.setName("Name");
-        marketData.getInstruments().put("bdfgd", new MarketInstrument("bdfgd", 1));
-        marketData.getInstruments().put("dsaddass", new MarketInstrument("dsaddass", 2));
-        marketData.getInstruments().put("sdassadsad", new MarketInstrument("sdassadsad", 3));
-        marketData.getInstruments().put("dasdasddsaasd", new MarketInstrument("dasdasddsaasd", 4));
+        marketModel.setName("Name");
+        marketModel.getInstruments().put("bdfgd", new MarketInstrumentModel("bdfgd", 1));
+        marketModel.getInstruments().put("dsaddass", new MarketInstrumentModel("dsaddass", 2));
+        marketModel.getInstruments().put("sdassadsad", new MarketInstrumentModel("sdassadsad", 3));
+        marketModel.getInstruments().put("dasdasddsaasd", new MarketInstrumentModel("dasdasddsaasd", 4));
 
     }
 
@@ -51,11 +51,11 @@ public class Market extends Client {
     };
 
     private void generatePriceForInstruments() {
-        for (Instrument instrument: marketData.getInstruments().values())
-            generateRandomPrice((MarketInstrument) instrument);
+        for (InstrumentModel instrumentModel : marketModel.getInstruments().values())
+            generateRandomPrice((MarketInstrumentModel) instrumentModel);
     }
 
-    private void generateRandomPrice(MarketInstrument instrument) {
+    private void generateRandomPrice(MarketInstrumentModel instrument) {
         double randomValue = instrument.getMinPrice() + (instrument.getMaxPrice() - instrument.getMinPrice() ) * random.nextDouble();
         instrument.setPrice(randomValue);
     }
@@ -63,7 +63,7 @@ public class Market extends Client {
 
     @Override
     public void messageRead(ChannelHandlerContext ctx, String message) {
-        System.out.println("Market read fix message " + message);
+        System.out.println("MarketClient read fix message " + message);
 
         FixMessage fixMessage = FixDecoder.decode(message);
 
@@ -80,13 +80,13 @@ public class Market extends Client {
     }
 
     public void sendMarketDataSnapShot(String senderCompId, Channel channel) {
-        String symbol = encodeInstruments(marketData.getInstruments().values());
+        String symbol = encodeInstruments(marketModel.getInstruments().values());
 
         FixMessage responseMessage = new FixMessageBuilder()
                 .newFixMessage()
                 .withMessageType("W")
-                .withMDName(marketData.getName())
-                .withMDReqID(marketData.getId())
+                .withMDName(marketModel.getName())
+                .withMDReqID(marketModel.getId())
                 .withSenderCompId(lastChannel.id().toString())
                 .withTargetCompId(senderCompId)
                 .withSymbol(symbol)
@@ -97,11 +97,11 @@ public class Market extends Client {
         channel.writeAndFlush(fixString + "\r\n");
     }
 
-    private String encodeInstruments(Collection<Instrument> instruments) {
+    private String encodeInstruments(Collection<InstrumentModel> instrumentModels) {
         StringBuilder builder = new StringBuilder();
 
-        for (Instrument instrument: instruments) {
-            builder.append(instrument.getName() + "#" + instrument.getPrice() + "%");
+        for (InstrumentModel instrumentModel : instrumentModels) {
+            builder.append(instrumentModel.getName() + "#" + instrumentModel.getPrice() + "%");
         }
         return builder.toString();
     }

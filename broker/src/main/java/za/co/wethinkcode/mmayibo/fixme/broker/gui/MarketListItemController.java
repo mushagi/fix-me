@@ -5,18 +5,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
-import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
 
 import java.io.IOException;
 
-public class MarketListItemController extends ListCell<MarketData> {
+public class MarketListItemController extends ListCell<MarketModel> {
 
     private final MainWindowController mainWindowController;
 
     @FXML
     private Label name;
 
-    private MarketData markertData;
+    private MarketModel markertData;
     private VBox box;
 
     MarketListItemController(MainWindowController mainWindowController) {
@@ -45,7 +45,7 @@ public class MarketListItemController extends ListCell<MarketData> {
     }
 
     @Override
-    protected void updateItem(MarketData item, boolean empty) {
+    protected void updateItem(MarketModel item, boolean empty) {
         super.updateItem(item, empty);
 
         if(empty || item == null) {

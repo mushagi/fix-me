@@ -12,24 +12,29 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixDecoder;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
-import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
-import za.co.wethinkcode.mmayibo.fixme.core.model.OwnedInstrument;
+import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
+import za.co.wethinkcode.mmayibo.fixme.core.model.OwnedInstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.core.model.Wallet;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class Broker extends Client {
 
-    private Wallet wallet = new Wallet();
+    public String id;
+    private Wallet wallet;
     private UserClientData userClientData;
+    private Logger logger = Logger.getLogger(getClass().getName());
 
 
     private ArrayList<BrokerUI> userInterfaces = new ArrayList<>();
-    public ObservableList<MarketData> markets = FXCollections.observableArrayList();
+    public ObservableList<MarketModel> markets = FXCollections.observableArrayList();
 
     public Broker(String host, int port, UserClientData userClientData) {
         super(host, port);
         this.userClientData = userClientData;
+        this.wallet = userClientData.getWallet();
     }
 
     @Override
@@ -58,13 +63,13 @@ public class Broker extends Client {
         lastChannel.writeAndFlush(fixMessageString +"\r\n");
     }
 
-    public void updateMarkets(MarketData marketData) {
-        if (!markets.contains(marketData))
-            markets.add(marketData);
+    public void updateMarkets(MarketModel marketModel) {
+        if (!markets.contains(marketModel))
+            markets.add(marketModel);
         else {
-            for (MarketData localMarketData: markets) {
-                if (localMarketData.equals(marketData)) {
-                    localMarketData.updateInstruments(marketData.getInstruments());
+            for (MarketModel localMarketModel : markets) {
+                if (localMarketModel.equals(marketModel)) {
+                    localMarketModel.updateInstruments(marketModel.getInstruments());
                     break;
                 }
             }
@@ -78,10 +83,34 @@ public class Broker extends Client {
             userInterfaces.add(userInterface);
     }
 
-    public void updateWallet(double availableAmount, ArrayList<OwnedInstrument> ownedInstruments) {
+    public void updateWallet(double availableAmount, ArrayList<OwnedInstrumentModel> ownedInstrumentModels) {
         wallet.setAvailableFunds(availableAmount);
-        wallet.updateInstruments(ownedInstruments);
+        wallet.updateInstruments(ownedInstrumentModels);
         for (BrokerUI userInterface: userInterfaces)
             userInterface.updateWallet(wallet);
+    }
+
+    public void newOrderSingle(String marketId, InstrumentModel instrumentModel){
+        FixMessage requestFixMessage = new FixMessageBuilder()
+                .newFixMessage()
+                .withMessageType("D")
+                .withClOrderId(generateClientOrder(marketId, instrumentModel.getName()))
+                .withPrice("11")
+                .withSide("Buy")
+                .withSenderCompId(id)
+                .withTargetCompId(marketId)
+                .withSymbol(instrumentModel.toSymbol())
+                .getFixMessage();
+        String fixMessage = FixEncode.encode(requestFixMessage);
+        logger.fine("New Order Single " + fixMessage);
+        sendMessage(fixMessage);
+    }
+
+    private String generateClientOrder(String marketId, String name) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(System.currentTimeMillis()).append(marketId).append(name);
+
+        return builder.toString();
     }
 }

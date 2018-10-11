@@ -3,8 +3,7 @@ package za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
-import za.co.wethinkcode.mmayibo.fixme.core.model.Instrument;
-import za.co.wethinkcode.mmayibo.fixme.core.model.OwnedInstrument;
+import za.co.wethinkcode.mmayibo.fixme.core.model.OwnedInstrumentModel;
 
 import java.util.ArrayList;
 
@@ -20,13 +19,13 @@ public class ProcessWalletResponseHandler implements FixMessageHandlerResponse{
 
         double availableAmount = Double.parseDouble(walletString[0]);
 
-        ArrayList<OwnedInstrument> ownedInstruments = getAvailableAmount(walletString[1]);
+        ArrayList<OwnedInstrumentModel> ownedInstrumentModels = getAvailableAmount(walletString[1]);
 
-        broker.updateWallet(availableAmount, ownedInstruments);
+        broker.updateWallet(availableAmount, ownedInstrumentModels);
     }
 
-    private ArrayList<OwnedInstrument> getAvailableAmount(String walletResponse) {
-        ArrayList<OwnedInstrument> ownedInstruments = new ArrayList<>();
+    private ArrayList<OwnedInstrumentModel> getAvailableAmount(String walletResponse) {
+        ArrayList<OwnedInstrumentModel> ownedInstrumentModels = new ArrayList<>();
         String[] instruments = walletResponse.split("#");
 
         for (String instrument : instruments) {
@@ -34,8 +33,8 @@ public class ProcessWalletResponseHandler implements FixMessageHandlerResponse{
 
             String name = instrumentValues[0];
             int quantity = Integer.parseInt(instrumentValues[1]);
-            ownedInstruments.add(new OwnedInstrument(name, quantity));
+            ownedInstrumentModels.add(new OwnedInstrumentModel(name, quantity));
         }
-        return ownedInstruments;
+        return ownedInstrumentModels;
     }
 }

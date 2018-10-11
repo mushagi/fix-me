@@ -11,7 +11,7 @@ public class FixEncode {
     }
 
     private static void addLine(StringBuilder fixString, FixMessage fixMessage) {
-        HashMap<Integer, String> tagsValuesMap = fixMessage.getTagsValuesMap();
+        HashMap<Integer, Object> tagsValuesMap = fixMessage.getTagsValuesMap();
         for (Integer tag: tagsValuesMap.keySet())
             fixString.append(tag + "="+ tagsValuesMap.get(tag) + "|");
     }

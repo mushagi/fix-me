@@ -6,7 +6,7 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
-import za.co.wethinkcode.mmayibo.fixme.core.model.OwnedInstrument;
+import za.co.wethinkcode.mmayibo.fixme.core.model.OwnedInstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.core.model.Wallet;
 
 import java.util.ArrayList;
@@ -21,9 +21,9 @@ public class WalletRequestHandler implements FixMessageHandler {
     public void handleMessage(FixMessage fixMessage, Channel channel, ChannelGroupHashed responseChannels) {
         Wallet wallet = new Wallet();
         wallet.setAvailableFunds(1000);
-        ArrayList<OwnedInstrument> ownedInstruments = new ArrayList<>();
-        ownedInstruments.add(new OwnedInstrument("nane", 80));
-        wallet.setOwnedInstruments(ownedInstruments);
+        ArrayList<OwnedInstrumentModel> ownedInstrumentModels = new ArrayList<>();
+        ownedInstrumentModels.add(new OwnedInstrumentModel("nane", 80));
+        wallet.setOwnedInstrumentModels(ownedInstrumentModels);
         String walletString = getWalletString(wallet);
 
         FixMessage responseFixMessage = new FixMessageBuilder()
@@ -38,7 +38,7 @@ public class WalletRequestHandler implements FixMessageHandler {
     private String getWalletString(Wallet wallet) {
         StringBuilder walletString = new StringBuilder();
         walletString.append(wallet.getAvailableFunds()).append("%");
-        for (OwnedInstrument instrument: wallet.getOwnedInstruments())
+        for (OwnedInstrumentModel instrument: wallet.getOwnedInstrumentModels())
             walletString.append(instrument.getName()).append("&").append(instrument.getQuantity()).append("#");
         return walletString.toString();
     }

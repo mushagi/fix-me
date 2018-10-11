@@ -9,7 +9,7 @@ import static za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixTags.*;
 public class FixMessageBuilder {
     @Getter
     private  FixMessage fixMessage;
-    private  HashMap<Integer, String> tagsValuesMap;
+    private  HashMap<Integer, Object> tagsValuesMap;
 
     public FixMessageBuilder existingMessage(FixMessage fixMessage) {
         this.fixMessage = fixMessage;
@@ -55,7 +55,7 @@ public class FixMessageBuilder {
         tagsValuesMap.put(SENDING_TIME.tag, value);
         return  this;
     }
-    public FixMessageBuilder withOrderQuantity(String value) {
+    public FixMessageBuilder withOrderQuantity(int value) {
         fixMessage.orderQuantity = value;
         tagsValuesMap.put(ORDER_QUANTITY.tag, value);
         return  this;
@@ -76,7 +76,7 @@ public class FixMessageBuilder {
         tagsValuesMap.put(CHECK_SUM.tag, value);
         return  this;
     }
-    public FixMessageBuilder withPrice(String value) {
+    public FixMessageBuilder withPrice(double value) {
         fixMessage.price = value;
         tagsValuesMap.put(PRICE.tag, value);
         return  this;

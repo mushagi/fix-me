@@ -13,9 +13,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
-import za.co.wethinkcode.mmayibo.fixme.broker.model.BrokerInstrument;
-import za.co.wethinkcode.mmayibo.fixme.core.model.Instrument;
-import za.co.wethinkcode.mmayibo.fixme.core.model.MarketData;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.BrokerInstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
 import za.co.wethinkcode.mmayibo.fixme.core.model.Wallet;
 
 import java.net.URL;
@@ -38,12 +38,13 @@ public class MainWindowController implements Initializable, BrokerUI{
     @FXML
     private AreaChart<Number, Number> marketLineChart;
 
-    private ObservableList<MarketData> markets;
+    private ObservableList<MarketModel> markets;
 
-    private MarketData selectedMarket;
-    private BrokerInstrument selectedInstrument;
+    private MarketModel selectedMarket;
+    private BrokerInstrumentModel selectedInstrument;
 
     private XYChart.Series<Number, Number> marketDataSeries = new XYChart.Series<>();
+    private Broker broker;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -53,16 +54,16 @@ public class MainWindowController implements Initializable, BrokerUI{
         instrumentDropDown.setItems(observableInstruments);
 
         instrumentDropDown.valueProperty().addListener((obs, oldItem, newItem) -> {
-            if (newItem instanceof Instrument) {
+            if (newItem instanceof InstrumentModel) {
 
-                selectedInstrument = (BrokerInstrument) newItem;
+                selectedInstrument = (BrokerInstrumentModel) newItem;
 
                 resetLineGraphWithInstrumentHistory();
                 updateUI();
             }
         });
 
-        marketListView.setCellFactory((Callback<ListView<MarketData>, MarketListItemController>) listView -> new MarketListItemController(MainWindowController.this));
+        marketListView.setCellFactory((Callback<ListView<MarketModel>, MarketListItemController>) listView -> new MarketListItemController(MainWindowController.this));
     }
 
     private void resetLineGraphWithInstrumentHistory() {
@@ -78,13 +79,15 @@ public class MainWindowController implements Initializable, BrokerUI{
 
 
     @FXML
-    void buyAction(ActionEvent event) {
-
+    void buyAction(ActionEvent event){
+        if (selectedInstrument != null) {
+            broker.newOrderSingle(selectedMarket.getId(), selectedInstrument);
+        }
     }
     void updateSelectedMarket() {
 
         Platform.runLater(() -> {
-             selectedMarket = (MarketData) marketListView.getSelectionModel().getSelectedItem();
+             selectedMarket = (MarketModel) marketListView.getSelectionModel().getSelectedItem();
 
             if (selectedMarket != null && selectedMarket.getInstruments() != null) {
                 observableInstruments.clear();
@@ -97,6 +100,7 @@ public class MainWindowController implements Initializable, BrokerUI{
 
     @Override
     public void registerBroker(Broker broker) {
+        this.broker = broker;
         markets = broker.markets;
         marketListView.setItems(markets);
         broker.register(this);
