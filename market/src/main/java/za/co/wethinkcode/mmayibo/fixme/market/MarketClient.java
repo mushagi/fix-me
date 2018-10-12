@@ -86,7 +86,7 @@ public class MarketClient extends Client {
                 .newFixMessage()
                 .withMessageType("W")
                 .withMDName(marketModel.getName())
-                .withMDReqID(marketModel.getId())
+                .withMDReqID(marketModel.getUserName())
                 .withSenderCompId(lastChannel.id().toString())
                 .withTargetCompId(senderCompId)
                 .withSymbol(symbol)

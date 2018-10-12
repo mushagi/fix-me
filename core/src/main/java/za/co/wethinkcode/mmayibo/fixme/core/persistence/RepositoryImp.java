@@ -9,7 +9,7 @@ public class RepositoryImp implements IRepository {
     private final Session session = HibernateUtil.getInstance().getSession();
 
     @Override
-    public <T> Collection<T> getAll(int id)  {
+    public <T> Collection<T> getAll()  {
         final Class<T> type = null;
         Collection<T> entities = null;
         try {
@@ -77,6 +77,14 @@ public class RepositoryImp implements IRepository {
             e.printStackTrace();
             return false;
         }
+        return true;
+    }
+
+    @Override
+    public <T> boolean createAll(Collection<T> entities) {
+        for (T entity: entities)
+            if (!create(entity))
+                return false;
         return true;
     }
 }

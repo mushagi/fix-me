@@ -20,7 +20,7 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandlerRespo
     public void handleMessage(FixMessage fixMessage, Broker broker) {
         MarketModel marketModel = new MarketModel();
 
-        marketModel.setId(fixMessage.getMDReqID());
+        marketModel.setUserName(fixMessage.getMDReqID());
 
         HashMap<String, InstrumentModel> instruments = getInstruments(fixMessage.getSymbol());
         marketModel.setInstruments(instruments);

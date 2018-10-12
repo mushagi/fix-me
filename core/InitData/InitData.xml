@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf8" ?>
+<InitData>
+    <Markets>
+        <Market>
+            <Name>Fruit Basket</Name>
+            <Username>fbasket</Username>
+            <Instruments>
+                <Instrument>
+                    <Id>zimbananas</Id>
+                </Instrument>
+                <Instrument>
+                    <Id>chinaapples</Id>
+                </Instrument>
+                <Instrument>
+                    <Id>limpavocado</Id>
+                </Instrument>
+            </Instruments>
+        </Market>
+    </Markets>
+    <Instruments>
+        <Instrument>
+            <Id>zimbananas</Id>
+            <Name>Zimbabwe Bananas</Name>
+        </Instrument>
+        <Instrument>
+            <Id>chinaapples</Id>
+            <Name>China Bananas</Name>
+        </Instrument>
+        <Instrument>
+            <Id>limpavocado</Id>
+            <Name>Limpopo Bananas</Name>
+        </Instrument>
+    </Instruments>
+</InitData>
+

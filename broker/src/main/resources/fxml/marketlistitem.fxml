@@ -7,7 +7,7 @@
    <graphic>
       <VBox>
          <children>
-            <Label fx:id="name" />
+            <Label fx:userName="name" />
          </children>
       </VBox>
    </graphic>

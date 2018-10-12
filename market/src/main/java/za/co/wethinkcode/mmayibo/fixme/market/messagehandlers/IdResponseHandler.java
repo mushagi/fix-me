@@ -13,8 +13,8 @@ public class IdResponseHandler implements FixMessageHandlerResponse {
 
     @Override
     public void handleMessage(ChannelHandlerContext ctx, FixMessage fixMessage, MarketClient marketClient) {
-        marketClient.marketModel.setId(fixMessage.getMDReqID());
-        System.out.println("MarketClient Id : " + marketClient.marketModel.getId());
+        marketClient.marketModel.setUserName(fixMessage.getMDReqID());
+        System.out.println("MarketClient Id : " + marketClient.marketModel.getUserName());
         marketClient.startTimer();
     }
 }

@@ -10,15 +10,15 @@ import java.util.Objects;
 public class MarketModel {
     private HashMap<String, InstrumentModel> instruments;
     private String name;
-    private String id;
+    private String userName;
 
     public MarketModel() {
         instruments = new HashMap<>();
     }
 
-    public MarketModel(String name, String id) {
+    public MarketModel(String name, String userName) {
         this.name = name;
-        this.id = id;
+        this.userName = userName;
     }
 
     @Override
@@ -26,12 +26,12 @@ public class MarketModel {
         if (this == o) return true;
         if (!(o instanceof MarketModel)) return false;
         MarketModel that = (MarketModel) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(userName, that.userName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(userName);
     }
 
     public void updateInstruments(HashMap<String, InstrumentModel> instruments) {

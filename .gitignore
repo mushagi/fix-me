@@ -13,7 +13,7 @@ tramp
 .\#*
 
 # Org-mode
-.org-id-locations
+.org-userName-locations
 *_archive
 
 # flymake-mode

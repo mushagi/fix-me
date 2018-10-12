@@ -81,7 +81,7 @@ public class MainWindowController implements Initializable, BrokerUI{
     @FXML
     void buyAction(ActionEvent event){
         if (selectedInstrument != null) {
-            broker.newOrderSingle(selectedMarket.getId(), selectedInstrument);
+            broker.newOrderSingle(selectedMarket.getUserName(), selectedInstrument);
         }
     }
     void updateSelectedMarket() {

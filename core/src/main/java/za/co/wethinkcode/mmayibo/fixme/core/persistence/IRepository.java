@@ -1,9 +1,11 @@
 package za.co.wethinkcode.mmayibo.fixme.core.persistence;
 
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
+
 import java.util.Collection;
 
 public interface IRepository {
-    <T> Collection<T> getAll(int id);
+    <T> Collection<T> getAll();
 
     <T> T getByID(String id);
 
@@ -12,4 +14,6 @@ public interface IRepository {
     <T> boolean create(T entity);
 
     <T> boolean delete(T entity);
+
+    <T> boolean createAll(Collection<T> markets);
 }
