@@ -3,6 +3,8 @@ package za.co.wethinkcode.mmayibo.fixme.core.persistence;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.Collection;
 
 public class RepositoryImp implements IRepository {
@@ -14,7 +16,9 @@ public class RepositoryImp implements IRepository {
         Collection<T> entities = null;
         try {
             Transaction transaction = session.beginTransaction();
-            entities = session.createCriteria(type).list();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<T> query = builder.createQuery(type);
+
             transaction.commit();
         }
         catch (Exception e) {

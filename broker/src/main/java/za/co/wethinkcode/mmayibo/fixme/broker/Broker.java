@@ -95,7 +95,7 @@ public class Broker extends Client {
                 .newFixMessage()
                 .withMessageType("D")
                 .withClOrderId(generateClientOrder(marketId, instrumentModel.getName()))
-                .withPrice("11")
+                .withPrice(instrumentModel.getPrice())
                 .withSide("Buy")
                 .withSenderCompId(id)
                 .withTargetCompId(marketId)

@@ -11,6 +11,7 @@
         <property name="connection.url">jdbc:sqlite:fixme_data.db</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
 
+        <mapping class="za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel"/>
         <mapping class="za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel"/>
 
     </session-factory>

@@ -8,6 +8,7 @@ public class Main {
         MarketRouter marketRouter = new MarketRouter("localhost", 5000, State.marketChannels, State.brokerChannels );
         BrokerRouter brokerRouter = new BrokerRouter("localhost", 5001, State.brokerChannels, State.marketChannels);
 
+
         Thread setUpDatabaseThread = new Thread(new SetUpDatabase());
         Thread marketThread = new Thread(marketRouter);
         Thread brokerThread = new Thread(brokerRouter);

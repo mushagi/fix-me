@@ -3,11 +3,18 @@ package za.co.wethinkcode.mmayibo.fixme.core.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Objects;
 
+@Entity
 @Getter @Setter
 public class MarketModel {
+    @Id
+    @Column(updatable = false, nullable = false, length = 100)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     private HashMap<String, InstrumentModel> instruments;
     private String name;
     private String userName;
@@ -42,4 +49,5 @@ public class MarketModel {
             localInstrumentModel.setPrice(instrumentModel.getPrice());
         }
     }
+
 }
