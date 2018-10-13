@@ -7,15 +7,15 @@ import org.hibernate.cfg.Configuration;
 import lombok.Getter;
 
 public class HibernateUtil {
-    private static final HibernateUtil ourInstance = new HibernateUtil();
     @Getter
-    private final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+    private final SessionFactory sessionFactory;
 
     @Getter
-    private Session session = sessionFactory.openSession();
+    private Session session;
 
-    public static HibernateUtil getInstance() {
-        return ourInstance;
+    public HibernateUtil(String resource) {
+        sessionFactory = new Configuration().configure(resource).buildSessionFactory();;
+        session = sessionFactory.openSession();
     }
 
     private void close() {

@@ -9,12 +9,11 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
 import za.co.wethinkcode.mmayibo.fixme.core.model.BrokerUser;
 import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
-import za.co.wethinkcode.mmayibo.fixme.market.Global;
 import za.co.wethinkcode.mmayibo.fixme.market.MarketClient;
 
 public class NewOrderRequestHandler implements FixMessageHandlerResponse {
     Channel channel;
-    private IRepository repository = Global.repository;
+    private IRepository repository;
 
     @Override
     public void next(FixMessageHandler next) {
@@ -53,8 +52,8 @@ public class NewOrderRequestHandler implements FixMessageHandlerResponse {
     }
 
     private boolean purchase(FixMessage fixMessage) {
-        InstrumentModel instrument = repository.<InstrumentModel>getByID(fixMessage.getSymbol());
-        BrokerUser user =  repository.<BrokerUser>getByID(fixMessage.getClientId());
+        InstrumentModel instrument = repository.getByID(fixMessage.getSymbol(), InstrumentModel.class);
+        BrokerUser user = null; //=  repository.<BrokerUser>getByID(fixMessage.getClientId(), );
 
         if (instrument == null || user == null)
             return false;
@@ -68,11 +67,10 @@ public class NewOrderRequestHandler implements FixMessageHandlerResponse {
         user.setAccountBalance(user.getAccountBalance() - fixMessage.getPrice());
         instrument.setQuantity(instrument.getQuantity() - fixMessage.getOrderQuantity());
 
-        if (repository.update(instrument)  == null) {
-
+        if (!repository.update(instrument)){
+            return false;
         }
-        if (repository.update(user) == null){
-
+        if (!repository.update(user)){
             return false;
         }
 

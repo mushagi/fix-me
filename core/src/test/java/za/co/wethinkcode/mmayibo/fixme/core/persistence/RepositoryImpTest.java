@@ -1,16 +1,18 @@
 package za.co.wethinkcode.mmayibo.fixme.core.persistence;
 
 import org.junit.jupiter.api.Test;
+import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
+
+import java.util.Collection;
 
 class RepositoryImpTest {
 
+
     @Test
-    void getAll() {
-        SetUpDatabase setUpDatabase = new SetUpDatabase();
-        setUpDatabase.run();
+    void delete() {
     }
 
     @Test
-    void create() {
+    void createAll() {
     }
 }

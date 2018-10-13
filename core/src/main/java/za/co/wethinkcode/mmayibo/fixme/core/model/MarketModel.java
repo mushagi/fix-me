@@ -2,25 +2,38 @@ package za.co.wethinkcode.mmayibo.fixme.core.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
 
 @Entity
+
+@XmlRootElement(name = "Instrument")
+@XmlAccessorType(XmlAccessType.FIELD)
+
 @Getter @Setter
 public class MarketModel {
-    @Id
-    @Column(updatable = false, nullable = false, length = 100)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
-    private HashMap<String, InstrumentModel> instruments;
-    private String name;
+    @Id
+    @XmlElement(name =  "Username")
     private String userName;
 
+    @Transient
+    @XmlElementWrapper(name="Instruments")
+    @XmlElement(name="InstrumentId")
+    private ArrayList<String> instrumentsIds;
+
+    @XmlElement(name =  "Name")
+    private String name;
+
+
     public MarketModel() {
-        instruments = new HashMap<>();
+        instrumentsIds = new ArrayList<>();
     }
 
     public MarketModel(String name, String userName) {
@@ -41,13 +54,9 @@ public class MarketModel {
         return Objects.hash(userName);
     }
 
-    public void updateInstruments(HashMap<String, InstrumentModel> instruments) {
-        for (String key : this.instruments.keySet()) {
-            InstrumentModel localInstrumentModel = this.instruments.get(key);
-            InstrumentModel instrumentModel = instruments.get(key);
-
-            localInstrumentModel.setPrice(instrumentModel.getPrice());
-        }
+    public void updateInstruments(ArrayList<String> instrumentsIds) {
+        this.instrumentsIds.clear();
+        this.instrumentsIds.addAll(instrumentsIds);
     }
 
 }

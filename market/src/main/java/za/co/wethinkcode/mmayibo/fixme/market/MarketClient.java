@@ -9,31 +9,34 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
 import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
+import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
 import za.co.wethinkcode.mmayibo.fixme.market.messagehandlers.FixMessageHandlerResponse;
 import za.co.wethinkcode.mmayibo.fixme.market.messagehandlers.MarketMessageHandlerTool;
 import za.co.wethinkcode.mmayibo.fixme.market.model.MarketInstrumentModel;
 
-import java.util.Collection;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class MarketClient extends Client {
-    public MarketModel marketModel = new MarketModel();
-    Timer timer = new Timer("Timer");
-    Random random = new Random();
+    public MarketModel marketModel;
+    private IRepository repository;
+    private HashMap<String, InstrumentModel> instruments;
 
-    MarketClient(String host, int port) {
+    private Timer timer = new Timer("Timer");
+    private Random random = new Random();
+
+    MarketClient(String host, int
+            port, MarketModel marketModel, IRepository repository) {
         super(host, port);
+        this.marketModel = marketModel;
+        this.repository = repository;
+        setInstruments();
+    }
 
-
-
-        marketModel.setName("Name");
-        marketModel.getInstruments().put("bdfgd", new MarketInstrumentModel("bdfgd", 1));
-        marketModel.getInstruments().put("dsaddass", new MarketInstrumentModel("dsaddass", 2));
-        marketModel.getInstruments().put("sdassadsad", new MarketInstrumentModel("sdassadsad", 3));
-        marketModel.getInstruments().put("dasdasddsaasd", new MarketInstrumentModel("dasdasddsaasd", 4));
-
+    private void setInstruments() {
+        instruments = new HashMap<>();
+        Collection<InstrumentModel> instrumentModels = repository.getMultipleByIds(InstrumentModel.class, marketModel.getInstrumentsIds());
+        for (InstrumentModel instrument: instrumentModels)
+            instruments.put(instrument.getId(), instrument);
     }
 
     public void startTimer()
@@ -51,7 +54,7 @@ public class MarketClient extends Client {
     };
 
     private void generatePriceForInstruments() {
-        for (InstrumentModel instrumentModel : marketModel.getInstruments().values())
+        for (InstrumentModel instrumentModel : instruments.values())
             generateRandomPrice((MarketInstrumentModel) instrumentModel);
     }
 
@@ -71,7 +74,6 @@ public class MarketClient extends Client {
         assert messageHandler != null;
 
         messageHandler.handleMessage(ctx, fixMessage, this);
-
     }
 
     @Override
@@ -80,7 +82,7 @@ public class MarketClient extends Client {
     }
 
     public void sendMarketDataSnapShot(String senderCompId, Channel channel) {
-        String symbol = encodeInstruments(marketModel.getInstruments().values());
+        String symbol = encodeInstruments();
 
         FixMessage responseMessage = new FixMessageBuilder()
                 .newFixMessage()
@@ -97,12 +99,12 @@ public class MarketClient extends Client {
         channel.writeAndFlush(fixString + "\r\n");
     }
 
-    private String encodeInstruments(Collection<InstrumentModel> instrumentModels) {
+    private String encodeInstruments() {
         StringBuilder builder = new StringBuilder();
 
-        for (InstrumentModel instrumentModel : instrumentModels) {
+        for (InstrumentModel instrumentModel : instruments.values())
             builder.append(instrumentModel.getName() + "#" + instrumentModel.getPrice() + "%");
-        }
+
         return builder.toString();
     }
 

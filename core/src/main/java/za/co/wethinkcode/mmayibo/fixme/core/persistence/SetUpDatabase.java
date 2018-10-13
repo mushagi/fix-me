@@ -2,53 +2,49 @@ package za.co.wethinkcode.mmayibo.fixme.core.persistence;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import za.co.wethinkcode.mmayibo.fixme.core.model.InitData;
+import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 import java.io.*;
 
 public class SetUpDatabase implements Runnable {
-    IRepository repository = new RepositoryImp();
-    InitData initData = loadInitDataFromXML();
-    private InputStream is;
+    private IRepository repository;
+    private InitData initData;
+
+    public SetUpDatabase(IRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public void run() {
-        this.initData = loadInitDataFromXML();
+        loadInitDataFromXML();
         setUpDatabase();
     }
 
-    private InitData loadInitDataFromXML() {
+    private void loadInitDataFromXML() {
         try {
             File file = new File(getClass().getResource("/InitData.xml").getFile());
-            XmlMapper xmlMapper = new XmlMapper();
-            String xml = inputStreamToString(new FileInputStream(file));
-            InitData initData = xmlMapper.readValue(xml, InitData.class);
-            return initData;
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(InitData.class);
+
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+            initData = (InitData) unmarshaller.unmarshal(file);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     private void setUpDatabase() {
-  //      if (repository.<InstrumentModel>getAll() == null)
+        if (repository.getAll(InstrumentModel.class).isEmpty())
             repository.createAll(initData.instruments);
-
-   //     if (repository.<MarketModel>getAll() == null)
-            repository.createAll(initData.markets);
+        if (repository.getAll(MarketModel.class).isEmpty())
+           repository.createAll(initData.markets);
     }
 
-    public  String inputStreamToString(InputStream is) throws IOException {
-        this.is = is;
-        StringBuilder sb = new StringBuilder();
-        String line;
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
-        }
-        br.close();
-        return sb.toString();
-    }
 
 
 }
