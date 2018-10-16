@@ -58,8 +58,8 @@ public class MarketClient extends Client {
 
     @Override
     public void messageRead(ChannelHandlerContext ctx, FixMessage message) throws InterruptedException {
-        FixMessageHandlerResponse messageHandler = MarketMessageHandlerTool.getMessageHandler(message, repository);
-        messageHandler.handleMessage(ctx, message, this);
+        FixMessageHandlerResponse messageHandler = MarketMessageHandlerTool.getMessageHandler(message, this);
+        messageHandler.handleMessage(message);
     }
 
     @Override

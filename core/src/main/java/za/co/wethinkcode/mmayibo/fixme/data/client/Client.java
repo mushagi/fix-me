@@ -21,7 +21,7 @@ public abstract class Client implements Runnable {
 
     private final String HOST;
     private final int PORT;
-    protected final IRepository repository;
+    public final IRepository repository;
     boolean isActive;
     public String networkId;
     ResponseFuture responseFuture = new ResponseFuture();

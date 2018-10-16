@@ -2,6 +2,7 @@ package za.co.wethinkcode.mmayibo.fixme.market.handlers;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import za.co.wethinkcode.mmayibo.fixme.data.client.Client;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
@@ -12,11 +13,12 @@ import za.co.wethinkcode.mmayibo.fixme.data.persistence.IRepository;
 import za.co.wethinkcode.mmayibo.fixme.market.MarketClient;
 
 public class NewOrderRequestHandler implements FixMessageHandlerResponse {
-    private Channel channel;
+    private final MarketClient client;
     private IRepository repository;
 
-    NewOrderRequestHandler(IRepository repository) {
-        this.repository = repository;
+    NewOrderRequestHandler(MarketClient client) {
+        this.repository = client.repository;
+        this.client = client;
     }
 
     @Override
@@ -25,8 +27,7 @@ public class NewOrderRequestHandler implements FixMessageHandlerResponse {
     }
 
     @Override
-    public void handleMessage(ChannelHandlerContext ctx, FixMessage fixMessage, MarketClient marketClient) {
-        this.channel = ctx.channel();
+    public void handleMessage(FixMessage fixMessage) {
         new Thread(() -> processBuyRequest(fixMessage)).start();
     }
 
@@ -38,8 +39,17 @@ public class NewOrderRequestHandler implements FixMessageHandlerResponse {
             sendRejectResponse(message);
     }
 
-    private void sendRejectResponse(FixMessage fixMessage) {
-        //TODO reject message
+    private void sendRejectResponse(FixMessage message) {
+        FixMessage rejectMessage = new FixMessageBuilder()
+                .newFixMessage()
+                .withMessageType("")
+                .withMessage("")
+                .withSymbol(message.getSymbol())
+                .withTargetCompId(message.getSenderCompId())
+                .withSenderCompId(message.getTargetCompId())
+                .withMessageId(message.getMessageId())
+                .getFixMessage();
+        client.sendResponse(rejectMessage);
     }
 
     private void sendBuySuccessResponse(FixMessage fixMessage) {
@@ -48,11 +58,9 @@ public class NewOrderRequestHandler implements FixMessageHandlerResponse {
                 .withMessageType("")
                 .withSymbol(fixMessage.getSymbol())
                 .withTargetCompId(fixMessage.getSenderCompId())
-                .withSenderCompId(fixMessage.getSenderCompId())
+                .withSenderCompId(fixMessage.getTargetCompId())
                 .getFixMessage();
-
-        String responseFixString = FixEncode.encode(responseFixMessage);
-        channel.writeAndFlush(responseFixString + "\r\n");
+        client.sendResponse(responseFixMessage);
     }
 
     private boolean purchase(FixMessage fixMessage) {

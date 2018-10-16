@@ -9,6 +9,11 @@ import java.util.logging.Logger;
 
 public class AuthResponseHandler implements FixMessageHandlerResponse{
     private final Logger logger = Logger.getLogger(getClass().getName());
+    private final MarketClient client;
+
+    public AuthResponseHandler(MarketClient client) {
+        this.client = client;
+    }
 
     @Override
     public void next(FixMessageHandler next) {
@@ -16,11 +21,17 @@ public class AuthResponseHandler implements FixMessageHandlerResponse{
     }
 
     @Override
-    public void handleMessage(ChannelHandlerContext ctx, FixMessage fixMessage, MarketClient marketClient) throws InterruptedException {
+    public void handleMessage(FixMessage fixMessage) {
         logger.info("Auth response status :" + fixMessage.getAuthStatus());
-        if (fixMessage.getAuthStatus().equals("success"))
-            marketClient.loggedInSuccessfully();
+        if (fixMessage.getAuthStatus().equals("success")) {
+            try {
+                client.loggedInSuccessfully();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                client.failedToLogin("could not login");
+            }
+        }
         else
-            marketClient.failedToLogin("Error :" + fixMessage.getMessage());
+            client.failedToLogin("Error :" + fixMessage.getMessage());
     }
 }

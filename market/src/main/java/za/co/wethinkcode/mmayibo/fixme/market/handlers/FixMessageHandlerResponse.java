@@ -7,5 +7,5 @@ import za.co.wethinkcode.mmayibo.fixme.market.MarketClient;
 
 public interface FixMessageHandlerResponse {
     void next(FixMessageHandler next);
-     void handleMessage(ChannelHandlerContext ctx, FixMessage fixMessage, MarketClient marketClient) throws InterruptedException;
+     void handleMessage(FixMessage fixMessage);
 }
