@@ -1,11 +1,9 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers;
 
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
-import za.co.wethinkcode.mmayibo.fixme.core.model.OwnedInstrumentModel;
-
-import java.util.ArrayList;
+import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.data.model.OwnedInstrumentModel;
 
 public class ProcessWalletResponseHandler implements FixMessageHandlerResponse{
     @Override
@@ -15,26 +13,11 @@ public class ProcessWalletResponseHandler implements FixMessageHandlerResponse{
 
     @Override
     public void handleMessage(FixMessage fixMessage, Broker broker) {
-        String[] walletString = fixMessage.getWalletResponse().split("%");
 
-        double availableAmount = Double.parseDouble(walletString[0]);
+        double availableAmount = Double.parseDouble(fixMessage.getWalletResponse());
 
-        ArrayList<OwnedInstrumentModel> ownedInstrumentModels = getAvailableAmount(walletString[1]);
-
-        broker.updateWallet(availableAmount, ownedInstrumentModels);
+        broker.updateWallet(availableAmount);
     }
 
-    private ArrayList<OwnedInstrumentModel> getAvailableAmount(String walletResponse) {
-        ArrayList<OwnedInstrumentModel> ownedInstrumentModels = new ArrayList<>();
-        String[] instruments = walletResponse.split("#");
 
-        for (String instrument : instruments) {
-            String[] instrumentValues = instrument.split("&");
-
-            String name = instrumentValues[0];
-            int quantity = Integer.parseInt(instrumentValues[1]);
-            ownedInstrumentModels.add(new OwnedInstrumentModel(name, quantity));
-        }
-        return ownedInstrumentModels;
-    }
 }

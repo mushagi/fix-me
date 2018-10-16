@@ -74,15 +74,15 @@
                         <Font size="36.0" />
                      </font>
                   </Text>
-                  <ListView fx:userName="marketListView" layoutX="5.0" layoutY="62.0" prefHeight="485.0" prefWidth="219.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="62.0" />
+                  <ListView fx:id="marketListView" layoutX="5.0" layoutY="62.0" prefHeight="485.0" prefWidth="219.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="62.0" />
                </children>
         </AnchorPane>
         <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="-1.0" prefWidth="-1.0">
           <content>
-            <AnchorPane userName="Content" minHeight="-1.0" minWidth="-1.0">
+            <AnchorPane fx:id="Content" minHeight="-1.0" minWidth="-1.0">
                      <children>
-                        <ChoiceBox fx:userName="instrumentDropDown" layoutX="14.0" layoutY="14.0" />
-                        <AreaChart fx:userName="marketLineChart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" layoutY="44.0" legendSide="TOP" legendVisible="false" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="44.0">
+                        <ChoiceBox fx:id="instrumentDropDown" layoutX="14.0" layoutY="14.0" />
+                        <AreaChart fx:id="marketLineChart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" layoutY="44.0" legendSide="TOP" legendVisible="false" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="44.0">
                           <xAxis>
                             <NumberAxis side="BOTTOM" />
                           </xAxis>
@@ -90,7 +90,7 @@
                             <NumberAxis side="LEFT" />
                           </yAxis>
                         </AreaChart>
-                        <Label fx:userName="instrumentDetailTextInLine" layoutX="301.0" layoutY="14.0" prefHeight="42.0" prefWidth="200.0" />
+                        <Label fx:id="instrumentDetailTextInLine" layoutX="301.0" layoutY="14.0" prefHeight="42.0" prefWidth="200.0" />
                      </children>
             </AnchorPane>
           </content>
@@ -100,7 +100,7 @@
                   <Pane VBox.vgrow="SOMETIMES">
                      <children>
                         <Separator layoutY="110.0" prefHeight="3.0" prefWidth="219.0" />
-                        <Button fx:userName="buyButton" layoutX="122.0" layoutY="69.0" mnemonicParsing="false" onAction="#buyAction" prefHeight="32.0" prefWidth="63.0" text="Buy" />
+                        <Button fx:id="buyButton" layoutX="122.0" layoutY="69.0" mnemonicParsing="false" onAction="#buyAction" prefHeight="32.0" prefWidth="63.0" text="Buy" />
                         <Button layoutX="29.0" layoutY="69.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="63.0" text="Sell" />
                         <TextField alignment="TOP_CENTER" layoutX="26.0" layoutY="11.0" prefHeight="28.0" prefWidth="150.0" promptText="Enter Quantity  " />
                      </children>
@@ -118,14 +118,14 @@
             </VBox>
       </items>
     </SplitPane>
-    <HBox userName="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
+    <HBox fx:id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
         <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
           <font>
-            <Font size="11.0" fx:userName="x3" />
+            <Font size="11.0" fx:id="x3" />
           </font>
           <textFill>
-            <Color blue="0.625" green="0.625" red="0.625" fx:userName="x4" />
+            <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
           </textFill>
         </Label>
         <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />

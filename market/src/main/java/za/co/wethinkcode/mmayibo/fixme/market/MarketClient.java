@@ -2,51 +2,43 @@ package za.co.wethinkcode.mmayibo.fixme.market;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import za.co.wethinkcode.mmayibo.fixme.core.client.Client;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixDecoder;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
-import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
-import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
-import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
-import za.co.wethinkcode.mmayibo.fixme.market.messagehandlers.FixMessageHandlerResponse;
-import za.co.wethinkcode.mmayibo.fixme.market.messagehandlers.MarketMessageHandlerTool;
+
+import za.co.wethinkcode.mmayibo.fixme.data.client.Client;
+import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
+import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.data.model.MarketModel;
+import za.co.wethinkcode.mmayibo.fixme.market.handlers.FixMessageHandlerResponse;
+import za.co.wethinkcode.mmayibo.fixme.market.handlers.MarketMessageHandlerTool;
 import za.co.wethinkcode.mmayibo.fixme.market.model.MarketInstrumentModel;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class MarketClient extends Client {
+    private final Logger logger = Logger.getLogger(getClass().getName());
+
     public MarketModel marketModel;
-    private IRepository repository;
-    private HashMap<String, InstrumentModel> instruments;
+    private String marketUserName;
+    private boolean isLoggedIn = false;
 
     private Timer timer = new Timer("Timer");
     private Random random = new Random();
 
     MarketClient(String host, int
-            port, MarketModel marketModel, IRepository repository) {
+            port, String marketUserName) {
         super(host, port);
-        this.marketModel = marketModel;
-        this.repository = repository;
-        setInstruments();
-    }
-
-    private void setInstruments() {
-        instruments = new HashMap<>();
-        Collection<InstrumentModel> instrumentModels = repository.getMultipleByIds(InstrumentModel.class, marketModel.getInstrumentsIds());
-        for (InstrumentModel instrument: instrumentModels)
-            instruments.put(instrument.getId(), instrument);
+        this.marketUserName = marketUserName;
     }
 
     public void startTimer()
     {
-        long delay  = 2000L;
-        long period = 2000L;
-        timer.scheduleAtFixedRate(repeatedTask, delay, period);
+        long delay  = 10000L;
+        long period = 10000L;
+        timer.scheduleAtFixedRate(broadcastMarket, delay, period);
     }
 
-    TimerTask repeatedTask = new TimerTask() {
+    private TimerTask broadcastMarket = new TimerTask() {
         public void run() {
             generatePriceForInstruments();
             sendMarketDataSnapShot("all", lastChannel);
@@ -54,31 +46,31 @@ public class MarketClient extends Client {
     };
 
     private void generatePriceForInstruments() {
-        for (InstrumentModel instrumentModel : instruments.values())
-            generateRandomPrice((MarketInstrumentModel) instrumentModel);
+        for (InstrumentModel instrument : marketModel.getInstruments())
+            generateRandomPrice(instrument);
     }
 
-    private void generateRandomPrice(MarketInstrumentModel instrument) {
-        double randomValue = instrument.getMinPrice() + (instrument.getMaxPrice() - instrument.getMinPrice() ) * random.nextDouble();
+    private void generateRandomPrice(InstrumentModel instrument) {
+        double randomValue = 0 + (100- 1) * random.nextDouble();
         instrument.setPrice(randomValue);
     }
 
 
     @Override
-    public void messageRead(ChannelHandlerContext ctx, String message) {
-        System.out.println("MarketClient read fix message " + message);
-
-        FixMessage fixMessage = FixDecoder.decode(message);
-
-        FixMessageHandlerResponse messageHandler = MarketMessageHandlerTool.getMessageHandler(fixMessage);
-        assert messageHandler != null;
-
-        messageHandler.handleMessage(ctx, fixMessage, this);
+    public void messageRead(ChannelHandlerContext ctx, FixMessage message) throws InterruptedException {
+        FixMessageHandlerResponse messageHandler = MarketMessageHandlerTool.getMessageHandler(message, repository);
+        messageHandler.handleMessage(ctx, message, this);
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) {
+    public void channelActive(ChannelHandlerContext ctx) throws InterruptedException {
+        login();
+    }
 
+    private void login() {
+        String dbData = "username:\"" + marketUserName + "\"";
+
+        sendRequest(authRequestMessage(dbData, "market", "signin"));
     }
 
     public void sendMarketDataSnapShot(String senderCompId, Channel channel) {
@@ -89,23 +81,44 @@ public class MarketClient extends Client {
                 .withMessageType("W")
                 .withMDName(marketModel.getName())
                 .withMDReqID(marketModel.getUserName())
-                .withSenderCompId(lastChannel.id().toString())
+                .withSenderCompId(networkId)
                 .withTargetCompId(senderCompId)
                 .withSymbol(symbol)
                 .getFixMessage();
 
-        String fixString = FixEncode.encode(responseMessage);
-
-        channel.writeAndFlush(fixString + "\r\n");
+        sendResponse(responseMessage);
     }
 
     private String encodeInstruments() {
         StringBuilder builder = new StringBuilder();
 
-        for (InstrumentModel instrumentModel : instruments.values())
-            builder.append(instrumentModel.getName() + "#" + instrumentModel.getPrice() + "%");
+        for (InstrumentModel instrumentModel : marketModel.getInstruments())
+            builder.append(instrumentModel.getId()).append("#").append(instrumentModel.getName()).append("#").append(instrumentModel.getPrice()).append("%");
 
         return builder.toString();
     }
 
+    public void loggedInSuccessfully() throws InterruptedException {
+        isLoggedIn = true;
+        requestMarketInformation();
+        startTimer();
+    }
+
+    private void requestMarketInformation() throws InterruptedException {
+        new Thread(() -> {
+            marketModel = repository.getByID(marketUserName, MarketModel.class);
+            if (marketModel == null) {
+                System.out.println("Could not find the market on the database or database is down");
+                System.exit(0);
+            }
+            logger.info("Market "+ marketModel.getName()+" has been received");
+
+
+        }).start();
+    }
+
+    public void failedToLogin(String err) {
+        System.out.println(err);
+        System.exit(0);
+    }
 }

@@ -2,7 +2,9 @@ package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,26 +13,29 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
-import za.co.wethinkcode.mmayibo.fixme.broker.model.BrokerInstrumentModel;
-import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
-import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
-import za.co.wethinkcode.mmayibo.fixme.core.model.Wallet;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Instrument;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
+import za.co.wethinkcode.mmayibo.fixme.data.model.BrokerUser;
+import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.data.model.MarketModel;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 
 
-public class MainWindowController implements Initializable, BrokerUI{
-    private ObservableList  observableInstruments = FXCollections.observableArrayList();;
-
-    @FXML
-    private ChoiceBox<?> instrumentDropDown;
+public class MainWindowController extends BrokerUI implements Initializable {
+    private ObservableList<Instrument>  observableInstruments = FXCollections.observableArrayList();;
 
     @FXML
-    private ListView marketListView;
+    private ChoiceBox<Instrument> instrumentDropDown;
+
+    @FXML
+    private ListView<Market> marketListView;
 
     @FXML
     private Label instrumentDetailTextInLine;
@@ -38,13 +43,11 @@ public class MainWindowController implements Initializable, BrokerUI{
     @FXML
     private AreaChart<Number, Number> marketLineChart;
 
-    private ObservableList<MarketModel> markets;
+    private Market selectedMarket;
+    private Instrument selectedInstrument;
 
-    private MarketModel selectedMarket;
-    private BrokerInstrumentModel selectedInstrument;
 
     private XYChart.Series<Number, Number> marketDataSeries = new XYChart.Series<>();
-    private Broker broker;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -54,22 +57,17 @@ public class MainWindowController implements Initializable, BrokerUI{
         instrumentDropDown.setItems(observableInstruments);
 
         instrumentDropDown.valueProperty().addListener((obs, oldItem, newItem) -> {
-            if (newItem instanceof InstrumentModel) {
-
-                selectedInstrument = (BrokerInstrumentModel) newItem;
-
+                selectedInstrument =  newItem;
                 resetLineGraphWithInstrumentHistory();
-                updateUI();
-            }
+                update();
         });
 
-        marketListView.setCellFactory((Callback<ListView<MarketModel>, MarketListItemController>) listView -> new MarketListItemController(MainWindowController.this));
+        marketListView.setCellFactory(new MarketListCellFactory(this));
     }
 
     private void resetLineGraphWithInstrumentHistory() {
         Platform.runLater(() -> {
             if (selectedInstrument != null) {
-
                 marketDataSeries.getData().clear();
                 for (int i = 0; i < selectedInstrument.getPricesHistory().size(); i++)
                     marketDataSeries.getData().add(new XYChart.Data<>(i, selectedInstrument.getPricesHistory().get(i)));
@@ -81,13 +79,12 @@ public class MainWindowController implements Initializable, BrokerUI{
     @FXML
     void buyAction(ActionEvent event){
         if (selectedInstrument != null) {
-            broker.newOrderSingle(selectedMarket.getUserName(), selectedInstrument);
+            broker.newOrderSingle(selectedMarket, selectedInstrument);
         }
     }
     void updateSelectedMarket() {
-
         Platform.runLater(() -> {
-             selectedMarket = (MarketModel) marketListView.getSelectionModel().getSelectedItem();
+            selectedMarket = marketListView.getSelectionModel().getSelectedItem();
 
             if (selectedMarket != null && selectedMarket.getInstruments() != null) {
                 observableInstruments.clear();
@@ -99,27 +96,29 @@ public class MainWindowController implements Initializable, BrokerUI{
     }
 
     @Override
-    public void registerBroker(Broker broker) {
-        this.broker = broker;
-        markets = broker.markets;
-        marketListView.setItems(markets);
-        broker.register(this);
+    void setUpUi(Broker broker, Stage stage) {
+        super.setUpUi(broker, stage);
+
+        ObservableMap<String, Market> observableMarkets = FXCollections.observableMap(markets);
+
+        marketListView.getItems().setAll(observableMarkets.values());
+
+        observableMarkets.addListener((MapChangeListener<String, Market>) change -> {
+//            marketListView.getItems().removeAll(change.)
+//            if (change.wasAdded()) {
+//                marketListView.getItems().add(change.getKey());
+//            }
+        });
+
     }
 
     @Override
     public void update() {
-        updateUI();
-    }
-
-    @Override
-    public void updateWallet(Wallet wallet) {
-        System.out.println(wallet.getAvailableFunds());
-    }
-
-    private void updateUI() {
         Platform.runLater(() -> {
+            System.out.println(markets.values());
+
             if (selectedInstrument != null){
-                instrumentDetailTextInLine.setText("Name " + selectedInstrument.getName() +"\n" + "Price "+ selectedInstrument.getPrice());
+                instrumentDetailTextInLine.setText("Name " + selectedInstrument.getName() +"\n" + "Price "+ selectedInstrument.getCostPrice());
                 ArrayList<Double> pricesHistory = selectedInstrument.getPricesHistory();
                 int size = pricesHistory.size()  - 1;
                 Double firstValue = selectedInstrument.getPricesHistory().get(size);
@@ -137,6 +136,11 @@ public class MainWindowController implements Initializable, BrokerUI{
                 instrumentDetailTextInLine.setText("");
 
         });
+    }
+
+    @Override
+    public void updateUser(BrokerUser user) {
+        System.out.println(user.getAccountBalance());
     }
 
 

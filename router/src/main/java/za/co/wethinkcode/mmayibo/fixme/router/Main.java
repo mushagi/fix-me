@@ -1,29 +1,24 @@
 package za.co.wethinkcode.mmayibo.fixme.router;
 
-import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
-import za.co.wethinkcode.mmayibo.fixme.core.persistence.RepositoryImp;
-import za.co.wethinkcode.mmayibo.fixme.core.persistence.SetUpDatabase;
+import za.co.wethinkcode.mmayibo.fixme.data.persistence.IRepository;
 
 public class Main {
     public static void main(String args[]){
-        IRepository repository = new RepositoryImp(Main.class.getResource("/hibernate.cfg.xml").toString());
+        MarketRouter marketRouter = new MarketRouter("localhost", 5000, State.channels);
+        BrokerRouter brokerRouter = new BrokerRouter("localhost", 5001, State.channels);
+        DatabaseRouter databaseRouter = new DatabaseRouter("localhost", 5002, State.channels);
 
-        MarketRouter marketRouter = new MarketRouter("localhost", 5000, State.marketChannels, State.brokerChannels );
-        BrokerRouter brokerRouter = new BrokerRouter("localhost", 5001, State.brokerChannels, State.marketChannels);
-        SetUpDatabase setUpDatabase = new SetUpDatabase(repository);
-
-        Thread setUpDatabaseThread = new Thread(setUpDatabase);
         Thread marketThread = new Thread(marketRouter);
         Thread brokerThread = new Thread(brokerRouter);
+        Thread databaseThread = new Thread(databaseRouter);
 
-        setUpDatabaseThread.start();
         marketThread.start();
         brokerThread.start();
-
+        databaseThread.start();
         try {
-            setUpDatabaseThread.join();
             marketThread.join();
-            marketThread.join();
+            brokerThread.join();
+            databaseThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

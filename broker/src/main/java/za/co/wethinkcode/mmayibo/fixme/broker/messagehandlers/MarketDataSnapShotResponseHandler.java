@@ -1,15 +1,16 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers;
 
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
-import za.co.wethinkcode.mmayibo.fixme.broker.model.BrokerInstrumentModel;
-import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
-import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Instrument;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
+import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 public class MarketDataSnapShotResponseHandler implements FixMessageHandlerResponse{
+    private Logger logger = Logger.getLogger(getClass().getName());
 
     @Override
     public void next(FixMessageHandler next) {
@@ -17,28 +18,38 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandlerRespo
     }
 
     @Override
-    public void handleMessage(FixMessage fixMessage, Broker broker) {
-        MarketModel marketModel = new MarketModel();
+    public void handleMessage(FixMessage message, Broker broker) {
+        ConcurrentHashMap<String, Instrument> instruments = createInstruments(message.getSymbol());
+        String mdReqId = message.getMDReqID();
+        String marketName = message.getMdName();
+        String marketNetworkId = message.getSenderCompId();
+        String uniqueId = mdReqId + marketNetworkId;
 
-        marketModel.setUserName(fixMessage.getMDReqID());
+        logger.info("Received snapshot market "  + instruments );
 
-        HashMap<String, InstrumentModel> instruments = getInstruments(fixMessage.getSymbol());
-        marketModel.setInstruments(instruments);
-        marketModel.setName(fixMessage.getMdName());
+        Market market = broker.markets.get(uniqueId);
 
-        broker.updateMarkets(marketModel);
+        if (market == null){
+            market = new Market(marketName, mdReqId, instruments, marketNetworkId);
+            broker.markets.put(uniqueId, market);
+        }
+        else
+            market.updateInstruments(instruments);
+        broker.marketsUpdated();
     }
 
-    private HashMap<String, InstrumentModel> getInstruments(String symbol) {
-        HashMap<String, InstrumentModel> instruments = new HashMap<>();
-        String[] strings = symbol.split("%");
+    private ConcurrentHashMap<String, Instrument> createInstruments(String symbol) {
+        ConcurrentHashMap<String, Instrument> instruments = new ConcurrentHashMap<>();
 
-        for (String line: strings) {
-            String[] nameAndPrice = line.split("#");
-            if (nameAndPrice.length == 2) {
-                String name = nameAndPrice[0];
-                double price = Double.parseDouble(nameAndPrice[1]);
-                instruments.put(name, new BrokerInstrumentModel(name, price));
+        String[] instrumentStringArray = symbol.split("%");
+
+        for (String instrument: instrumentStringArray) {
+            String[] instrumentValues = instrument.split("#");
+            if (instrumentValues.length == 3) {
+                String id = instrumentValues[0];
+                String name = instrumentValues[1];
+                double price = Double.parseDouble(instrumentValues[2]);
+                instruments.put(id, new Instrument(id, name, price));
             }
         }
 
