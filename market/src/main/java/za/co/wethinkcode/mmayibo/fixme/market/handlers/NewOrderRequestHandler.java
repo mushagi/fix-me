@@ -1,9 +1,5 @@
 package za.co.wethinkcode.mmayibo.fixme.market.handlers;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import za.co.wethinkcode.mmayibo.fixme.data.client.Client;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
@@ -42,7 +38,8 @@ public class NewOrderRequestHandler implements FixMessageHandlerResponse {
     private void sendRejectResponse(FixMessage message) {
         FixMessage rejectMessage = new FixMessageBuilder()
                 .newFixMessage()
-                .withMessageType("")
+                .withRefMsgType(message.getMessageType())
+                .withMessageType("3")
                 .withMessage("")
                 .withSymbol(message.getSymbol())
                 .withTargetCompId(message.getSenderCompId())

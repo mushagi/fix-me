@@ -35,6 +35,7 @@ public class FixMessage {
     String dbStatus;
     String authStatus;
     String messageId;
+    String refMsgType;
 
 
 }

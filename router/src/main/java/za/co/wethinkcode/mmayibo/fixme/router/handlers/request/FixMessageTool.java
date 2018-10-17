@@ -10,7 +10,8 @@ public class FixMessageTool {
         {
             switch (fixMessage.getMessageType()) {
                 case "D":
-                    return new NewOrderRequestHandler();
+                case "3" :
+                    return new GeneralMessageHandler();
                 case "V":
                     return new MarketsDataSnapDataRequestHandler();
                 case "W":

@@ -6,7 +6,7 @@ import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
 
-public class NewOrderRequestHandler implements FixMessageHandler {
+public class GeneralMessageHandler implements FixMessageHandler {
     @Override
     public void next(FixMessageHandler next) {
 

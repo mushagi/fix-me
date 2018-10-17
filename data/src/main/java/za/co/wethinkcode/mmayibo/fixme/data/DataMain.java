@@ -5,7 +5,7 @@ import za.co.wethinkcode.mmayibo.fixme.data.persistence.HibernateRepository;
 import za.co.wethinkcode.mmayibo.fixme.data.persistence.SetUpDatabase;
 
 
-public class Main {
+public class DataMain {
     public static void main(String args[]) {
         IRepository repository = new HibernateRepository();
 

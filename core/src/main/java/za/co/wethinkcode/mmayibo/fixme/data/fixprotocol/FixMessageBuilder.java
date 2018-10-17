@@ -162,4 +162,10 @@ public class FixMessageBuilder {
         tagsValuesMap.put(AUTH_REQUEST_TYPE.tag, value);
         return this;
     }
+
+    public FixMessageBuilder withRefMsgType	(String value) {
+        fixMessage.authRequestType = value;
+        tagsValuesMap.put(REF_MSG_TYPE.tag, value);
+        return this;
+    }
 }

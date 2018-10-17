@@ -25,7 +25,8 @@ public enum FixTags {
     DB_TRANSACTION_TYPE(506),
     AUTH_STATUS(507),
     MSG_ID(508),
-    AUTH_REQUEST_TYPE(509);
+    AUTH_REQUEST_TYPE(509),
+    REF_MSG_TYPE(372);
 
     public final int tag;
 

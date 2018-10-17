@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 
-public class Gui extends Application {
+public class BrokerMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {

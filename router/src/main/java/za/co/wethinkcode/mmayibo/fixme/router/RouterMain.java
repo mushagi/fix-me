@@ -2,7 +2,7 @@ package za.co.wethinkcode.mmayibo.fixme.router;
 
 import za.co.wethinkcode.mmayibo.fixme.data.persistence.IRepository;
 
-public class Main {
+public class RouterMain {
     public static void main(String args[]){
         MarketRouter marketRouter = new MarketRouter("localhost", 5000, State.channels);
         BrokerRouter brokerRouter = new BrokerRouter("localhost", 5001, State.channels);
