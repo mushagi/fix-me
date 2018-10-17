@@ -78,9 +78,8 @@ public class MainWindowController extends BrokerUI implements Initializable {
 
     @FXML
     void buyAction(ActionEvent event){
-        if (selectedInstrument != null) {
+        if (selectedInstrument != null)
             broker.newOrderSingle(selectedMarket, selectedInstrument);
-        }
     }
     void updateSelectedMarket() {
         Platform.runLater(() -> {
@@ -115,8 +114,6 @@ public class MainWindowController extends BrokerUI implements Initializable {
     @Override
     public void update() {
         Platform.runLater(() -> {
-            System.out.println(markets.values());
-
             if (selectedInstrument != null){
                 instrumentDetailTextInLine.setText("Name " + selectedInstrument.getName() +"\n" + "Price "+ selectedInstrument.getCostPrice());
                 ArrayList<Double> pricesHistory = selectedInstrument.getPricesHistory();

@@ -9,23 +9,13 @@ public class FixMessageTool {
         if (fixMessage.getMessageType() != null)
         {
             switch (fixMessage.getMessageType()) {
-                case "D":
-                case "3" :
-                    return new GeneralMessageHandler();
                 case "V":
                     return new MarketsDataSnapDataRequestHandler();
                 case "W":
                     return new MarketDataSnapShotResponseHandler();
-                case "authrequest":
-                    return new DbHandlerHandler();
-                case "authresponse":
-                case "dbresponse":
-                    return new DbResponseHandler();
-                case "dbrequest" :
-                    return new DbHandlerHandler();
 
             }
         }
-        return new InvalidResponseRequestHandler();
+        return new GeneralMessageHandler();
     }
 }

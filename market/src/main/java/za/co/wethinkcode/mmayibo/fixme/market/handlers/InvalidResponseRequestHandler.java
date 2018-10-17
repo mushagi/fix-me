@@ -10,7 +10,7 @@ public class InvalidResponseRequestHandler implements FixMessageHandlerResponse 
     }
 
     @Override
-    public void handleMessage(FixMessage fixMessage) {
+    public void handleMessage(FixMessage message) {
 
         System.out.println("Invalid Request");
     }

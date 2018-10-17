@@ -8,11 +8,9 @@
         <property name="format_sql">true</property>
         <property name="dialect">org.hibernate.dialect.SQLiteDialect</property>
         <property name="connection.driver_class">org.sqlite.JDBC</property>
-        <property name="connection.url">jdbc:sqlite:fixme_data.db</property>
+        <property name="connection.url">jdbc:sqlite:broker_data.db</property>
         <property name="hibernate.hbm2ddl.auto">create-drop</property>
 
-        <mapping class="za.co.wethinkcode.mmayibo.fixme.data.model.MarketModel"/>
-        <mapping class="za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel"/>
         <mapping class="za.co.wethinkcode.mmayibo.fixme.data.model.BrokerUser"/>
     </session-factory>
 </hibernate-configuration>

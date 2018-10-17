@@ -10,7 +10,7 @@ public class BrokerMessageHandlerTool {
                 case "1":
                     return new IdResponseHandler();
                 case "3":
-                    return new ProcessWalletResponseHandler();
+                    return new RejectMessageHandler();
                 case "D":
                     return new NewOrderResponseHandler();
                 case "W":

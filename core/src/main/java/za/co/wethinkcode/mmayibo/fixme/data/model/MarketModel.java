@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
 
@@ -25,6 +26,8 @@ public class MarketModel {
     @XmlElement(name="Instrument")
     @ManyToMany(cascade = CascadeType.ALL)
     private Collection<InstrumentModel> instruments;
+
+    public ConcurrentHashMap<String, InstrumentModel> instrumentsHashMap = new ConcurrentHashMap<>();
 
     @XmlElement(name =  "Name")
     private String name;
@@ -51,4 +54,8 @@ public class MarketModel {
         return Objects.hash(userName);
     }
 
+    public void updateHashMap() {
+        for (InstrumentModel model : instruments)
+            instrumentsHashMap.put(model.getId(), model);
+    }
 }

@@ -1,7 +1,6 @@
 package za.co.wethinkcode.mmayibo.fixme.data.persistence;
 
 import za.co.wethinkcode.mmayibo.fixme.data.model.InitData;
-import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.data.model.MarketModel;
 
 import javax.xml.bind.JAXBContext;

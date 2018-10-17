@@ -18,8 +18,8 @@ public class IdResponseHandler implements FixMessageHandlerResponse {
     }
 
     @Override
-    public void handleMessage(FixMessage fixMessage) {
-        client.networkId = fixMessage.getMessage();
+    public void handleMessage(FixMessage message) {
+        client.networkId = message.getMessage();
         System.out.println("MarketClient Id : " + client.networkId);
     }
 }

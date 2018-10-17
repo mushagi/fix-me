@@ -11,8 +11,6 @@ public class MarketMessageHandlerTool {
             switch (fixMessage.getMessageType()) {
                 case "invalidrequest":
                     break;
-                case "authresponse":
-                    return new AuthResponseHandler(client);
                 case "1":
                     return new IdResponseHandler(client);
                 case "D":

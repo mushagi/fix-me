@@ -15,7 +15,6 @@ public class MarketsDataSnapDataRequestHandler implements FixMessageHandler {
 
     @Override
     public void handleMessage(FixMessage fixMessage, Channel channel, ChannelGroupHashed responseChannels, Channel databaseChannel) {
-
         Channel respondChannel = responseChannels.find(fixMessage.getTargetCompId());
 
         fixMessage.setSenderCompId(channel.id().toString());

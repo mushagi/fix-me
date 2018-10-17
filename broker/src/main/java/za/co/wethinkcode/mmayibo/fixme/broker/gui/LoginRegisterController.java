@@ -11,11 +11,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.data.model.BrokerUser;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class LoginRegisterController extends BrokerUI {
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     @FXML
     private TextField userNameText;
@@ -27,36 +29,42 @@ public class LoginRegisterController extends BrokerUI {
     void signUp(ActionEvent event) {
         String userName = userNameText.getText();
         String name = nameText.getText();
-        String dbData = "username:\"" + userName + "\"" +
-                "name:\"" + name + "\"";
-        authenticate(userName, dbData, "signup");
+        authenticate(userName, name);
     }
 
 
     @FXML
     void signIn(ActionEvent event) {
         String userName = userNameText.getText();
-        String dbData = "username:\"" + userName + "\"";
-        authenticate(userName, dbData, "signin");
+        String name = nameText.getText();
+        authenticate(userName, name);
     }
 
-    private void authenticate(String username, String dbData, String authRequestType) {
+
+
+    private void authenticate(String username, String name) {
         new Thread(new Task<Void>() {
             @Override
             protected Void call() throws Exception {
+                logger.info("Getting an existing account");
+                BrokerUser brokerUser = broker.repository.getByID(username, BrokerUser.class);
 
-
-                FixMessage request = broker.authRequestMessage(dbData, "broker", authRequestType);
-                FixMessage message = broker.sendMessageWaitForResponse(request);
-                if (message.getAuthStatus().equals("success")) {
-                    showMainWindow(username);
+                if (brokerUser == null)
+                {
+                    logger.info("Could not find the market on the database");
+                    logger.info("Creating a new a market");
+                    brokerUser = new BrokerUser(username, name);
+                    broker.repository.create(brokerUser);
+                    broker.user = brokerUser;
                 }
+
+                logger.info("Market "+ broker.user.getName()+" has been received");
+                showMainWindow(username);
                 return null;
             }
         }).start();
     }
     private void showMainWindow(String username) throws InterruptedException {
-
         setSceneToMainWindowStage(stage, "Broker", "/fxml/main-window.fxml", username);
     }
 
@@ -80,7 +88,6 @@ public class LoginRegisterController extends BrokerUI {
                 BrokerUI controller = loader.getController();
                 controller.setUpUi(broker, stage);
                 this.unregisterFromBroker();
-                broker.prepareBroker(username);
 
             } catch (IOException e) {
                 e.printStackTrace();

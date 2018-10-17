@@ -6,12 +6,15 @@ import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.data.client.Client;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
+import za.co.wethinkcode.mmayibo.fixme.data.model.InitData;
 import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.data.model.MarketModel;
 import za.co.wethinkcode.mmayibo.fixme.market.handlers.FixMessageHandlerResponse;
 import za.co.wethinkcode.mmayibo.fixme.market.handlers.MarketMessageHandlerTool;
-import za.co.wethinkcode.mmayibo.fixme.market.model.MarketInstrumentModel;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -20,7 +23,6 @@ public class MarketClient extends Client {
 
     public MarketModel marketModel;
     private String marketUserName;
-    private boolean isLoggedIn = false;
 
     private Timer timer = new Timer("Timer");
     private Random random = new Random();
@@ -68,9 +70,41 @@ public class MarketClient extends Client {
     }
 
     private void login() {
-        String dbData = "username:\"" + marketUserName + "\"";
+        logger.info("Getting an existing account");
+        marketModel = repository.getByID(marketUserName, MarketModel.class);
+        if (marketModel == null)
+        {
+            logger.info("Could not find the market on the database");
+            logger.info("Creating a new a market");
+            marketModel = loadMarketFromXML();
+            marketModel = repository.create(marketModel);
+        }
+        marketModel.updateHashMap();
+        logger.info("Market "+ marketModel.getName()+" has been received");
+        startTimer();
+    }
 
-        sendRequest(authRequestMessage(dbData, "market", "signin"));
+    private MarketModel loadMarketFromXML() {
+        InitData initData ;
+
+        try {
+            File file = new File(getClass().getResource("/init.data.xml").getFile());
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(InitData.class);
+
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+            initData = (InitData) unmarshaller.unmarshal(file);
+
+            for (MarketModel market : initData.markets){
+                if (market.getUserName().equals(marketUserName))
+                    return market;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void sendMarketDataSnapShot(String senderCompId, Channel channel) {
@@ -98,27 +132,6 @@ public class MarketClient extends Client {
         return builder.toString();
     }
 
-    public void loggedInSuccessfully() throws InterruptedException {
-        isLoggedIn = true;
-        requestMarketInformation();
-        startTimer();
-    }
-
-    private void requestMarketInformation() throws InterruptedException {
-        new Thread(() -> {
-            marketModel = repository.getByID(marketUserName, MarketModel.class);
-            if (marketModel == null) {
-                System.out.println("Could not find the market on the database or database is down");
-                System.exit(0);
-            }
-            logger.info("Market "+ marketModel.getName()+" has been received");
 
 
-        }).start();
-    }
-
-    public void failedToLogin(String err) {
-        System.out.println(err);
-        System.exit(0);
-    }
 }

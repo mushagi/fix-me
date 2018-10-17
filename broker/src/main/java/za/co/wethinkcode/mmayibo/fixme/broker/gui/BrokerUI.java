@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class BrokerUI {
 
     protected Broker broker;
-    protected ConcurrentHashMap<String, Market> markets;
+    ConcurrentHashMap<String, Market> markets;
     Stage stage;
 
 
@@ -27,7 +27,7 @@ public abstract class BrokerUI {
         broker.register(this);
     }
 
-    protected void unregisterFromBroker() {
+    void unregisterFromBroker() {
         broker.unregisterUi(this);
     }
 }

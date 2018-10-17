@@ -9,7 +9,7 @@ import za.co.wethinkcode.mmayibo.fixme.data.ResponseFuture;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
-import za.co.wethinkcode.mmayibo.fixme.data.persistence.FixRepositoryImp;
+import za.co.wethinkcode.mmayibo.fixme.data.persistence.HibernateRepository;
 import za.co.wethinkcode.mmayibo.fixme.data.persistence.IRepository;
 
 import java.util.Random;
@@ -30,7 +30,7 @@ public abstract class Client implements Runnable {
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     public Client(String host, int port) {
-        this.repository = new FixRepositoryImp(this);
+        this.repository = new HibernateRepository();
 
         HOST = System.getProperty("host", host);
         PORT = Integer.parseInt(System.getProperty("port", String.valueOf(port)));

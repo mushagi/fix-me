@@ -11,7 +11,6 @@ public class BrokerMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         Broker broker = new Broker("localhost", 5001 );
         new Thread(broker).start();
 
