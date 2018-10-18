@@ -22,7 +22,7 @@ public class FixMessage {
     String checkSum;
     double price;
     String requestOrResponse;
-    String message;
+    String text;
     String mDReqID;
     String symbol;
     String mdName;

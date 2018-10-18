@@ -79,7 +79,7 @@ public class MainWindowController extends BrokerUI implements Initializable {
     @FXML
     void buyAction(ActionEvent event){
         if (selectedInstrument != null)
-            broker.newOrderSingle(selectedMarket, selectedInstrument);
+            broker.newOrderSingle(selectedMarket, selectedInstrument, "buy");
     }
     void updateSelectedMarket() {
         Platform.runLater(() -> {
@@ -141,4 +141,9 @@ public class MainWindowController extends BrokerUI implements Initializable {
     }
 
 
+    @FXML
+    public void sellAction(ActionEvent actionEvent) {
+        if (selectedInstrument != null)
+            broker.newOrderSingle(selectedMarket, selectedInstrument, "sell");
+    }
 }

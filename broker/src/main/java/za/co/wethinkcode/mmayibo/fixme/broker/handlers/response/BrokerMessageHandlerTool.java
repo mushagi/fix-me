@@ -1,5 +1,6 @@
-package za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers;
+package za.co.wethinkcode.mmayibo.fixme.broker.handlers.response;
 
+import za.co.wethinkcode.mmayibo.fixme.broker.handlers.InvalidResponseRequestHandler;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 
 public class BrokerMessageHandlerTool {
@@ -9,10 +10,8 @@ public class BrokerMessageHandlerTool {
             switch (fixMessage.getMessageType()) {
                 case "1":
                     return new IdResponseHandler();
-                case "3":
-                    return new RejectMessageHandler();
-                case "D":
-                    return new NewOrderResponseHandler();
+                case "8":
+                    return new ExecutionReportHandler();
                 case "W":
                     return new MarketDataSnapShotResponseHandler();
                 case "2":

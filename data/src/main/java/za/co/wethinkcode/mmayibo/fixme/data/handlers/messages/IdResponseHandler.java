@@ -16,7 +16,7 @@ public class IdResponseHandler implements IFixMessageHandler {
 
     @Override
     public void process() {
-        dataClient.networkId = response.getMessage();
+        dataClient.networkId = response.getText();
         System.out.println("Data Id " + dataClient.networkId);
     }
 }

@@ -2,8 +2,8 @@ package za.co.wethinkcode.mmayibo.fixme.broker;
 
 import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.broker.gui.BrokerUI;
-import za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers.BrokerMessageHandlerTool;
-import za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers.FixMessageHandlerResponse;
+import za.co.wethinkcode.mmayibo.fixme.broker.handlers.response.BrokerMessageHandlerTool;
+import za.co.wethinkcode.mmayibo.fixme.broker.handlers.response.FixMessageHandlerResponse;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
 import za.co.wethinkcode.mmayibo.fixme.data.client.Client;
@@ -42,19 +42,13 @@ public class Broker extends Client {
             userInterfaces.add(userInterface);
     }
 
-    public void updateWallet(double availableAmount) {
-        user.setAccountBalance(availableAmount);
-        for (BrokerUI userInterface: userInterfaces)
-            userInterface.updateUser(user);
-    }
-
-    public void newOrderSingle(Market market, Instrument instrument){
+    public void newOrderSingle(Market market, Instrument instrument, String side){
         FixMessage requestFixMessage = new FixMessageBuilder()
                 .newFixMessage()
                 .withMessageType("D")
                 .withClOrderId(generateUUID())
                 .withPrice(instrument.costPrice)
-                .withSide("buy")
+                .withSide(side)
                 .withSenderCompId(networkId)
                 .withTargetCompId(market.getNetworkId())
                 .withMDReqID(market.getMdReqId())
@@ -62,7 +56,7 @@ public class Broker extends Client {
                 .withSymbol(instrument.getId())
                 .getFixMessage();
 
-        logger.fine("New Order Single. OrderID =  " + requestFixMessage.getClOrderId());
+        logger.info("New Order Single. OrderID =  " + requestFixMessage.getClOrderId());
         sendRequest(requestFixMessage);
     }
 

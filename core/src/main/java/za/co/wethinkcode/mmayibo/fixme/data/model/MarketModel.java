@@ -5,7 +5,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +26,7 @@ public class MarketModel {
     @ManyToMany(cascade = CascadeType.ALL)
     private Collection<InstrumentModel> instruments;
 
-    public ConcurrentHashMap<String, InstrumentModel> instrumentsHashMap = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, InstrumentModel> instrumentMao = new ConcurrentHashMap<>();
 
     @XmlElement(name =  "Name")
     private String name;
@@ -56,6 +55,6 @@ public class MarketModel {
 
     public void updateHashMap() {
         for (InstrumentModel model : instruments)
-            instrumentsHashMap.put(model.getId(), model);
+            instrumentMao.put(model.getId(), model);
     }
 }

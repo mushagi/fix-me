@@ -52,6 +52,9 @@ public class FixDecoder {
             case 38 :
                 fixMessage.orderQuantity = Integer.parseInt(value);
                 break;
+            case 39 :
+                fixMessage.ordStatus = value;
+                break;
             case 44 :
                 fixMessage.price = Double.parseDouble(value);
                 break;
@@ -73,8 +76,8 @@ public class FixDecoder {
             case 200:
                 fixMessage.requestOrResponse = value;
                 break;
-            case 201:
-                fixMessage.message = value;
+            case 58:
+                fixMessage.text = value;
                 break;
             case 262:
                 fixMessage.mDReqID = value;

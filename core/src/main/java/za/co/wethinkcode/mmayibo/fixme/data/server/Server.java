@@ -1,7 +1,6 @@
 package za.co.wethinkcode.mmayibo.fixme.data.server;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -13,7 +12,6 @@ import io.netty.handler.logging.LoggingHandler;
 import za.co.wethinkcode.mmayibo.fixme.data.ChannelGroupHashed;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
 
 public abstract class Server implements Runnable{
     private final String HOST;
@@ -59,7 +57,7 @@ public abstract class Server implements Runnable{
                 .newFixMessage()
                 .withMessageId(message.getMessageId())
                 .withMessageType("invalidrequest")
-                .withMessage("Could not find the request of message type = " + message.getMessageType())
+                .withText("Could not find the request of text type = " + message.getMessageType())
                 .getFixMessage();
         ctx.writeAndFlush(invalidRespondFixMessage + "\r\n");
     }

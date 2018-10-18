@@ -37,7 +37,7 @@ public class AuthRequestHandler extends IDbTransactionProcessor implements IFixM
 
         logger.info("Auth status  : " +
                 responseBuilder.getFixMessage().getAuthStatus() + ". " +
-                responseBuilder.getFixMessage().getMessage());
+                responseBuilder.getFixMessage().getText());
 
         return responseBuilder.getFixMessage();
     }
@@ -49,7 +49,7 @@ public class AuthRequestHandler extends IDbTransactionProcessor implements IFixM
         if (repository.getByID(username, entityClassType) != null)
                 responseBuilder.withAuthStatus("success");
         else
-            responseBuilder.withMessage("user exists does not exist");
+            responseBuilder.withText("user exists does not exist");
     }
 
     private void signUp(FixMessageBuilder responseBuilder, Class<?> entityClassType) throws InterruptedException {
@@ -66,10 +66,10 @@ public class AuthRequestHandler extends IDbTransactionProcessor implements IFixM
             if (entity != null)
                 responseBuilder.withAuthStatus("success");
             else
-                responseBuilder.withMessage("could not create user");
+                responseBuilder.withText("could not create user");
         }
         else
-            responseBuilder.withMessage("user exists");
+            responseBuilder.withText("user exists");
 
     }
 

@@ -1,4 +1,4 @@
-package za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers;
+package za.co.wethinkcode.mmayibo.fixme.broker.handlers.response;
 
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
@@ -6,7 +6,7 @@ import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
 
 import java.util.logging.Logger;
 
-public class RejectMessageHandler implements FixMessageHandlerResponse {
+public class ExecutionReportHandler implements FixMessageHandlerResponse {
     private Logger logger = Logger.getLogger(getClass().getName());
 
     @Override
@@ -16,6 +16,8 @@ public class RejectMessageHandler implements FixMessageHandlerResponse {
 
     @Override
     public void handleMessage(FixMessage fixMessage, Broker broker) {
-        logger.info("Request has been rejected");
+        logger.info("Execution report of Client Order : {"+fixMessage.getClOrderId()+"}. Status : "+ fixMessage.getOrdStatus() );
     }
+
+
 }

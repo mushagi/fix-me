@@ -1,7 +1,8 @@
-package za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers;
+package za.co.wethinkcode.mmayibo.fixme.broker.handlers;
 
 
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
+import za.co.wethinkcode.mmayibo.fixme.broker.handlers.response.FixMessageHandlerResponse;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
 

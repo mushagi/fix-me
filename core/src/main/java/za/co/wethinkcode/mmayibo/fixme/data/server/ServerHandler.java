@@ -24,14 +24,14 @@ class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void channelActive(final ChannelHandlerContext ctx) {
         channels.add(ctx.channel());
         server.channelActive(ctx);
-        sendBackIdToClient(ctx);
+        sendToClient(ctx);
     }
 
-    private void sendBackIdToClient(ChannelHandlerContext ctx) {
+    private void sendToClient(ChannelHandlerContext ctx) {
         FixMessage responseIdBackToChannelFixMessage = new FixMessageBuilder()
                 .newFixMessage()
                 .withMessageType("1")
-                .withMessage(ctx.channel().id().toString())
+                .withText(ctx.channel().id().toString())
                 .getFixMessage();
 
         String fixStringResponseBackToChannel = FixEncode.encode(responseIdBackToChannelFixMessage);

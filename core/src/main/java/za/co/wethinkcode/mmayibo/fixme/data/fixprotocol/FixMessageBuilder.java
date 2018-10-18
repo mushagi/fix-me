@@ -82,9 +82,9 @@ public class FixMessageBuilder {
         return  this;
     }
 
-    public FixMessageBuilder withMessage(String value) {
-        fixMessage.message = value;
-        tagsValuesMap.put(MESSAGE.tag, value);
+    public FixMessageBuilder withText(String value) {
+        fixMessage.text = value;
+        tagsValuesMap.put(TEXT.tag, value);
         return this;
     }
 
@@ -168,4 +168,5 @@ public class FixMessageBuilder {
         tagsValuesMap.put(REF_MSG_TYPE.tag, value);
         return this;
     }
+
 }

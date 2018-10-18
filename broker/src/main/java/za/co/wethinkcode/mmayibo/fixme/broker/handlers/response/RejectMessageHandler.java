@@ -1,11 +1,13 @@
-package za.co.wethinkcode.mmayibo.fixme.broker.messagehandlers;
-
+package za.co.wethinkcode.mmayibo.fixme.broker.handlers.response;
 
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
 
-public class IdResponseHandler implements FixMessageHandlerResponse {
+import java.util.logging.Logger;
+
+public class RejectMessageHandler implements FixMessageHandlerResponse {
+    private Logger logger = Logger.getLogger(getClass().getName());
 
     @Override
     public void next(FixMessageHandler next) {
@@ -14,7 +16,6 @@ public class IdResponseHandler implements FixMessageHandlerResponse {
 
     @Override
     public void handleMessage(FixMessage fixMessage, Broker broker) {
-        broker.networkId = fixMessage.getMessage();
-        System.out.println("MarketClient Id : " + broker.networkId);
+        logger.info("Request has been rejected");
     }
 }

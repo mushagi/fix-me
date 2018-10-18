@@ -101,7 +101,7 @@
                      <children>
                         <Separator layoutY="110.0" prefHeight="3.0" prefWidth="219.0" />
                         <Button fx:id="buyButton" layoutX="122.0" layoutY="69.0" mnemonicParsing="false" onAction="#buyAction" prefHeight="32.0" prefWidth="63.0" text="Buy" />
-                        <Button layoutX="29.0" layoutY="69.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="63.0" text="Sell" />
+                        <Button layoutX="29.0" layoutY="69.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="63.0" text="Sell"  onAction="#sellAction"/>
                         <TextField alignment="TOP_CENTER" layoutX="26.0" layoutY="11.0" prefHeight="28.0" prefWidth="150.0" promptText="Enter Quantity  " />
                      </children>
                      <padding>
