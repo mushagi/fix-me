@@ -7,7 +7,7 @@ import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.data.persistence.IRepository;
 import za.co.wethinkcode.mmayibo.fixme.market.FixMessageValidator;
 import za.co.wethinkcode.mmayibo.fixme.market.MarketClient;
-import za.co.wethinkcode.mmayibo.fixme.market.model.TradeTransaction;
+import za.co.wethinkcode.mmayibo.fixme.data.model.TradeTransaction;
 
 import java.util.logging.Logger;
 
@@ -88,7 +88,7 @@ public class NewOrderRequestHandler implements FixMessageHandlerResponse {
     }
 
     private void processBuyRequest() {
-        if (marketSellInstrumentAtCost()) {
+        if (marketSellInstrumentAtCost() && canBuyWithQuantity()) {
             orderStatus = "7";
             text = "Filled : Transaction a success";
         } else
@@ -97,7 +97,27 @@ public class NewOrderRequestHandler implements FixMessageHandlerResponse {
         saveTransactionToDatabase();
     }
 
+    private boolean canBuyWithQuantity() {
+        int instrumentQuantity = instrument.quantity;
+        int requestedQuantity = requestMessage.getOrderQuantity();
+
+        boolean isQuantityAvailable = requestedQuantity < instrumentQuantity;
+        instrument.quantity -= requestedQuantity;
+
+        if (!isQuantityAvailable)
+            text = "The quantity is too high";
+
+        return isQuantityAvailable;
+    }
+
     private boolean marketBuyInstrumentAtCost() {
+        double instrumentPrice = instrument.price;
+        double requestedPrice = requestMessage.getPrice();
+
+        boolean canBuy = requestedPrice < instrumentPrice;
+
+        if (!canBuy)
+            text = "Can't buy, price is too low";
         return true;
     }
 

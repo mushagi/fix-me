@@ -11,7 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import za.co.wethinkcode.mmayibo.fixme.data.model.BrokerUser;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.BrokerUser;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -42,7 +42,7 @@ public class LoginRegisterController extends BrokerUI {
 
 
 
-    private void authenticate(String username, String name) {
+    private void authenticate(final String username, final String name) {
         new Thread(new Task<Void>() {
             @Override
             protected Void call() throws Exception {

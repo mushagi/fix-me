@@ -12,7 +12,6 @@ import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
 import za.co.wethinkcode.mmayibo.fixme.data.persistence.HibernateRepository;
 import za.co.wethinkcode.mmayibo.fixme.data.persistence.IRepository;
 
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
@@ -82,7 +81,6 @@ public abstract class Client implements Runnable {
         String encodedFixMessage = FixEncode.encode(responseMessage);
         lastChannel.writeAndFlush(encodedFixMessage + "\r\n");
         logger.info("Fix Message response : " + encodedFixMessage);
-
     }
 
     public FixMessage sendMessageWaitForResponse(FixMessage message) throws InterruptedException {
@@ -106,6 +104,6 @@ public abstract class Client implements Runnable {
     }
 
 
-    public abstract void messageRead(ChannelHandlerContext ctx, FixMessage message) throws InterruptedException;
+    public abstract void messageRead(ChannelHandlerContext ctx, FixMessage message, String rawFixMessage) throws InterruptedException;
     public abstract void channelActive(ChannelHandlerContext ctx) throws ExecutionException, InterruptedException;
 }

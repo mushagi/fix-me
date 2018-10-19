@@ -2,14 +2,10 @@ package za.co.wethinkcode.mmayibo.fixme.data.persistence;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import za.co.wethinkcode.mmayibo.fixme.data.model.BrokerUser;
 import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.data.model.MarketModel;
 
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class FixPersisitenceTools {
@@ -40,8 +36,6 @@ public class FixPersisitenceTools {
                 return InstrumentModel.class;
             case "market" :
                 return MarketModel.class;
-            case "broker" :
-                return BrokerUser.class;
         }
         return null;
     }

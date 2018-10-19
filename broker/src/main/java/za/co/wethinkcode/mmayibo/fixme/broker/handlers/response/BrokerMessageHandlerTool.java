@@ -1,24 +1,23 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.handlers.response;
 
+import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.broker.handlers.InvalidResponseRequestHandler;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 
 public class BrokerMessageHandlerTool {
 
-    public static FixMessageHandlerResponse getMessageHandler(FixMessage fixMessage) {
-        if (fixMessage.getMessageType() != null){
-            switch (fixMessage.getMessageType()) {
+    public static FixMessageHandlerResponse getMessageHandler(FixMessage message, Broker broker, String rawFixMessage) {
+        if (message.getMessageType() != null){
+            switch (message.getMessageType()) {
                 case "1":
-                    return new IdResponseHandler();
+                    return new IdResponseHandler(broker, message, rawFixMessage);
                 case "8":
-                    return new ExecutionReportHandler();
+                    return new ExecutionReportHandler(broker, message, rawFixMessage);
                 case "W":
-                    return new MarketDataSnapShotResponseHandler();
-                case "2":
-                    return new MarketDataSnapShotResponseHandler();
+                    return new MarketDataSnapShotResponseHandler(broker, message, rawFixMessage);
             }
         }
 
-        return new InvalidResponseRequestHandler();
+        return new InvalidResponseRequestHandler(rawFixMessage);
     }
 }

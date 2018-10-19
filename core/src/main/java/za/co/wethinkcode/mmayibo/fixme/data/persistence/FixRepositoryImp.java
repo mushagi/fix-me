@@ -3,12 +3,9 @@ package za.co.wethinkcode.mmayibo.fixme.data.persistence;
 import za.co.wethinkcode.mmayibo.fixme.data.client.Client;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
-import za.co.wethinkcode.mmayibo.fixme.data.model.BrokerUser;
 import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.data.model.MarketModel;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Collection;
 
 public class FixRepositoryImp implements IRepository {
@@ -85,8 +82,6 @@ public class FixRepositoryImp implements IRepository {
             return "market";
         else if (type == InstrumentModel.class)
             return "instrument";
-        else if (type == BrokerUser.class)
-            return "broker";
         return null;
     }
 }

@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 
 import za.co.wethinkcode.mmayibo.fixme.data.client.Client;
+import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
 import za.co.wethinkcode.mmayibo.fixme.data.model.InitData;
@@ -59,7 +60,7 @@ public class MarketClient extends Client {
 
 
     @Override
-    public void messageRead(ChannelHandlerContext ctx, FixMessage message) throws InterruptedException {
+    public void messageRead(ChannelHandlerContext ctx, FixMessage message, String rawFixMessage) throws InterruptedException {
         FixMessageHandlerResponse messageHandler = MarketMessageHandlerTool.getMessageHandler(message, this);
         messageHandler.handleMessage(message);
     }
@@ -120,7 +121,7 @@ public class MarketClient extends Client {
                 .withSymbol(symbol)
                 .getFixMessage();
 
-        sendResponse(responseMessage);
+        lastChannel.writeAndFlush(FixEncode.encode(responseMessage) + "\n\r");
     }
 
     private String encodeInstruments() {

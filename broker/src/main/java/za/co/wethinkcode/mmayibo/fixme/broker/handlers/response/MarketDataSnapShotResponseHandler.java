@@ -10,33 +10,37 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class MarketDataSnapShotResponseHandler implements FixMessageHandlerResponse {
+    private final String rawFixMessage;
     private Logger logger = Logger.getLogger(getClass().getName());
+    private Broker client;
 
-    @Override
-    public void next(FixMessageHandler next) {
+    private FixMessage responseMessage;
 
+    MarketDataSnapShotResponseHandler(Broker client, FixMessage responseMessage, String rawFixMessage) {
+        this.client = client;
+        this.responseMessage = responseMessage;
+        this.rawFixMessage = rawFixMessage;
     }
 
     @Override
-    public void handleMessage(FixMessage message, Broker broker) {
-        ConcurrentHashMap<String, Instrument> instruments = createInstruments(message.getSymbol());
-        String mdReqId = message.getMDReqID();
-        String marketName = message.getMdName();
-        String marketNetworkId = message.getSenderCompId();
+    public void processMessage() {
+        ConcurrentHashMap<String, Instrument> instruments = createInstruments(responseMessage.getSymbol());
+        String mdReqId = responseMessage.getMDReqID();
+        String marketName = responseMessage.getMdName();
+        String marketNetworkId = responseMessage.getSenderCompId();
         String uniqueId = mdReqId + marketNetworkId;
 
-        logger.info("Received snapshot market "  + instruments );
-
-        Market market = broker.markets.get(uniqueId);
+        Market market = client.markets.get(uniqueId);
 
         if (market == null){
             market = new Market(marketName, mdReqId, instruments, marketNetworkId);
-            broker.markets.put(uniqueId, market);
+            client.markets.put(uniqueId, market);
         }
         else
             market.updateInstruments(instruments);
-        broker.marketsUpdated();
+        client.marketsUpdated();
     }
+
 
     private ConcurrentHashMap<String, Instrument> createInstruments(String symbol) {
         ConcurrentHashMap<String, Instrument> instruments = new ConcurrentHashMap<>();
@@ -55,4 +59,11 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandlerRespo
 
     return instruments;
     }
+
+    @Override
+    public void next(FixMessageHandler next) {
+
+    }
+
+
 }

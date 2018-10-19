@@ -1,22 +1,91 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.handlers.response;
 
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.BrokerUser;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.OwnedInstrument;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.data.model.TradeTransaction;
+import za.co.wethinkcode.mmayibo.fixme.data.persistence.IRepository;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class ExecutionReportHandler implements FixMessageHandlerResponse {
+    private final String rawFixMessage;
     private Logger logger = Logger.getLogger(getClass().getName());
+    private Broker client;
+    private IRepository repository;
+    private BrokerUser user;
+    private FixMessage responseMessage;
+
+    ExecutionReportHandler(Broker client, FixMessage responseMessage, String rawFixMessage) {
+        this.client = client;
+        this.repository = client.repository;
+        this.user = client.user;
+        this.responseMessage = responseMessage;
+        this.rawFixMessage = rawFixMessage;
+    }
 
     @Override
     public void next(FixMessageHandler next) {
 
     }
 
-    @Override
-    public void handleMessage(FixMessage fixMessage, Broker broker) {
-        logger.info("Execution report of Client Order : {"+fixMessage.getClOrderId()+"}. Status : "+ fixMessage.getOrdStatus() );
+    public void processMessage() {
+        logger.info("Raw Fix Message read: " + rawFixMessage
+                + "\nExecution report of Client Order : " +
+                "{"+responseMessage.getClOrderId()+"}. " +
+                "Status : "+ responseMessage.getOrdStatus()
+        );
+
+        TradeTransaction transaction = createTransaction(responseMessage);
+        client.transactions.add(transaction);
+
+        createUpdatePurchasedInstrument();
+        repository.update(client.user);
+
+        client.updateTransactions();
+    }
+
+
+
+    private void createUpdatePurchasedInstrument() {
+        ConcurrentHashMap<String, OwnedInstrument> ownedInstruments = client.user.getInstruments();
+
+        String instrumentId = responseMessage.getSymbol();
+        int purchasedQuantity = responseMessage.getOrderQuantity();
+
+        OwnedInstrument ownedInstrument = ownedInstruments.get(instrumentId);
+        if (ownedInstrument == null){
+            ownedInstrument = new OwnedInstrument(instrumentId);
+            ownedInstruments.put(ownedInstrument.getId(), ownedInstrument);
+        }
+        ownedInstrument.setQuantity(purchasedQuantity);
+
+    }
+
+    private void saveTransactionToDatabase(TradeTransaction transaction) {
+        repository.create(transaction);
+    }
+
+    private TradeTransaction createTransaction(FixMessage message) {
+        TradeTransaction transaction = new TradeTransaction();
+
+        transaction.setClient(message.getClientId());
+        //tradeTransaction.setClientOrderId(requestMessage.getClOrderId());
+        transaction.setSide(message.getSide());
+        transaction.setSymbol(message.getSymbol());
+        transaction.setOrderStatus(message.getOrdStatus());
+        transaction.setText(message.getText());
+        transaction.setPrice(message.getPrice());
+        transaction.setQuantity(message.getOrderQuantity());
+        transaction.setClient(user.getUserName());
+
+        saveTransactionToDatabase(transaction);
+
+        return transaction;
+
     }
 
 

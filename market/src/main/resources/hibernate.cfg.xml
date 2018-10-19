@@ -13,7 +13,7 @@
 
         <mapping class="za.co.wethinkcode.mmayibo.fixme.data.model.MarketModel"/>
         <mapping class="za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel"/>
-        <mapping class="za.co.wethinkcode.mmayibo.fixme.market.model.TradeTransaction"/>
+        <mapping class="za.co.wethinkcode.mmayibo.fixme.data.model.TradeTransaction"/>
 
     </session-factory>
 </hibernate-configuration>

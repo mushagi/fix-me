@@ -1,7 +1,5 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.handlers.response;
 
-import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
 
 import java.util.logging.Logger;
@@ -15,7 +13,7 @@ public class RejectMessageHandler implements FixMessageHandlerResponse {
     }
 
     @Override
-    public void handleMessage(FixMessage fixMessage, Broker broker) {
+    public void processMessage() {
         logger.info("Request has been rejected");
     }
 }

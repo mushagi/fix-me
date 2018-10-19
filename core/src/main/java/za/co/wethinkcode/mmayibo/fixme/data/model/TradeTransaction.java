@@ -1,10 +1,7 @@
-package za.co.wethinkcode.mmayibo.fixme.market.model;
+package za.co.wethinkcode.mmayibo.fixme.data.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenericGenerator;
-import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -4,15 +4,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import za.co.wethinkcode.mmayibo.fixme.data.ResponseFuture;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixDecoder;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
-
-import java.util.logging.Logger;
 
 class ClientHandler extends SimpleChannelInboundHandler<String> {
     private final Client client;
-    private final Logger logger = Logger.getLogger(getClass().getName());
     private ResponseFuture responseFuture;
 
     ClientHandler(Client client) {
@@ -22,12 +17,13 @@ class ClientHandler extends SimpleChannelInboundHandler<String> {
 
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String message) throws Exception {
-        logger.info("Fix Message read: " + message);
-        FixMessage fixMessage = FixDecoder.decode(message);
-        client.messageRead(ctx, fixMessage);
-        if (fixMessage.getMessageId() != null)
-            responseFuture.set(fixMessage.getMessageId(), fixMessage);
+    public void channelRead0(ChannelHandlerContext ctx, String rawFixMessage) throws Exception {
+        FixMessage decodeFixMessage = FixDecoder.decode(rawFixMessage);
+
+        if (decodeFixMessage.getMessageId() != null)
+            responseFuture.set(decodeFixMessage.getMessageId(), decodeFixMessage);
+
+        client.messageRead(ctx, decodeFixMessage, rawFixMessage);
     }
 
     @Override

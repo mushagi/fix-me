@@ -14,18 +14,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
-import za.co.wethinkcode.mmayibo.fixme.data.model.BrokerUser;
-import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
-import za.co.wethinkcode.mmayibo.fixme.data.model.MarketModel;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 public class MainWindowController extends BrokerUI implements Initializable {
@@ -134,12 +129,6 @@ public class MainWindowController extends BrokerUI implements Initializable {
 
         });
     }
-
-    @Override
-    public void updateUser(BrokerUser user) {
-        System.out.println(user.getAccountBalance());
-    }
-
 
     @FXML
     public void sellAction(ActionEvent actionEvent) {
