@@ -14,13 +14,17 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+import org.hibernate.Transaction;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
+import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class MainWindowController extends BrokerUI implements Initializable {
@@ -31,6 +35,9 @@ public class MainWindowController extends BrokerUI implements Initializable {
 
     @FXML
     private ListView<Market> marketListView;
+
+    @FXML
+    private ListView<TradeTransaction> transactionListView;
 
     @FXML
     private Label instrumentDetailTextInLine;
@@ -56,8 +63,8 @@ public class MainWindowController extends BrokerUI implements Initializable {
                 resetLineGraphWithInstrumentHistory();
                 update();
         });
-
         marketListView.setCellFactory(new MarketListCellFactory(this));
+       // transactionListView.setCellFactory(new TransactionListCellFactory(this));
     }
 
     private void resetLineGraphWithInstrumentHistory() {
@@ -86,7 +93,6 @@ public class MainWindowController extends BrokerUI implements Initializable {
                 instrumentDropDown.getSelectionModel().select(0);
             }
         });
-
     }
 
     @Override
@@ -94,8 +100,10 @@ public class MainWindowController extends BrokerUI implements Initializable {
         super.setUpUi(broker, stage);
 
         ObservableMap<String, Market> observableMarkets = FXCollections.observableMap(markets);
+        ObservableList<TradeTransaction> observableTransactions = FXCollections.observableArrayList(transactions);
 
         marketListView.getItems().setAll(observableMarkets.values());
+        transactionListView.getItems().setAll(observableTransactions);
 
         observableMarkets.addListener((MapChangeListener<String, Market>) change -> {
 //            marketListView.getItems().removeAll(change.)

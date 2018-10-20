@@ -1,24 +1,29 @@
 package za.co.wethinkcode.mmayibo.fixme.market.handlers;
 
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
 import za.co.wethinkcode.mmayibo.fixme.market.MarketClient;
 
-public class IdResponseHandler implements FixMessageHandlerResponse {
+import java.util.logging.Logger;
+
+public class IdResponseHandler implements IMessageHandler {
+    private final Logger logger = Logger.getLogger(getClass().getName());
+
     private final MarketClient client;
+    private final FixMessage responseMessage;
+    private final String rawFixMessage;
 
-    public IdResponseHandler(MarketClient client) {
+    public IdResponseHandler(MarketClient client, FixMessage responseMessage, String rawFixMessage) {
         this.client = client;
+        this.responseMessage = responseMessage;
+        this.rawFixMessage = rawFixMessage;
     }
 
     @Override
-    public void next(FixMessageHandler next) {
-
-    }
-
-    @Override
-    public void handleMessage(FixMessage message) {
-        client.networkId = message.getText();
-        System.out.println("MarketClient Id : " + client.networkId);
+    public void processMessage() {
+        logger.info("Fix message read : " + rawFixMessage);
+        client.networkId = responseMessage.getText();
+        logger.info("MarketClient Id : " + client.networkId);
     }
 }

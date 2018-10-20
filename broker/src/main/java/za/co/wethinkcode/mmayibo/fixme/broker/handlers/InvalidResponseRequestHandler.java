@@ -1,22 +1,16 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.handlers;
 
 
-import za.co.wethinkcode.mmayibo.fixme.broker.handlers.response.FixMessageHandlerResponse;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
 
 import java.util.logging.Logger;
 
-public class InvalidResponseRequestHandler implements FixMessageHandlerResponse {
+public class InvalidResponseRequestHandler implements IMessageHandler {
     private final String rawFixMessage;
     private Logger logger = Logger.getLogger(getClass().getName());
 
     public InvalidResponseRequestHandler(String rawFixMessage) {
         this.rawFixMessage = rawFixMessage;
-    }
-
-    @Override
-    public void next(FixMessageHandler next) {
-
     }
 
     @Override

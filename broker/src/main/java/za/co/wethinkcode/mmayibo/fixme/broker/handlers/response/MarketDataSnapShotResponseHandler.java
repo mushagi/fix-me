@@ -3,13 +3,13 @@ package za.co.wethinkcode.mmayibo.fixme.broker.handlers.response;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-public class MarketDataSnapShotResponseHandler implements FixMessageHandlerResponse {
+public class MarketDataSnapShotResponseHandler implements IMessageHandler {
     private final String rawFixMessage;
     private Logger logger = Logger.getLogger(getClass().getName());
     private Broker client;
@@ -25,6 +25,7 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandlerRespo
     @Override
     public void processMessage() {
         ConcurrentHashMap<String, Instrument> instruments = createInstruments(responseMessage.getSymbol());
+
         String mdReqId = responseMessage.getMDReqID();
         String marketName = responseMessage.getMdName();
         String marketNetworkId = responseMessage.getSenderCompId();
@@ -56,14 +57,7 @@ public class MarketDataSnapShotResponseHandler implements FixMessageHandlerRespo
                 instruments.put(id, new Instrument(id, name, price));
             }
         }
-
-    return instruments;
+        return instruments;
     }
-
-    @Override
-    public void next(FixMessageHandler next) {
-
-    }
-
 
 }

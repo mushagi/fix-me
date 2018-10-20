@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 
 public class BrokerMain extends Application {
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         Broker broker = new Broker("localhost", 5001 );
@@ -22,11 +21,9 @@ public class BrokerMain extends Application {
 
         BrokerUI controller = loader.getController();
         controller.setUpUi(broker, primaryStage);
-
     }
 
     public static void main(String args[]) {
         launch(args);
     }
-
 }

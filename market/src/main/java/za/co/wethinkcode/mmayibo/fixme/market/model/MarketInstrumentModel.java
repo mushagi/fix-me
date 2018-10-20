@@ -1,7 +1,7 @@
 package za.co.wethinkcode.mmayibo.fixme.market.model;
 
 import lombok.Getter;
-import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
 
 @Getter
 public class MarketInstrumentModel extends InstrumentModel {

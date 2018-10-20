@@ -95,8 +95,7 @@ public class LoginRegisterController extends BrokerUI {
         });
     }
 
-    private void transitToAnotherScene(Parent root)
-    {
+    private void transitToAnotherScene(Parent root) {
         FadeTransition fd = new FadeTransition();
         fd.setNode(root);
         fd.setFromValue(0);

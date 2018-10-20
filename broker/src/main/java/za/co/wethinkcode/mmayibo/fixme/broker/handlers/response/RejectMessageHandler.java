@@ -1,16 +1,11 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.handlers.response;
 
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
 
 import java.util.logging.Logger;
 
-public class RejectMessageHandler implements FixMessageHandlerResponse {
+public class RejectMessageHandler implements IMessageHandler {
     private Logger logger = Logger.getLogger(getClass().getName());
-
-    @Override
-    public void next(FixMessageHandler next) {
-
-    }
 
     @Override
     public void processMessage() {

@@ -1,17 +1,24 @@
 package za.co.wethinkcode.mmayibo.fixme.market.handlers;
 
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
 
-public class InvalidResponseRequestHandler implements FixMessageHandlerResponse {
-    @Override
-    public void next(FixMessageHandler next) {
+import java.util.logging.Logger;
 
+public class InvalidResponseRequestHandler implements IMessageHandler {
+    private final Logger logger = Logger.getLogger(getClass().getName());
+
+    private final String rawFixMessage;
+
+    InvalidResponseRequestHandler(String rawFixMessage) {
+        this.rawFixMessage = rawFixMessage;
     }
 
     @Override
-    public void handleMessage(FixMessage message) {
+    public void processMessage() {
+        logger.info("Fix message read : " + rawFixMessage);
 
-        System.out.println("Invalid Request");
     }
+
 }

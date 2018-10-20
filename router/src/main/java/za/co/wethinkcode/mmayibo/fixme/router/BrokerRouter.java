@@ -1,31 +1,25 @@
 package za.co.wethinkcode.mmayibo.fixme.router;
 
 import io.netty.channel.ChannelHandlerContext;
-import za.co.wethinkcode.mmayibo.fixme.data.ChannelGroupHashed;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixDecoder;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
-import za.co.wethinkcode.mmayibo.fixme.router.handlers.request.FixMessageTool;
-import za.co.wethinkcode.mmayibo.fixme.data.server.Server;
-
-import java.util.logging.Logger;
+import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
+import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.router.handlers.MessageHandlerTool;
+import za.co.wethinkcode.mmayibo.fixme.core.server.Server;
 
 public class BrokerRouter extends Server {
-    private final Logger logger = Logger.getLogger(getClass().getName());
-
-    BrokerRouter(String host, int port, ChannelGroupHashed channels) {
-        super(host, port, channels);
+    BrokerRouter(String host, int port, ChannelGroupHashed channels, ChannelGroupHashed responseChannels) {
+        super(host, port, channels, responseChannels);
     }
 
     @Override
-    public void messageRead(final ChannelHandlerContext ctx, final FixMessage message) {
-        FixMessageHandler fixMessageHandler = FixMessageTool.getMessageHandler(message);
-        fixMessageHandler.handleMessage(message, ctx.channel(), State.marketChannels, State.dataChannel);
+    public void messageRead(final ChannelHandlerContext ctx, final String rawFixMessage) {
+        IMessageHandler handler = MessageHandlerTool.getMessageHandler(rawFixMessage, this);
+        handler.processMessage();
     }
 
     @Override
     protected void channelActive(ChannelHandlerContext ctx) {
         logger.info("Broker client connected. " + ctx.channel().id().toString());
-        State.brokerChannels.add(ctx.channel());
+        responseChannels.add(ctx.channel());
     }
 }

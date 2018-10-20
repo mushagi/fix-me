@@ -11,9 +11,9 @@
         <property name="connection.url">jdbc:sqlite:fixme_data.db</property>
         <property name="hibernate.hbm2ddl.auto">create-drop</property>
 
-        <mapping class="za.co.wethinkcode.mmayibo.fixme.data.model.MarketModel"/>
-        <mapping class="za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel"/>
-        <mapping class="za.co.wethinkcode.mmayibo.fixme.data.model.TradeTransaction"/>
+        <mapping class="za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel"/>
+        <mapping class="za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel"/>
+        <mapping class="za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction"/>
 
     </session-factory>
 </hibernate-configuration>

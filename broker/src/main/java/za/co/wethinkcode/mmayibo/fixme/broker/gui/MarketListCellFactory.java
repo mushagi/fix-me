@@ -8,7 +8,7 @@ import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
 public class MarketListCellFactory implements Callback<ListView<Market>, ListCell<Market>> {
     private final MainWindowController mainWindowController;
 
-    public MarketListCellFactory(MainWindowController mainWindowController) {
+    MarketListCellFactory(MainWindowController mainWindowController) {
         this.mainWindowController = mainWindowController;
     }
 

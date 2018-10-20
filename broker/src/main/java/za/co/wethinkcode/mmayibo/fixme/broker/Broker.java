@@ -3,14 +3,14 @@ package za.co.wethinkcode.mmayibo.fixme.broker;
 import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.broker.gui.BrokerUI;
 import za.co.wethinkcode.mmayibo.fixme.broker.handlers.response.BrokerMessageHandlerTool;
-import za.co.wethinkcode.mmayibo.fixme.broker.handlers.response.FixMessageHandlerResponse;
+import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.BrokerUser;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
-import za.co.wethinkcode.mmayibo.fixme.data.client.Client;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
-import za.co.wethinkcode.mmayibo.fixme.data.model.TradeTransaction;
+import za.co.wethinkcode.mmayibo.fixme.core.client.Client;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
+import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class Broker extends Client {
-    public ArrayList<TradeTransaction> transactions = new ArrayList();
+    public ArrayList<TradeTransaction> transactions = new ArrayList<>();
     private Logger logger = Logger.getLogger(getClass().getName());
     public BrokerUser user;
     private ArrayList<BrokerUI> userInterfaces = new ArrayList<>();
@@ -27,16 +27,18 @@ public class Broker extends Client {
 
     public Broker(String host, int port) {
         super(host, port);
+        transactions.add(new TradeTransaction());
     }
 
     @Override
     public void messageRead(ChannelHandlerContext ctx, FixMessage message, String rawFixMessage) {
-        FixMessageHandlerResponse messageHandler = BrokerMessageHandlerTool.getMessageHandler(message, this, rawFixMessage);
+        IMessageHandler messageHandler = BrokerMessageHandlerTool.getMessageHandler(message, this, rawFixMessage);
         messageHandler.processMessage();
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        requestMarketSnapShotData("all");
     }
 
     public void register(BrokerUI userInterface) {
@@ -62,6 +64,17 @@ public class Broker extends Client {
         sendRequest(requestFixMessage);
     }
 
+    public void requestMarketSnapShotData(String marketId){
+        FixMessage requestFixMessage = new FixMessageBuilder()
+                .newFixMessage()
+                .withMessageType("V")
+                .withTargetCompId(marketId)
+                .getFixMessage();
+
+        logger.info("Requesting market. OrderID =  " + requestFixMessage.getClOrderId());
+        sendRequest(requestFixMessage);
+    }
+
     private String generateUUID() {
         return UUID.randomUUID().toString();
     }
@@ -80,6 +93,6 @@ public class Broker extends Client {
     }
 
     public void updateTransactions() {
-        logger.info("transaction available");
+        logger.info("transaction done");
     }
 }

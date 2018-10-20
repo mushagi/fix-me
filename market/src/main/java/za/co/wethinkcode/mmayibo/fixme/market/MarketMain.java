@@ -1,6 +1,7 @@
 package za.co.wethinkcode.mmayibo.fixme.market;
 
 class MarketMain {
+
     public static void main(String args[]){
         String marketUserName = getMarketIdFromArguments(args);
 

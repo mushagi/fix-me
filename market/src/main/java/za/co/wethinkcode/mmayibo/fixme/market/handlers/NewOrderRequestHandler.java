@@ -1,44 +1,43 @@
 package za.co.wethinkcode.mmayibo.fixme.market.handlers;
 
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
-import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
-import za.co.wethinkcode.mmayibo.fixme.data.persistence.IRepository;
+import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
 import za.co.wethinkcode.mmayibo.fixme.market.FixMessageValidator;
 import za.co.wethinkcode.mmayibo.fixme.market.MarketClient;
-import za.co.wethinkcode.mmayibo.fixme.data.model.TradeTransaction;
+import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
 import java.util.logging.Logger;
 
-public class NewOrderRequestHandler implements FixMessageHandlerResponse {
-    private Logger logger = Logger.getLogger(getClass().getName());
+public class NewOrderRequestHandler implements IMessageHandler {
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     private final MarketClient client;
+    private final IRepository repository;
+    private final FixMessage requestMessage;
+    private final String rawFixMessage;
 
-    private IRepository repository;
-
-    private String orderStatus;
-    private FixMessage requestMessage;
+    private  String orderStatus;
     private String text;
     private StringBuilder errorBuilder = new StringBuilder();
     private InstrumentModel instrument;
 
-    NewOrderRequestHandler(MarketClient client) {
+    NewOrderRequestHandler(FixMessage requestMessage, MarketClient client, String rawFixMessage) {
+        this.requestMessage = requestMessage;
         this.repository = client.repository;
         this.client = client;
+        this.rawFixMessage = rawFixMessage;
     }
-
     @Override
-    public void next(FixMessageHandler next) {
-
-    }
-
-    @Override
-    public void handleMessage(FixMessage requestMessage) {
-        this.requestMessage = requestMessage;
+    public void processMessage() {
+        logger.info("Fix message read : " + rawFixMessage);
         new Thread(this::processRequest).start();
     }
+
+
 
     private void processRequest()  {
         orderStatus = "2";

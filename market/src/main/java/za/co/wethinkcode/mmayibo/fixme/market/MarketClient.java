@@ -3,14 +3,14 @@ package za.co.wethinkcode.mmayibo.fixme.market;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 
-import za.co.wethinkcode.mmayibo.fixme.data.client.Client;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixEncode;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageBuilder;
-import za.co.wethinkcode.mmayibo.fixme.data.model.InitData;
-import za.co.wethinkcode.mmayibo.fixme.data.model.InstrumentModel;
-import za.co.wethinkcode.mmayibo.fixme.data.model.MarketModel;
-import za.co.wethinkcode.mmayibo.fixme.market.handlers.FixMessageHandlerResponse;
+import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.client.Client;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
+import za.co.wethinkcode.mmayibo.fixme.core.model.InitData;
+import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
+import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
 import za.co.wethinkcode.mmayibo.fixme.market.handlers.MarketMessageHandlerTool;
 
 import javax.xml.bind.JAXBContext;
@@ -34,7 +34,7 @@ public class MarketClient extends Client {
         this.marketUserName = marketUserName;
     }
 
-    public void startTimer()
+    private void startTimer()
     {
         long delay  = 10000L;
         long period = 10000L;
@@ -44,7 +44,7 @@ public class MarketClient extends Client {
     private TimerTask broadcastMarket = new TimerTask() {
         public void run() {
             generatePriceForInstruments();
-            sendMarketDataSnapShot("all", lastChannel);
+            sendMarketDataSnapShot("all");
         }
     };
 
@@ -60,13 +60,13 @@ public class MarketClient extends Client {
 
 
     @Override
-    public void messageRead(ChannelHandlerContext ctx, FixMessage message, String rawFixMessage) throws InterruptedException {
-        FixMessageHandlerResponse messageHandler = MarketMessageHandlerTool.getMessageHandler(message, this);
-        messageHandler.handleMessage(message);
+    public void messageRead(ChannelHandlerContext ctx, FixMessage message, String rawFixMessage) {
+        IMessageHandler handler = MarketMessageHandlerTool.getMessageHandler(message, this, rawFixMessage);
+        handler.processMessage();
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws InterruptedException {
+    public void channelActive(ChannelHandlerContext ctx)  {
         login();
     }
 
@@ -108,7 +108,7 @@ public class MarketClient extends Client {
         return null;
     }
 
-    public void sendMarketDataSnapShot(String senderCompId, Channel channel) {
+    public void sendMarketDataSnapShot(String senderCompId) {
         String symbol = encodeInstruments();
 
         FixMessage responseMessage = new FixMessageBuilder()
@@ -121,7 +121,7 @@ public class MarketClient extends Client {
                 .withSymbol(symbol)
                 .getFixMessage();
 
-        lastChannel.writeAndFlush(FixEncode.encode(responseMessage) + "\n\r");
+        lastChannel.writeAndFlush(FixEncode.encode(responseMessage) + "\r\n");
     }
 
     private String encodeInstruments() {

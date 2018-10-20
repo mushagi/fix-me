@@ -3,15 +3,15 @@ package za.co.wethinkcode.mmayibo.fixme.broker.handlers.response;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.BrokerUser;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.OwnedInstrument;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.data.fixprotocol.FixMessageHandler;
-import za.co.wethinkcode.mmayibo.fixme.data.model.TradeTransaction;
-import za.co.wethinkcode.mmayibo.fixme.data.persistence.IRepository;
+import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
+import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-public class ExecutionReportHandler implements FixMessageHandlerResponse {
+public class ExecutionReportHandler implements IMessageHandler {
     private final String rawFixMessage;
     private Logger logger = Logger.getLogger(getClass().getName());
     private Broker client;
@@ -25,11 +25,6 @@ public class ExecutionReportHandler implements FixMessageHandlerResponse {
         this.user = client.user;
         this.responseMessage = responseMessage;
         this.rawFixMessage = rawFixMessage;
-    }
-
-    @Override
-    public void next(FixMessageHandler next) {
-
     }
 
     public void processMessage() {
