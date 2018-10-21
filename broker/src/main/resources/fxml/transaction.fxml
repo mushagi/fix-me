@@ -5,10 +5,11 @@
 <?import javafx.scene.layout.VBox?>
 <fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
    <graphic>
-      <VBox>
-         <children>
-            <Label fx:id="name" />
-         </children>
+      <VBox fx:id="box">
+          <children>
+              <Label fx:id="heading"/>
+              <Label fx:id="subheading"/>
+          </children>
       </VBox>
    </graphic>
 </fx:root>

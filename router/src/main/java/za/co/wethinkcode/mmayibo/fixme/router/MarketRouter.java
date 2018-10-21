@@ -12,8 +12,8 @@ public class MarketRouter extends Server {
     }
 
     @Override
-    public void messageRead(final ChannelHandlerContext ctx, final String rawFixMessage) {
-        IMessageHandler handler = MessageHandlerTool.getMessageHandler(rawFixMessage, this);
+    public void messageRead(final String rawFixMessage, ChannelHandlerContext ctx) {
+        IMessageHandler handler = MessageHandlerTool.getMessageHandler(rawFixMessage, this, ctx.channel());
         handler.processMessage();
     }
 

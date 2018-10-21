@@ -10,7 +10,7 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 
 public class ResponseFuture implements Future<FixMessage> {
 
-    BlockingHashMap<String, FixMessage> blockingHashMap = new BlockingHashMap<>();
+    private final BlockingHashMap<String, FixMessage> blockingHashMap = new BlockingHashMap<>();
 
     @Override
     public boolean isDone() {
@@ -18,7 +18,7 @@ public class ResponseFuture implements Future<FixMessage> {
     }
 
     @Override
-    public FixMessage get() throws InterruptedException, ExecutionException {
+    public FixMessage get() {
         return null;
     }
 
@@ -70,7 +70,7 @@ public class ResponseFuture implements Future<FixMessage> {
     }
 
     @Override
-    public Future<FixMessage> sync() throws InterruptedException {
+    public Future<FixMessage> sync() {
         return null;
     }
 
@@ -80,7 +80,7 @@ public class ResponseFuture implements Future<FixMessage> {
     }
 
     @Override
-    public Future<FixMessage> await() throws InterruptedException {
+    public Future<FixMessage> await() {
         return null;
     }
 
@@ -90,12 +90,12 @@ public class ResponseFuture implements Future<FixMessage> {
     }
 
     @Override
-    public boolean await(long l, TimeUnit timeUnit) throws InterruptedException {
+    public boolean await(long l, TimeUnit timeUnit) {
         return false;
     }
 
     @Override
-    public boolean await(long l) throws InterruptedException {
+    public boolean await(long l) {
         return false;
     }
 

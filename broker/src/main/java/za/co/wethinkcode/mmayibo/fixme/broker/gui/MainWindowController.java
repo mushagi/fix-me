@@ -1,10 +1,7 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,22 +10,22 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.hibernate.Transaction;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
 import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
+import javax.swing.text.GlyphView;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
 
 
 public class MainWindowController extends BrokerUI implements Initializable {
-    private ObservableList<Instrument>  observableInstruments = FXCollections.observableArrayList();;
+    private final ObservableList<Instrument>  observableInstruments = FXCollections.observableArrayList();
 
     @FXML
     private ChoiceBox<Instrument> instrumentDropDown;
@@ -47,9 +44,12 @@ public class MainWindowController extends BrokerUI implements Initializable {
 
     private Market selectedMarket;
     private Instrument selectedInstrument;
+    ObservableMap<UUID, TradeTransaction> observableTransactions;
 
+    private final XYChart.Series<Number, Number> marketDataSeries = new XYChart.Series<>();
 
-    private XYChart.Series<Number, Number> marketDataSeries = new XYChart.Series<>();
+    @FXML
+    private TextField quantityText;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -64,7 +64,7 @@ public class MainWindowController extends BrokerUI implements Initializable {
                 update();
         });
         marketListView.setCellFactory(new MarketListCellFactory(this));
-       // transactionListView.setCellFactory(new TransactionListCellFactory(this));
+        transactionListView.setCellFactory(new TransactionListCellFactory(this));
     }
 
     private void resetLineGraphWithInstrumentHistory() {
@@ -77,11 +77,17 @@ public class MainWindowController extends BrokerUI implements Initializable {
         });
     }
 
-
     @FXML
     void buyAction(ActionEvent event){
-        if (selectedInstrument != null)
-            broker.newOrderSingle(selectedMarket, selectedInstrument, "buy");
+
+        if (selectedInstrument != null){
+            try{
+                int quantity = Integer.parseInt(quantityText.getText());
+                broker.newOrderSingle(selectedMarket, selectedInstrument, "buy", quantity);
+            }catch (NumberFormatException e) {
+
+            }
+        }
     }
     void updateSelectedMarket() {
         Platform.runLater(() -> {
@@ -100,17 +106,21 @@ public class MainWindowController extends BrokerUI implements Initializable {
         super.setUpUi(broker, stage);
 
         ObservableMap<String, Market> observableMarkets = FXCollections.observableMap(markets);
-        ObservableList<TradeTransaction> observableTransactions = FXCollections.observableArrayList(transactions);
+
+        observableTransactions = FXCollections.observableMap(transactions);
 
         marketListView.getItems().setAll(observableMarkets.values());
-        transactionListView.getItems().setAll(observableTransactions);
+        transactionListView.getItems().setAll(observableTransactions.values());
+        observableTransactions.addListener((MapChangeListener<UUID, TradeTransaction>) change -> {
 
-        observableMarkets.addListener((MapChangeListener<String, Market>) change -> {
-//            marketListView.getItems().removeAll(change.)
-//            if (change.wasAdded()) {
-//                marketListView.getItems().add(change.getKey());
-//            }
+            if (change.wasAdded()) {
+                transactionListView.getItems().add(change.getValueAdded());
+            }
+            else if (change.wasRemoved())
+                transactionListView.getItems().remove(change.getValueRemoved());
+
         });
+
 
     }
 
@@ -140,7 +150,16 @@ public class MainWindowController extends BrokerUI implements Initializable {
 
     @FXML
     public void sellAction(ActionEvent actionEvent) {
+        int quantity = Integer.parseInt(quantityText.getText());
         if (selectedInstrument != null)
-            broker.newOrderSingle(selectedMarket, selectedInstrument, "sell");
+            broker.newOrderSingle(selectedMarket, selectedInstrument, "sell", quantity);
+    }
+
+    @Override
+    public void updateTransactions(final TradeTransaction tradeTransaction){
+        Platform.runLater(() -> {
+            observableTransactions.put(tradeTransaction.getClientOrderId(), tradeTransaction);
+            System.out.println("transaction done");
+        });
     }
 }

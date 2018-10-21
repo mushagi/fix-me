@@ -3,11 +3,9 @@ package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
-import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Instrument;
-import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
 import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
-public class TransactionListCellFactory implements Callback<ListView<TradeTransaction>, ListCell<TradeTransaction>> {
+class TransactionListCellFactory implements Callback<ListView<TradeTransaction>, ListCell<TradeTransaction>> {
     private final MainWindowController mainWindowController;
 
     public TransactionListCellFactory(MainWindowController mainWindowController) {

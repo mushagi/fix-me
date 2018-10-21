@@ -7,8 +7,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 
-public class SetUpDatabase implements Runnable {
-    private IRepository repository;
+class SetUpDatabase implements Runnable {
+    private final IRepository repository;
     private InitData initData;
 
     public SetUpDatabase(IRepository repository) {
@@ -18,14 +18,11 @@ public class SetUpDatabase implements Runnable {
     @Override
     public void run() {
         loadInitDataFromXML();
-        try {
-            setUpDatabase();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        setUpDatabase();
+
     }
 
-    public void loadInitDataFromXML() {
+    private void loadInitDataFromXML() {
         try {
             File file = new File(getClass().getResource("/init.core.xml").getFile());
 
@@ -41,7 +38,7 @@ public class SetUpDatabase implements Runnable {
         }
     }
 
-    private void setUpDatabase() throws InterruptedException {
+    private void setUpDatabase() {
         if (repository.getAll(MarketModel.class).isEmpty())
             repository.createAll(initData.markets);
     }

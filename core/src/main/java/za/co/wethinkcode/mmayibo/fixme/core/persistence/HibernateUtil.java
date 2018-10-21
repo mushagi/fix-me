@@ -6,16 +6,22 @@ import org.hibernate.cfg.Configuration;
 
 import lombok.Getter;
 
-public class HibernateUtil {
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+class HibernateUtil {
     @Getter
     private final SessionFactory sessionFactory;
 
     @Getter
-    private Session session;
+    private final Session session;
 
     public HibernateUtil() {
-        sessionFactory = new Configuration().configure().buildSessionFactory();;
+        Logger log = Logger.getLogger("org.hibernate");
+        log.setLevel(Level.OFF);
+        sessionFactory = new Configuration().configure().buildSessionFactory();
         session = sessionFactory.openSession();
+
     }
 
     private void close() {

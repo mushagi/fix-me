@@ -32,12 +32,12 @@ public class InstrumentModel {
     @XmlElement(name =  "Quantity")
     public int quantity;
 
-    public InstrumentModel(String name, double price) {
+    protected InstrumentModel(String name, double price) {
         this.name = name;
         this.price = price;
     }
 
-    public InstrumentModel() {
+    protected InstrumentModel() {
     }
 
     @Override

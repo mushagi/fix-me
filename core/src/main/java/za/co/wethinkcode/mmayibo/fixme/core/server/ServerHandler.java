@@ -36,7 +36,7 @@ class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String rawFixMessage) {
-        server.messageRead(ctx, rawFixMessage);
+        server.messageRead(rawFixMessage, ctx);
     }
 
     @Override

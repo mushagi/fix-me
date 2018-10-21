@@ -1,6 +1,6 @@
 package za.co.wethinkcode.mmayibo.fixme.router;
 
-public class RouterMain {
+class RouterMain {
     public static void main(String args[]){
         MarketRouter marketRouter = new MarketRouter("localhost", 5000, State.marketChannels, State.brokerChannels);
         BrokerRouter brokerRouter = new BrokerRouter("localhost", 5001, State.brokerChannels, State.marketChannels);

@@ -9,7 +9,7 @@ import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
 
 import java.io.IOException;
 
-public class MarketListItemController extends ListCell<Market> {
+class MarketListItemController extends ListCell<Market> {
 
     private final MainWindowController mainWindowController;
 

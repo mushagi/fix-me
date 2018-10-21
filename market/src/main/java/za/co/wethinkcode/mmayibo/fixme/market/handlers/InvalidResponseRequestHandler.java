@@ -1,8 +1,6 @@
 package za.co.wethinkcode.mmayibo.fixme.market.handlers;
 
 import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
 
 import java.util.logging.Logger;
 

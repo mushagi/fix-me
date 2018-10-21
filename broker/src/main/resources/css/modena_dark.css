@@ -4,6 +4,15 @@
  */
 
 /* Redefine base colors */
+
+
+#apnNGPBackground {
+    -fx-background-image: url("../images/marketwall.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover, stretch;
+    -fx-background-position: center;
+}
+
 .root {
     -fx-base: rgb(50, 50, 50);
     -fx-background: rgb(50, 50, 50);
@@ -53,4 +62,11 @@
 .scroll-bar > .increment-button:pressed > .increment-arrow,
 .scroll-bar > .decrement-button:pressed > .decrement-arrow {
     -fx-background-color: -fx-mark-highlight-color, rgb(255, 255, 255);
+}
+
+.list-view .list-cell:even {
+    -fx-background-color: blue;
+}
+.list-view .list-cell:odd {
+    -fx-background-color: blue;
 }

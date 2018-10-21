@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class OwnedInstrumentModel {
+class OwnedInstrumentModel {
     private String name;
     private int Quantity;
 

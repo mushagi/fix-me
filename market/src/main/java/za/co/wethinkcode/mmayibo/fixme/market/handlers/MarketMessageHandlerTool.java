@@ -13,6 +13,8 @@ public class MarketMessageHandlerTool {
                     return new IdResponseHandler(client, message, rawFixMessage);
                 case "D":
                     return new NewOrderRequestHandler(message, client, rawFixMessage);
+                case "V":
+                    return new MarketSnapShotRequestHandler(message, client, rawFixMessage);
             }
         }
         return new InvalidResponseRequestHandler(rawFixMessage);

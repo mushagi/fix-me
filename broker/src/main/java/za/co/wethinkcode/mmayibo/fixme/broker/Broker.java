@@ -1,6 +1,5 @@
 package za.co.wethinkcode.mmayibo.fixme.broker;
 
-import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.broker.gui.BrokerUI;
 import za.co.wethinkcode.mmayibo.fixme.broker.handlers.response.BrokerMessageHandlerTool;
 import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
@@ -18,26 +17,25 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class Broker extends Client {
-    public ArrayList<TradeTransaction> transactions = new ArrayList<>();
-    private Logger logger = Logger.getLogger(getClass().getName());
+    public final ConcurrentHashMap<UUID, TradeTransaction>  transactions = new ConcurrentHashMap<>();
+    private final Logger logger = Logger.getLogger(getClass().getName());
     public BrokerUser user;
-    private ArrayList<BrokerUI> userInterfaces = new ArrayList<>();
+    private final ArrayList<BrokerUI> userInterfaces = new ArrayList<>();
 
-    public ConcurrentHashMap<String, Market> markets = new ConcurrentHashMap<>();
+    public final ConcurrentHashMap<String, Market> markets = new ConcurrentHashMap<>();
 
     public Broker(String host, int port) {
         super(host, port);
-        transactions.add(new TradeTransaction());
     }
 
     @Override
-    public void messageRead(ChannelHandlerContext ctx, FixMessage message, String rawFixMessage) {
+    public void messageRead(FixMessage message, String rawFixMessage) {
         IMessageHandler messageHandler = BrokerMessageHandlerTool.getMessageHandler(message, this, rawFixMessage);
         messageHandler.processMessage();
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) {
+    public void channelActive() {
         requestMarketSnapShotData("all");
     }
 
@@ -46,13 +44,14 @@ public class Broker extends Client {
             userInterfaces.add(userInterface);
     }
 
-    public void newOrderSingle(Market market, Instrument instrument, String side){
+    public void newOrderSingle(Market market, Instrument instrument, String side, int quantity){
         FixMessage requestFixMessage = new FixMessageBuilder()
                 .newFixMessage()
                 .withMessageType("D")
                 .withClOrderId(generateUUID())
                 .withPrice(instrument.costPrice)
                 .withSide(side)
+                .withOrderQuantity(quantity)
                 .withSenderCompId(networkId)
                 .withTargetCompId(market.getNetworkId())
                 .withMDReqID(market.getMdReqId())
@@ -64,7 +63,7 @@ public class Broker extends Client {
         sendRequest(requestFixMessage);
     }
 
-    public void requestMarketSnapShotData(String marketId){
+    private void requestMarketSnapShotData(String marketId){
         FixMessage requestFixMessage = new FixMessageBuilder()
                 .newFixMessage()
                 .withMessageType("V")
@@ -92,7 +91,8 @@ public class Broker extends Client {
         userInterfaces.remove(brokerUI);
     }
 
-    public void updateTransactions() {
-        logger.info("transaction done");
+    public void updateTransactions(TradeTransaction tradeTransaction) {
+        for (BrokerUI userInterface: userInterfaces)
+            userInterface.updateTransactions(tradeTransaction);
     }
 }

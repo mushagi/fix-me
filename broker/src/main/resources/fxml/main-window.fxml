@@ -12,7 +12,6 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -29,37 +28,12 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Quit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Undo" />
-            <MenuItem mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+            <MenuItem mnemonicParsing="false" text="About" />
           </items>
         </Menu>
       </menus>
@@ -99,22 +73,23 @@
                <children>
                   <VBox alignment="CENTER" fillWidth="false" layoutY="14.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
                      <children>
-                        <TextField alignment="TOP_CENTER" prefHeight="28.0" prefWidth="150.0" promptText="Enter Quantity  " />
-                        <Separator prefHeight="3.0" prefWidth="219.0" />
+                        <TextField fx:id="quantityText" alignment="TOP_CENTER" prefHeight="28.0" prefWidth="150.0" promptText="Quantity  " />
+                        <TextField fx:id="quantityText1" alignment="TOP_CENTER" prefHeight="28.0" prefWidth="150.0" promptText="Delay" />
                         <HBox alignment="CENTER" spacing="39.0" VBox.vgrow="ALWAYS">
                            <children>
                               <Button fx:id="buyButton" mnemonicParsing="false" onAction="#buyAction" prefHeight="32.0" prefWidth="63.0" text="Buy" />
                               <Button mnemonicParsing="false" onAction="#sellAction" prefHeight="32.0" prefWidth="63.0" text="Sell" />
                            </children>
                         </HBox>
-                        <Text fill="#d1ff00" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Transactions" textAlignment="CENTER" wrappingWidth="230.00001534819603">
+                        <Separator prefHeight="3.0" prefWidth="219.0" />
+                        <Text fill="#c6cda3" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Transactions" textAlignment="CENTER" wrappingWidth="230.00001534819603">
                            <font>
                               <Font size="17.0" />
                            </font>
                         </Text>
                      </children>
                   </VBox>
-                  <ListView fx:id="transactionListView" layoutX="5.0" layoutY="139.0" maxHeight="1.7976931348623157E308" prefHeight="410.0" prefWidth="248.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="139.0" />
+                  <ListView fx:id="transactionListView" layoutX="5.0" layoutY="182.0" maxHeight="1.7976931348623157E308" prefHeight="367.0" prefWidth="239.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="182.0" />
                </children>
             </AnchorPane>
       </items>

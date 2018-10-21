@@ -6,23 +6,23 @@ import za.co.wethinkcode.mmayibo.fixme.market.MarketClient;
 
 import java.util.logging.Logger;
 
-public class IdResponseHandler implements IMessageHandler {
+public class MarketSnapShotRequestHandler implements IMessageHandler {
     private final Logger logger = Logger.getLogger(getClass().getName());
 
-    private final MarketClient client;
-    private final FixMessage responseMessage;
+    private final FixMessage requestMessage;
     private final String rawFixMessage;
+    private final MarketClient client;
 
-    public IdResponseHandler(MarketClient client, FixMessage responseMessage, String rawFixMessage) {
+    public MarketSnapShotRequestHandler(FixMessage requestMessage, MarketClient client, String rawFixMessage) {
+        this.requestMessage = requestMessage;
         this.client = client;
-        this.responseMessage = responseMessage;
         this.rawFixMessage = rawFixMessage;
     }
 
     @Override
     public void processMessage() {
         logger.info("Fix message read : " + rawFixMessage);
-        client.networkId = responseMessage.getText();
-        logger.info("MarketClient Id : " + client.networkId);
+
+        client.sendMarketDataSnapShot(requestMessage.getSenderCompId());
     }
 }

@@ -53,7 +53,7 @@ public class HibernateRepository implements IRepository {
     }
 
     @Override
-    public <T> boolean update(T entity) {
+    public <T> void update(T entity) {
         try {
             Transaction transaction = session.beginTransaction();
             session.update(entity);
@@ -61,9 +61,7 @@ public class HibernateRepository implements IRepository {
         }
         catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
-        return true;
     }
 
     @Override
@@ -95,11 +93,10 @@ public class HibernateRepository implements IRepository {
     }
 
     @Override
-    public <T> boolean createAll(Collection<T> entities) {
+    public <T> void createAll(Collection<T> entities) {
         for (T entity: entities)
             if (create(entity) == null)
-                return false;
-        return true;
+                return;
     }
 
     @Override

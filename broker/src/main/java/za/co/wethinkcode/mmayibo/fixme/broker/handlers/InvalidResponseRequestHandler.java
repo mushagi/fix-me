@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 public class InvalidResponseRequestHandler implements IMessageHandler {
     private final String rawFixMessage;
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     public InvalidResponseRequestHandler(String rawFixMessage) {
         this.rawFixMessage = rawFixMessage;

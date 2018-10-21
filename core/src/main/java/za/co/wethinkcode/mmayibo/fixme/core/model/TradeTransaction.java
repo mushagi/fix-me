@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.UUID;
 
 @Getter @Setter
 @Entity
@@ -15,7 +16,7 @@ public class TradeTransaction {
     @GeneratedValue(strategy= GenerationType.AUTO)
     Long id;
 
-    String clientOrderId;
+    UUID clientOrderId;
     String client;
     String side;
     String orderStatus;

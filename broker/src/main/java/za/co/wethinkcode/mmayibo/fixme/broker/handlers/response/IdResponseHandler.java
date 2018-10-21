@@ -11,16 +11,14 @@ import java.util.logging.Logger;
 
 public class IdResponseHandler implements IMessageHandler {
     private final String rawFixMessage;
-    private Logger logger = Logger.getLogger(getClass().getName());
-    private Broker client;
-    private IRepository repository;
-    private BrokerUser user;
-    private FixMessage responseMessage;
+    private final Logger logger = Logger.getLogger(getClass().getName());
+    private final Broker client;
+    private final FixMessage responseMessage;
 
     IdResponseHandler(Broker client, FixMessage responseMessage, String rawFixMessage) {
         this.client = client;
-        this.repository = client.repository;
-        this.user = client.user;
+        IRepository repository = client.repository;
+        BrokerUser user = client.user;
         this.responseMessage = responseMessage;
         this.rawFixMessage = rawFixMessage;
     }

@@ -2,7 +2,7 @@ package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
+    import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.BrokerUser;
+import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -23,26 +24,14 @@ public class LoginRegisterController extends BrokerUI {
     private TextField userNameText;
 
     @FXML
-    private TextField nameText;
-
-    @FXML
-    void signUp(ActionEvent event) {
+    void signIn() {
         String userName = userNameText.getText();
-        String name = nameText.getText();
-        authenticate(userName, name);
-    }
-
-
-    @FXML
-    void signIn(ActionEvent event) {
-        String userName = userNameText.getText();
-        String name = nameText.getText();
-        authenticate(userName, name);
+        authenticate(userName);
     }
 
 
 
-    private void authenticate(final String username, final String name) {
+    private void authenticate(final String username) {
         new Thread(new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -53,22 +42,22 @@ public class LoginRegisterController extends BrokerUI {
                 {
                     logger.info("Could not find the market on the database");
                     logger.info("Creating a new a market");
-                    brokerUser = new BrokerUser(username, name);
+                    brokerUser = new BrokerUser(username);
                     broker.repository.create(brokerUser);
                     broker.user = brokerUser;
                 }
 
-                logger.info("Market "+ broker.user.getName()+" has been received");
+                logger.info("Market "+ broker.user.getUserName()+" has been received");
                 showMainWindow(username);
                 return null;
             }
         }).start();
     }
-    private void showMainWindow(String username) throws InterruptedException {
-        setSceneToMainWindowStage(stage, "Broker", "/fxml/main-window.fxml", username);
+    private void showMainWindow(String username) {
+        setSceneToMainWindowStage(stage, "Broker", "/fxml/main-window.fxml");
     }
 
-    private void setSceneToMainWindowStage(Stage stage, String title, String fxmlResource, String username) throws InterruptedException {
+    private void setSceneToMainWindowStage(Stage stage, String title, String fxmlResource) {
         Platform.runLater(() -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlResource));
@@ -107,6 +96,11 @@ public class LoginRegisterController extends BrokerUI {
 
     @Override
     public void update() {
+
+    }
+
+    @Override
+    public void updateTransactions(TradeTransaction tradeTransaction) {
 
     }
 }

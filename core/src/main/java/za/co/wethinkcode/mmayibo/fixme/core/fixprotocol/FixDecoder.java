@@ -15,7 +15,7 @@ public class FixDecoder {
         String[] fixStrings = message.split("\\|");
 
         for (String tagAndValue : fixStrings) {
-            validateTagAndValue(tagAndValue);
+            validateTagAndValue();
             addLine(fixMessage, tagAndValue);
         }
 
@@ -124,7 +124,7 @@ public class FixDecoder {
         }
     }
 
-    private static void validateTagAndValue(String fixTagAndValue) {
+    private static void validateTagAndValue() {
 
     }
 }

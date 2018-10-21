@@ -5,15 +5,14 @@ import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
 import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class BrokerUI {
-    protected Broker broker;
-
+    Broker broker;
     ConcurrentHashMap<String, Market> markets;
-    ArrayList<TradeTransaction> transactions;
+    ConcurrentHashMap<UUID, TradeTransaction> transactions;
     Stage stage;
 
     public abstract void update();
@@ -29,4 +28,6 @@ public abstract class BrokerUI {
     void unregisterFromBroker() {
         broker.unregisterUi(this);
     }
+
+    public abstract void updateTransactions(TradeTransaction tradeTransaction);
 }

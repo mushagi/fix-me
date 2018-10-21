@@ -14,14 +14,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BrokerUser {
     @Id
     String userName;
-    String name;
 
     @Transient
     ConcurrentHashMap<String, OwnedInstrument> instruments;
 
-    public BrokerUser(String userName, String name) {
+    public BrokerUser(String userName) {
         this.userName = userName;
-        this.name = name;
         instruments = new ConcurrentHashMap<>();
     }
 

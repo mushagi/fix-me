@@ -8,16 +8,17 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
 
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class ExecutionReportHandler implements IMessageHandler {
     private final String rawFixMessage;
-    private Logger logger = Logger.getLogger(getClass().getName());
-    private Broker client;
-    private IRepository repository;
-    private BrokerUser user;
-    private FixMessage responseMessage;
+    private final Logger logger = Logger.getLogger(getClass().getName());
+    private final Broker client;
+    private final IRepository repository;
+    private final BrokerUser user;
+    private final FixMessage responseMessage;
 
     ExecutionReportHandler(Broker client, FixMessage responseMessage, String rawFixMessage) {
         this.client = client;
@@ -35,12 +36,12 @@ public class ExecutionReportHandler implements IMessageHandler {
         );
 
         TradeTransaction transaction = createTransaction(responseMessage);
-        client.transactions.add(transaction);
+       // client.transactions.put(transaction.getClientOrderId(), transaction);
 
         createUpdatePurchasedInstrument();
         repository.update(client.user);
 
-        client.updateTransactions();
+        client.updateTransactions(transaction);
     }
 
 
@@ -57,7 +58,6 @@ public class ExecutionReportHandler implements IMessageHandler {
             ownedInstruments.put(ownedInstrument.getId(), ownedInstrument);
         }
         ownedInstrument.setQuantity(purchasedQuantity);
-
     }
 
     private void saveTransactionToDatabase(TradeTransaction transaction) {
@@ -68,7 +68,7 @@ public class ExecutionReportHandler implements IMessageHandler {
         TradeTransaction transaction = new TradeTransaction();
 
         transaction.setClient(message.getClientId());
-        //tradeTransaction.setClientOrderId(requestMessage.getClOrderId());
+        transaction.setClientOrderId(UUID.fromString(message.getClOrderId()));
         transaction.setSide(message.getSide());
         transaction.setSymbol(message.getSymbol());
         transaction.setOrderStatus(message.getOrdStatus());
@@ -77,7 +77,7 @@ public class ExecutionReportHandler implements IMessageHandler {
         transaction.setQuantity(message.getOrderQuantity());
         transaction.setClient(user.getUserName());
 
-        saveTransactionToDatabase(transaction);
+      //  saveTransactionToDatabase(transaction);
 
         return transaction;
 

@@ -43,7 +43,6 @@ public abstract class Server implements Runnable{
 
             bootstrap.group(bossGroup, workerGroup);
             bootstrap.channel(NioServerSocketChannel.class)
-                    .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ServerInitializer(channels, this))
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .option(ChannelOption.TCP_NODELAY, true)
@@ -56,6 +55,6 @@ public abstract class Server implements Runnable{
 
    }
 
-   public abstract void messageRead(ChannelHandlerContext ctx, String rawFixMessage);
+   public abstract void messageRead(String rawFixMessage, ChannelHandlerContext ctx);
     protected abstract void channelActive(ChannelHandlerContext ctx);
 }

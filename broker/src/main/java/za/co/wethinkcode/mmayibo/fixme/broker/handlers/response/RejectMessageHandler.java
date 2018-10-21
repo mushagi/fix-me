@@ -5,7 +5,7 @@ import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
 import java.util.logging.Logger;
 
 public class RejectMessageHandler implements IMessageHandler {
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     @Override
     public void processMessage() {

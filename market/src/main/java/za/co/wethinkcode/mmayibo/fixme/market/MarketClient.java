@@ -1,8 +1,5 @@
 package za.co.wethinkcode.mmayibo.fixme.market;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-
 import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
 import za.co.wethinkcode.mmayibo.fixme.core.client.Client;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
@@ -23,15 +20,16 @@ public class MarketClient extends Client {
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     public MarketModel marketModel;
-    private String marketUserName;
+    private final String marketUserName;
 
-    private Timer timer = new Timer("Timer");
-    private Random random = new Random();
+    private final Timer timer = new Timer("Timer");
+    private final Random random = new Random();
 
     MarketClient(String host, int
             port, String marketUserName) {
         super(host, port);
         this.marketUserName = marketUserName;
+        login();
     }
 
     private void startTimer()
@@ -41,7 +39,7 @@ public class MarketClient extends Client {
         timer.scheduleAtFixedRate(broadcastMarket, delay, period);
     }
 
-    private TimerTask broadcastMarket = new TimerTask() {
+    private final TimerTask broadcastMarket = new TimerTask() {
         public void run() {
             generatePriceForInstruments();
             sendMarketDataSnapShot("all");
@@ -60,14 +58,14 @@ public class MarketClient extends Client {
 
 
     @Override
-    public void messageRead(ChannelHandlerContext ctx, FixMessage message, String rawFixMessage) {
+    public void messageRead(FixMessage message, String rawFixMessage) {
         IMessageHandler handler = MarketMessageHandlerTool.getMessageHandler(message, this, rawFixMessage);
         handler.processMessage();
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx)  {
-        login();
+    public void channelActive()  {
+
     }
 
     private void login() {
@@ -121,7 +119,7 @@ public class MarketClient extends Client {
                 .withSymbol(symbol)
                 .getFixMessage();
 
-        lastChannel.writeAndFlush(FixEncode.encode(responseMessage) + "\r\n");
+        channel.writeAndFlush(FixEncode.encode(responseMessage) + "\r\n");
     }
 
     private String encodeInstruments() {

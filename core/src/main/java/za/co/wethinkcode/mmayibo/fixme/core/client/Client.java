@@ -1,10 +1,10 @@
 package za.co.wethinkcode.mmayibo.fixme.core.client;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import za.co.wethinkcode.mmayibo.fixme.core.ResponseFuture;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
@@ -12,23 +12,28 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
 import za.co.wethinkcode.mmayibo.fixme.core.persistence.HibernateRepository;
 import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public abstract class Client implements Runnable {
 
     private final String HOST;
     private final int PORT;
+
     public final IRepository repository;
     boolean isActive;
     public String networkId;
-    ResponseFuture responseFuture = new ResponseFuture();
+    final ResponseFuture responseFuture = new ResponseFuture();
+    private  Bootstrap bootstrap;
 
-    protected Channel lastChannel;
+    protected Channel channel;
     private final Logger logger = Logger.getLogger(getClass().getName());
+    Timer timer = new Timer();
 
-    public Client(String host, int port) {
+    protected Client(String host, int port) {
         this.repository = new HibernateRepository();
 
         HOST = System.getProperty("host", host);
@@ -37,49 +42,78 @@ public abstract class Client implements Runnable {
 
     @Override
     public void run() {
-        startClient();
+        initBootstrap();
+        doConnect();
     }
 
-    private void startClient() {
+    private void initBootstrap() {
         EventLoopGroup group = new NioEventLoopGroup();
+        bootstrap = new Bootstrap();
+        bootstrap.group(group)
+                .channel(NioSocketChannel.class)
+                .handler(new ClientInitializer(this))
+                .option(ChannelOption.TCP_NODELAY, true)
+                .option(ChannelOption.SO_KEEPALIVE, true);
+    }
+
+    protected void doConnect() {
         try {
-            Bootstrap bootstrap = new Bootstrap();
-
-            bootstrap.group(group)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ClientInitializer(this))
-                    .option(ChannelOption.TCP_NODELAY, true)
-                    .option(ChannelOption.SO_KEEPALIVE, true);
-            lastChannel = bootstrap.connect(HOST, PORT).sync().channel();
-
-        } catch (InterruptedException e) {
+            bootstrap.connect(HOST, PORT).addListener((ChannelFuture f) -> {
+                if (!f.isSuccess()) {
+                    long nextRetryDelay = 1000;
+                    f.channel().eventLoop().schedule(this::doConnect, nextRetryDelay, TimeUnit.MILLISECONDS);
+                }
+                else{
+                    channel = f.channel();
+                    connectionEstablished();
+                }
+            });
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void connectionLost() {
+        logger.info("Connection lost");
+    }
+
+    private void connectionEstablished() {
+        logger.info("Connection established");
+    }
+
     public void stop() {
         try {
-            if (lastChannel != null)
-                lastChannel.closeFuture().sync();
+            if (channel != null)
+                channel.closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     protected void sendRequest(FixMessage message){
-        new FixMessageBuilder()
-                .existingMessage(message)
-                .withMessageId(generateMessageId());
+        if (channel != null && channel.isActive()){
+            new FixMessageBuilder()
+                    .existingMessage(message)
+                    .withMessageId(generateMessageId());
 
-        String encodedFixMessage = FixEncode.encode(message);
-        lastChannel.writeAndFlush(encodedFixMessage + "\r\n");
-        logger.info("Fix Message request : " + encodedFixMessage);
+            String encodedFixMessage = FixEncode.encode(message);
+            channel.writeAndFlush(encodedFixMessage + "\r\n");
+            logger.info("Fix Message request : " + encodedFixMessage);
+        }
+        else
+            logger.info("Cannot send request. Server can't be reached");
+
     }
 
     public void sendResponse(FixMessage responseMessage) {
-        String encodedFixMessage = FixEncode.encode(responseMessage);
-        lastChannel.writeAndFlush(encodedFixMessage + "\r\n");
-        logger.info("Fix Message response : " + encodedFixMessage);
+        if (channel != null && channel.isActive()) {
+            String encodedFixMessage = FixEncode.encode(responseMessage);
+            channel.writeAndFlush(encodedFixMessage + "\r\n");
+            logger.info("Fix Message response : " + encodedFixMessage);
+        }
+        else
+            logger.info("Cannot send response. Server can't be reached");
     }
 
     public FixMessage sendMessageWaitForResponse(FixMessage message) throws InterruptedException {
@@ -91,6 +125,6 @@ public abstract class Client implements Runnable {
         return UUID.randomUUID().toString();
     }
 
-    public abstract void messageRead(ChannelHandlerContext ctx, FixMessage message, String rawFixMessage) throws InterruptedException;
-    public abstract void channelActive(ChannelHandlerContext ctx) throws ExecutionException, InterruptedException;
+    public abstract void messageRead(FixMessage message, String rawFixMessage);
+    public abstract void channelActive();
 }

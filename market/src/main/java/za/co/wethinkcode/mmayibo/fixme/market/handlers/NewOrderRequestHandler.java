@@ -3,13 +3,13 @@ package za.co.wethinkcode.mmayibo.fixme.market.handlers;
 import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageHandler;
 import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
 import za.co.wethinkcode.mmayibo.fixme.market.FixMessageValidator;
 import za.co.wethinkcode.mmayibo.fixme.market.MarketClient;
 import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class NewOrderRequestHandler implements IMessageHandler {
@@ -22,7 +22,7 @@ public class NewOrderRequestHandler implements IMessageHandler {
 
     private  String orderStatus;
     private String text;
-    private StringBuilder errorBuilder = new StringBuilder();
+    private final StringBuilder errorBuilder = new StringBuilder();
     private InstrumentModel instrument;
 
     NewOrderRequestHandler(FixMessage requestMessage, MarketClient client, String rawFixMessage) {
@@ -42,7 +42,7 @@ public class NewOrderRequestHandler implements IMessageHandler {
     private void processRequest()  {
         orderStatus = "2";
 
-        if (FixMessageValidator.isValidateNewOrderSingle(requestMessage, errorBuilder)){
+        if (FixMessageValidator.isValidateNewOrderSingle()){
             instrument =
                     client.marketModel.instrumentMao.get(requestMessage.getSymbol());
 
@@ -77,7 +77,7 @@ public class NewOrderRequestHandler implements IMessageHandler {
     }
 
     private void processSellRequest() {
-        if (marketBuyInstrumentAtCost()) {
+        if (marketCanBuyInstrumentAtCost() && marketCanBuyWithQuantity()) {
             orderStatus = "7";
             text = "Filled : Transaction a success";
         } else
@@ -87,7 +87,7 @@ public class NewOrderRequestHandler implements IMessageHandler {
     }
 
     private void processBuyRequest() {
-        if (marketSellInstrumentAtCost() && canBuyWithQuantity()) {
+        if (brokerCanBuyInstrumentAtCost() && brokerCanBuyWithQuantity()) {
             orderStatus = "7";
             text = "Filled : Transaction a success";
         } else
@@ -96,27 +96,41 @@ public class NewOrderRequestHandler implements IMessageHandler {
         saveTransactionToDatabase();
     }
 
-    private boolean canBuyWithQuantity() {
+    private boolean marketCanBuyWithQuantity() {
+        int requestedQuantity = requestMessage.getOrderQuantity();
+
+        boolean isQuantityAccepted = requestedQuantity > 0 && requestedQuantity < 20000;
+
+        if (!isQuantityAccepted)
+            errorBuilder.append("The quantity is not allowed");
+        else
+            instrument.quantity += requestedQuantity;
+
+        return isQuantityAccepted;
+    }
+
+    private boolean brokerCanBuyWithQuantity() {
         int instrumentQuantity = instrument.quantity;
         int requestedQuantity = requestMessage.getOrderQuantity();
 
         boolean isQuantityAvailable = requestedQuantity < instrumentQuantity;
-        instrument.quantity -= requestedQuantity;
 
         if (!isQuantityAvailable)
-            text = "The quantity is too high";
+            errorBuilder.append("The quantity is too high");
+        else
+            instrument.quantity -= requestedQuantity;
 
         return isQuantityAvailable;
     }
 
-    private boolean marketBuyInstrumentAtCost() {
+    private boolean marketCanBuyInstrumentAtCost() {
         double instrumentPrice = instrument.price;
         double requestedPrice = requestMessage.getPrice();
 
-        boolean canBuy = requestedPrice < instrumentPrice;
+        boolean canBuy = requestedPrice >= instrumentPrice;
 
         if (!canBuy)
-            text = "Can't buy, price is too low";
+            errorBuilder.append("Can't buy, price is too low");
         return true;
     }
 
@@ -124,7 +138,7 @@ public class NewOrderRequestHandler implements IMessageHandler {
         TradeTransaction tradeTransaction = new TradeTransaction();
 
         tradeTransaction.setClient(requestMessage.getClientId());
-        //tradeTransaction.setClientOrderId(requestMessage.getClOrderId());
+        tradeTransaction.setClientOrderId(UUID.fromString(requestMessage.getClOrderId()));
         tradeTransaction.setSide(requestMessage.getSide());
         tradeTransaction.setSymbol(instrument.getId());
         tradeTransaction.setOrderStatus(orderStatus);
@@ -135,7 +149,7 @@ public class NewOrderRequestHandler implements IMessageHandler {
         repository.create(tradeTransaction);
     }
 
-    private boolean marketSellInstrumentAtCost() {
+    private boolean brokerCanBuyInstrumentAtCost() {
         double buyersPrice = requestMessage.getPrice();
         double currentInstrumentCost = instrument.getPrice();
 
@@ -146,6 +160,7 @@ public class NewOrderRequestHandler implements IMessageHandler {
         FixMessage responseFixMessage = new FixMessageBuilder()
                 .newFixMessage()
                 .withMessageType("8")
+                .withSide(requestMessage.getSide())
                 .withMessageId(requestMessage.getMessageId())
                 .withClientIId(requestMessage.getClientId())
                 .withClOrderId(requestMessage.getClOrderId())

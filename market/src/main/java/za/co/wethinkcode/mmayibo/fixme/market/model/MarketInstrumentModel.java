@@ -4,7 +4,7 @@ import lombok.Getter;
 import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
 
 @Getter
-public class MarketInstrumentModel extends InstrumentModel {
+class MarketInstrumentModel extends InstrumentModel {
 
     private double maxPrice = 100;
     private double minPrice = 0;

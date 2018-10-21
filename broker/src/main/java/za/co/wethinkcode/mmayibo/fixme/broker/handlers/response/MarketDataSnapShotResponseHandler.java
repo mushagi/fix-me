@@ -12,9 +12,9 @@ import java.util.logging.Logger;
 public class MarketDataSnapShotResponseHandler implements IMessageHandler {
     private final String rawFixMessage;
     private Logger logger = Logger.getLogger(getClass().getName());
-    private Broker client;
+    private final Broker client;
 
-    private FixMessage responseMessage;
+    private final FixMessage responseMessage;
 
     MarketDataSnapShotResponseHandler(Broker client, FixMessage responseMessage, String rawFixMessage) {
         this.client = client;

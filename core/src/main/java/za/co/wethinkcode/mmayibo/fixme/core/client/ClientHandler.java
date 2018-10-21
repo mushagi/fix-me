@@ -6,9 +6,12 @@ import za.co.wethinkcode.mmayibo.fixme.core.ResponseFuture;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixDecoder;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 
+import java.util.logging.Logger;
+
 class ClientHandler extends SimpleChannelInboundHandler<String> {
+    private final Logger logger = Logger.getLogger(getClass().getName());
     private final Client client;
-    private ResponseFuture responseFuture;
+    private final ResponseFuture responseFuture;
 
     ClientHandler(Client client) {
         this.client = client;
@@ -22,8 +25,7 @@ class ClientHandler extends SimpleChannelInboundHandler<String> {
 
         if (decodeFixMessage.getMessageId() != null)
             responseFuture.set(decodeFixMessage.getMessageId(), decodeFixMessage);
-
-        client.messageRead(ctx, decodeFixMessage, rawFixMessage);
+        client.messageRead(decodeFixMessage, rawFixMessage);
     }
 
     @Override
@@ -36,7 +38,13 @@ class ClientHandler extends SimpleChannelInboundHandler<String> {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
         client.isActive = true;
-        client.channelActive(ctx);
+        client.channelActive();
     }
 
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        logger.info("Channel is no longer connected with the server. Trying to connect again...");
+        client.doConnect();
+    }
 }
