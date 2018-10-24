@@ -90,6 +90,9 @@ public class FixDecoder {
             case 58:
                 fixMessage.text = value;
                 break;
+            case 112:
+                fixMessage.testReqId = value;
+                break;
             case 262:
                 fixMessage.mDReqID = value;
                 break;

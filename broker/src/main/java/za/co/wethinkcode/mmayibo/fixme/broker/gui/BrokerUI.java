@@ -5,7 +5,6 @@ import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
 import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
-import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,6 +27,8 @@ public abstract class BrokerUI {
     void unregisterFromBroker() {
         broker.unregisterUi(this);
     }
+
+    public abstract void updateMarkets(Market market);
 
     public abstract void updateTransactions(TradeTransaction tradeTransaction);
 }

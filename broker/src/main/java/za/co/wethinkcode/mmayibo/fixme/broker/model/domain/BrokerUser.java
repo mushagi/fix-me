@@ -15,6 +15,7 @@ public class BrokerUser {
     @Id
     String userName;
 
+    int networkId;
     @Transient
     ConcurrentHashMap<String, OwnedInstrument> instruments;
 

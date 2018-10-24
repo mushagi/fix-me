@@ -15,7 +15,7 @@ public class InvalidResponseRequestHandler implements IMessageHandler {
 
     @Override
     public void processMessage() {
-        logger.info("Raw Fix Message read: " + rawFixMessage);
-        logger.warning("Response/Request message type doesn't have a handler or A non-synchronous call may have been called");
+    //    logger.info("Raw Fix Message read: " + rawFixMessage);
+      //  logger.warning("Response/Request message type doesn't have a handler or A non-synchronous call may have been called");
     }
 }

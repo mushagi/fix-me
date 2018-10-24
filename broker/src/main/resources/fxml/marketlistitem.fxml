@@ -8,6 +8,7 @@
       <VBox>
          <children>
             <Label fx:id="name" />
+            <Label id="status" fx:id="status" />
          </children>
       </VBox>
    </graphic>

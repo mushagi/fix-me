@@ -14,21 +14,28 @@ public class IdResponseHandler implements IMessageHandler {
     private final Logger logger = Logger.getLogger(getClass().getName());
     private final Broker client;
     private final FixMessage responseMessage;
+    IRepository repository;
 
     IdResponseHandler(Broker client, FixMessage responseMessage, String rawFixMessage) {
         this.client = client;
-        IRepository repository = client.repository;
-        BrokerUser user = client.user;
+        repository = client.repository;
         this.responseMessage = responseMessage;
         this.rawFixMessage = rawFixMessage;
     }
 
     @Override
     public void processMessage() {
-        client.networkId = responseMessage.getText();
-
         logger.info("Raw Fix Message read: " + rawFixMessage
                 + "\nBroker Id : " + client.networkId
         );
+        client.networkId = responseMessage.getText();
+        if (client.networkId.equals("-1")){
+            client.networkId = responseMessage.getText();
+            client.user.setNetworkId(Integer.parseInt(client.networkId));
+            repository.update(client.user);
+        }
+        else
+            client.registerNetworkId(responseMessage.getText());
+        client.initialize();
     }
 }

@@ -1,15 +1,17 @@
 package za.co.wethinkcode.mmayibo.fixme.core.server;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
 
 import java.util.logging.Logger;
 
@@ -19,7 +21,7 @@ public abstract class Server implements Runnable{
     private final String HOST;
     private final int PORT;
 
-    private final ChannelGroupHashed channels;
+    public final ChannelGroupHashed channels;
     public final ChannelGroupHashed responseChannels;
 
     protected Server(String host, int port, ChannelGroupHashed channels, ChannelGroupHashed responseChannels) {
@@ -54,7 +56,18 @@ public abstract class Server implements Runnable{
         }
 
    }
+    public void sendIdToClient(Channel channel, int id) {
+        FixMessage responseIdBackToChannelFixMessage = new FixMessageBuilder()
+                .newFixMessage()
+                .withMessageType("1")
+                .withText(String.valueOf(id))
+                .getFixMessage();
+
+        String fixStringResponseBackToChannel = FixEncode.encode(responseIdBackToChannelFixMessage);
+        channel.writeAndFlush(fixStringResponseBackToChannel + "\r\n");
+    }
+    public abstract int generateId();
 
    public abstract void messageRead(String rawFixMessage, ChannelHandlerContext ctx);
-    protected abstract void channelActive(ChannelHandlerContext ctx);
+    protected abstract void channelActive(ChannelHandlerContext ctx, int id);
 }

@@ -15,7 +15,7 @@ public class InvalidResponseRequestHandler implements IMessageHandler {
 
     @Override
     public void processMessage() {
-        logger.info("Fix message read : " + rawFixMessage);
+        //logger.info("Fix message read : " + rawFixMessage);
 
     }
 

@@ -8,4 +8,5 @@ class State {
     static final ChannelGroupHashed brokerChannels = new ChannelGroupHashed(GlobalEventExecutor.INSTANCE);
     static final ChannelGroupHashed marketChannels = new ChannelGroupHashed(GlobalEventExecutor.INSTANCE);
 
+    static int idCounter;
 }

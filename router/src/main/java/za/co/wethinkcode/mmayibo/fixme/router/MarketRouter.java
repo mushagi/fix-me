@@ -3,6 +3,7 @@ package za.co.wethinkcode.mmayibo.fixme.router;
 import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
 import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.server.IdCounterFileUtil;
 import za.co.wethinkcode.mmayibo.fixme.router.handlers.MessageHandlerTool;
 import za.co.wethinkcode.mmayibo.fixme.core.server.Server;
 
@@ -18,8 +19,14 @@ public class MarketRouter extends Server {
     }
 
     @Override
-    protected void channelActive(ChannelHandlerContext ctx) {
-        logger.info("Market client connected. " + ctx.channel().id().toString());
-        State.marketChannels.add(ctx.channel());
+    protected void channelActive(ChannelHandlerContext ctx, int id) {
+        logger.info("Market client connected. " + id);
+        channels.add(id, ctx.channel());
+        IdCounterFileUtil.saveCounter(State.idCounter);
     }
+    @Override
+    public int generateId() {
+        return ++State.idCounter;
+    }
+
 }

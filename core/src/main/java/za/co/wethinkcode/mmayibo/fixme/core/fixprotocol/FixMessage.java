@@ -36,6 +36,6 @@ public class FixMessage {
     String authStatus;
     String messageId;
     String refMsgType;
-
+    String testReqId;
 
 }

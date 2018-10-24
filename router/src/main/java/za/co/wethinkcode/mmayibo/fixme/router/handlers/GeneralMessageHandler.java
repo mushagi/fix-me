@@ -1,8 +1,14 @@
 package za.co.wethinkcode.mmayibo.fixme.router.handlers;
 
 import io.netty.channel.Channel;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
 import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageTools;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixTags;
 import za.co.wethinkcode.mmayibo.fixme.core.server.Server;
 
 import java.util.logging.Logger;
@@ -14,6 +20,7 @@ public class GeneralMessageHandler implements IMessageHandler {
     private final String rawFixMessage;
     private final String targetCompId;
     private final Channel channel;
+
 
     GeneralMessageHandler(Server server, String rawFixMessage, String targetCompId, Channel channel) {
         this.responseChannels = server.responseChannels;
@@ -31,14 +38,34 @@ public class GeneralMessageHandler implements IMessageHandler {
             if (targetCompId.equals("all"))
                 responseChannels.writeAndFlush(  rawFixMessage + "\r\n");
             else {
-                Channel respondChannel = responseChannels.find(targetCompId);
+                Channel respondChannel = responseChannels.findById(Integer.valueOf(targetCompId));
 
                 if (respondChannel != null)
-                    respondChannel.writeAndFlush(  rawFixMessage + "\r\n");
+                    respondChannel.writeAndFlush(  rawFixMessage + "\r\n")
+                            .addListener(future -> {
+                                sendConnectivityStatus(future.isSuccess());
+                            });
                 else {
+                    logger.info("Target channel doesn't exist ");
                 }
-
             }
         }
     }
+
+    private FixMessageBuilder builder = new FixMessageBuilder()
+            .newFixMessage()
+            .withMessageType("400");
+
+    private void sendConnectivityStatus(boolean status) {
+        if (channel != null){
+            String messageId = FixMessageTools.getTagValueByRegex(rawFixMessage, FixTags.MSG_ID.tag);
+            builder.withTestReqId(String.valueOf(status));
+            builder.withMessageId(messageId);
+            builder.withTargetCompId(targetCompId);
+            String offlineResponse = FixEncode.encode(builder.getFixMessage());
+            channel.writeAndFlush(offlineResponse+"\r\n");
+        }
+    }
+
+
 }

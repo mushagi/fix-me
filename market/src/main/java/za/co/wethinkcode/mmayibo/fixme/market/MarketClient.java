@@ -78,6 +78,7 @@ public class MarketClient extends Client {
             marketModel = loadMarketFromXML();
             marketModel = repository.create(marketModel);
         }
+        networkId = String.valueOf(marketModel.getNetworkId());
         marketModel.updateHashMap();
         logger.info("Market "+ marketModel.getName()+" has been received");
         startTimer();
@@ -118,8 +119,8 @@ public class MarketClient extends Client {
                 .withTargetCompId(senderCompId)
                 .withSymbol(symbol)
                 .getFixMessage();
-
-        channel.writeAndFlush(FixEncode.encode(responseMessage) + "\r\n");
+        if (channel != null)
+            channel.writeAndFlush(FixEncode.encode(responseMessage) + "\r\n");
     }
 
     private String encodeInstruments() {

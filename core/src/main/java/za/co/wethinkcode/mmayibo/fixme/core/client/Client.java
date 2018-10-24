@@ -3,8 +3,6 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 import za.co.wethinkcode.mmayibo.fixme.core.ResponseFuture;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
@@ -13,7 +11,6 @@ import za.co.wethinkcode.mmayibo.fixme.core.persistence.HibernateRepository;
 import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
 
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -25,13 +22,15 @@ public abstract class Client implements Runnable {
 
     public final IRepository repository;
     boolean isActive;
-    public String networkId;
+    public String networkId = "-1";
     final ResponseFuture responseFuture = new ResponseFuture();
     private  Bootstrap bootstrap;
 
     protected Channel channel;
     private final Logger logger = Logger.getLogger(getClass().getName());
     Timer timer = new Timer();
+
+     FixMessageBuilder existingBuilder = new FixMessageBuilder();
 
     protected Client(String host, int port) {
         this.repository = new HibernateRepository();
@@ -56,22 +55,32 @@ public abstract class Client implements Runnable {
                 .option(ChannelOption.SO_KEEPALIVE, true);
     }
 
-    protected void doConnect() {
+    void doConnect() {
         try {
             bootstrap.connect(HOST, PORT).addListener((ChannelFuture f) -> {
                 if (!f.isSuccess()) {
-                    long nextRetryDelay = 1000;
+                    long nextRetryDelay = 3000;
                     f.channel().eventLoop().schedule(this::doConnect, nextRetryDelay, TimeUnit.MILLISECONDS);
                 }
                 else{
                     channel = f.channel();
                     connectionEstablished();
+
                 }
             });
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void registerNetworkId(String idToBeReplaced) {
+        FixMessage registerIdMessage = new FixMessageBuilder()
+                .newFixMessage()
+                .withMessageType("800")
+                .withText(idToBeReplaced)
+                .getFixMessage();
+        sendRequest(registerIdMessage, true);
     }
 
     private void connectionLost() {
@@ -91,18 +100,21 @@ public abstract class Client implements Runnable {
         }
     }
 
-    protected void sendRequest(FixMessage message){
+    protected void sendRequest(FixMessage message, boolean logging){
         if (channel != null && channel.isActive()){
-            new FixMessageBuilder()
+            existingBuilder
                     .existingMessage(message)
+                    .withSenderCompId(networkId)
                     .withMessageId(generateMessageId());
 
             String encodedFixMessage = FixEncode.encode(message);
             channel.writeAndFlush(encodedFixMessage + "\r\n");
-            logger.info("Fix Message request : " + encodedFixMessage);
+            if (logging)
+                logger.info("Fix Message request : " + encodedFixMessage);
         }
         else
-            logger.info("Cannot send request. Server can't be reached");
+            if (logging)
+                logger.info("Cannot send request. Server can't be reached");
 
     }
 
@@ -116,8 +128,8 @@ public abstract class Client implements Runnable {
             logger.info("Cannot send response. Server can't be reached");
     }
 
-    public FixMessage sendMessageWaitForResponse(FixMessage message) throws InterruptedException {
-        sendRequest(message);
+    public FixMessage sendMessageWaitForResponse(FixMessage message, boolean logging) throws InterruptedException {
+        sendRequest(message, logging);
         return responseFuture.get(message.getMessageId());
     }
 

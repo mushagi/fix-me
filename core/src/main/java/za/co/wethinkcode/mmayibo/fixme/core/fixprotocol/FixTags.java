@@ -15,6 +15,7 @@ public enum FixTags {
     SYMBOL(55),
     TARGET_COMP_ID(56),
     TEXT(58),
+    TEST_REQ_ID(112),
     MD_REQ_ID(262),
     MD_NAME(500),
     CLIENTID(501),

@@ -24,7 +24,7 @@ public class ResponseFuture implements Future<FixMessage> {
 
 
     public FixMessage get(String key) throws InterruptedException {
-        FixMessage aux = blockingHashMap.take(key);
+        FixMessage aux = blockingHashMap.take(key, 2, TimeUnit.SECONDS);
         blockingHashMap.put(key, aux);
         return aux;
     }

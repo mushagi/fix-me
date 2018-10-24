@@ -169,4 +169,12 @@ public class FixMessageBuilder {
         return this;
     }
 
+    public FixMessageBuilder withTestReqId(String value) {
+        fixMessage.testReqId = value;
+        tagsValuesMap.put(TEST_REQ_ID.tag, value);
+        return this;
+    }
+
+
+
 }

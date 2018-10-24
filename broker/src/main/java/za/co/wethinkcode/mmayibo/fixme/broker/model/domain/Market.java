@@ -10,6 +10,7 @@ public class Market {
     private String name;
     private String mdReqId;
     private String networkId;
+    private boolean isOnline;
 
     private ConcurrentHashMap<String, Instrument> instruments;
 

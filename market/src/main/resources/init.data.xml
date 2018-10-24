@@ -4,6 +4,7 @@
         <Market>
             <Name>Fruit Basket</Name>
             <Username>fbasket</Username>
+            <NetworkId>-1</NetworkId>
             <Instruments>
                 <Instrument>
                     <Id>zimbananas</Id>
@@ -19,6 +20,34 @@
                 </Instrument>
                 <Instrument>
                     <Id>limpavocado</Id>
+                    <Name>Limpopo Bananas</Name>
+                    <Price>12</Price>
+                    <Quantity>50000</Quantity>
+                </Instrument>
+            </Instruments>
+        </Market>
+    </Markets>
+
+    <Markets>
+        <Market>
+            <Name>Black Market</Name>
+            <Username>bmarket</Username>
+            <NetworkId>-1</NetworkId>
+            <Instruments>
+                <Instrument>
+                    <Id>coke</Id>
+                    <Name>Zimbabwe Bananas</Name>
+                    <Price>12</Price>
+                    <Quantity>50000</Quantity>
+                </Instrument>
+                <Instrument>
+                    <Id>w</Id>
+                    <Name>China Bananas</Name>
+                    <Price>12</Price>
+                    <Quantity>50000</Quantity>
+                </Instrument>
+                <Instrument>
+                    <Id>j</Id>
                     <Name>Limpopo Bananas</Name>
                     <Price>12</Price>
                     <Quantity>50000</Quantity>

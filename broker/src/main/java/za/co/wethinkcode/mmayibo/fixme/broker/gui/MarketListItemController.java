@@ -16,6 +16,8 @@ class MarketListItemController extends ListCell<Market> {
     @FXML
     private Label name;
     private VBox box;
+    @FXML
+    private Label status;
 
     MarketListItemController(MainWindowController mainWindowController) {
         this.mainWindowController = mainWindowController;
@@ -52,6 +54,7 @@ class MarketListItemController extends ListCell<Market> {
 
         else {
             name.setText(item.getName());
+            status.setText(item.isOnline() ?  "online" : "offline");
         }
 
     }

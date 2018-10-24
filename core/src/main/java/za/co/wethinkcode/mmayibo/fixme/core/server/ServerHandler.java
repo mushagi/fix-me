@@ -18,21 +18,13 @@ class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        channels.add(ctx.channel());
-        server.channelActive(ctx);
-        sendIdToClient(ctx);
+        int id = server.generateId();
+        channels.add(server.generateId(), ctx.channel());
+        server.channelActive(ctx, id);
+        server.sendIdToClient(ctx.channel(), id);
     }
 
-    private void sendIdToClient(ChannelHandlerContext ctx) {
-        FixMessage responseIdBackToChannelFixMessage = new FixMessageBuilder()
-                .newFixMessage()
-                .withMessageType("1")
-                .withText(ctx.channel().id().toString())
-                .getFixMessage();
 
-        String fixStringResponseBackToChannel = FixEncode.encode(responseIdBackToChannelFixMessage);
-        ctx.channel().writeAndFlush(fixStringResponseBackToChannel + "\r\n");
-    }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String rawFixMessage) {
@@ -44,5 +36,4 @@ class ServerHandler extends SimpleChannelInboundHandler<String> {
         cause.printStackTrace();
         ctx.close();
     }
-
 }

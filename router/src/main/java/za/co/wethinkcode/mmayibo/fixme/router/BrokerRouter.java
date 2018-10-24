@@ -3,6 +3,7 @@ package za.co.wethinkcode.mmayibo.fixme.router;
 import io.netty.channel.ChannelHandlerContext;
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
 import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
+import za.co.wethinkcode.mmayibo.fixme.core.server.IdCounterFileUtil;
 import za.co.wethinkcode.mmayibo.fixme.router.handlers.MessageHandlerTool;
 import za.co.wethinkcode.mmayibo.fixme.core.server.Server;
 
@@ -12,14 +13,20 @@ public class BrokerRouter extends Server {
     }
 
     @Override
+    public int generateId() {
+        return ++State.idCounter;
+    }
+
+    @Override
     public void messageRead(final String rawFixMessage, ChannelHandlerContext ctx) {
         IMessageHandler handler = MessageHandlerTool.getMessageHandler(rawFixMessage, this, ctx.channel());
         handler.processMessage();
     }
 
     @Override
-    protected void channelActive(ChannelHandlerContext ctx) {
+    protected void channelActive(ChannelHandlerContext ctx, int id) {
         logger.info("Broker client connected. " + ctx.channel().id().toString());
-        responseChannels.add(ctx.channel());
+        channels.add(id, ctx.channel());
+        IdCounterFileUtil.saveCounter(State.idCounter);
     }
 }

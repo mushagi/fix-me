@@ -64,7 +64,6 @@
                             <NumberAxis side="LEFT" />
                           </yAxis>
                         </AreaChart>
-                        <Label fx:id="instrumentDetailTextInLine" layoutX="301.0" layoutY="14.0" prefHeight="42.0" prefWidth="200.0" />
                      </children>
             </AnchorPane>
           </content>
@@ -73,6 +72,10 @@
                <children>
                   <VBox alignment="CENTER" fillWidth="false" layoutY="14.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
                      <children>
+                        <Label fx:id="instrumentDetailTextInLine" alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" prefWidth="200.0" text="Select Instrument" textAlignment="CENTER" wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font></Label>
                         <TextField fx:id="quantityText" alignment="TOP_CENTER" prefHeight="28.0" prefWidth="150.0" promptText="Quantity  " />
                         <TextField fx:id="quantityText1" alignment="TOP_CENTER" prefHeight="28.0" prefWidth="150.0" promptText="Delay" />
                         <HBox alignment="CENTER" spacing="39.0" VBox.vgrow="ALWAYS">
@@ -89,7 +92,7 @@
                         </Text>
                      </children>
                   </VBox>
-                  <ListView fx:id="transactionListView" layoutX="5.0" layoutY="182.0" maxHeight="1.7976931348623157E308" prefHeight="367.0" prefWidth="239.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="182.0" />
+                  <ListView fx:id="transactionListView" layoutX="5.0" layoutY="229.0" maxHeight="1.7976931348623157E308" prefHeight="320.0" prefWidth="239.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="229.0" />
                </children>
             </AnchorPane>
       </items>

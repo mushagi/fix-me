@@ -3,7 +3,6 @@ package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
     import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.BrokerUser;
+import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
 import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
 import java.io.IOException;
@@ -36,16 +36,19 @@ public class LoginRegisterController extends BrokerUI {
             @Override
             protected Void call() throws Exception {
                 logger.info("Getting an existing account");
-                BrokerUser brokerUser = broker.repository.getByID(username, BrokerUser.class);
+                BrokerUser user = broker.repository.getByID(username, BrokerUser.class);
 
-                if (brokerUser == null)
+                if (user == null)
                 {
                     logger.info("Could not find the market on the database");
                     logger.info("Creating a new a market");
-                    brokerUser = new BrokerUser(username);
-                    broker.repository.create(brokerUser);
-                    broker.user = brokerUser;
+                    user = new BrokerUser(username);
+                    user.setNetworkId(Integer.parseInt(broker.networkId));
+                    broker.repository.create(user);
+                    broker.user = user;
                 }
+                else
+                    broker.networkId = String.valueOf(user.getNetworkId());
 
                 logger.info("Market "+ broker.user.getUserName()+" has been received");
                 showMainWindow(username);
@@ -96,6 +99,11 @@ public class LoginRegisterController extends BrokerUI {
 
     @Override
     public void update() {
+
+    }
+
+    @Override
+    public void updateMarkets(Market market) {
 
     }
 

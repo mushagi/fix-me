@@ -29,17 +29,15 @@ public class MarketDataSnapShotResponseHandler implements IMessageHandler {
         String mdReqId = responseMessage.getMDReqID();
         String marketName = responseMessage.getMdName();
         String marketNetworkId = responseMessage.getSenderCompId();
-        String uniqueId = mdReqId + marketNetworkId;
 
-        Market market = client.markets.get(uniqueId);
+        Market market = client.markets.get(marketNetworkId);
 
         if (market == null){
             market = new Market(marketName, mdReqId, instruments, marketNetworkId);
-            client.markets.put(uniqueId, market);
         }
         else
             market.updateInstruments(instruments);
-        client.marketsUpdated();
+        client.marketsUpdated(market);
     }
 
 

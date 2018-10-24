@@ -8,17 +8,10 @@ import io.netty.util.concurrent.EventExecutor;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChannelGroupHashed extends DefaultChannelGroup {
-    private final ConcurrentHashMap<String, ChannelId> channelIdHashMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, Channel> channelIdHashMap = new ConcurrentHashMap<>();
 
-    public Channel find(String hashedCode) {
-        ChannelId channelId = channelIdHashMap.get(hashedCode);
-        return channelId == null ? null :  find(channelId);
-    }
-
-    @Override
-    public boolean add(Channel channel) {
-        channelIdHashMap.put(channel.id().toString(), channel.id());
-        return super.add(channel);
+    public Channel findById(Integer id) {
+        return channelIdHashMap.get(id);
     }
 
     @Override
@@ -26,9 +19,19 @@ public class ChannelGroupHashed extends DefaultChannelGroup {
         if (o instanceof ChannelId){
             ChannelId channelId = (ChannelId)o;
             channelIdHashMap.remove(channelId.toString());
+
         }
         return super.remove(o);
     }
+
+    public void replaceIds(Integer newId, Integer oldId, Channel channel) {
+        channelIdHashMap.remove(newId);
+        channelIdHashMap.put(oldId, channel);
+        channel.isActive();
+    }
+
+
+
 
     @Override
     public void clear() {
@@ -38,5 +41,10 @@ public class ChannelGroupHashed extends DefaultChannelGroup {
 
     public ChannelGroupHashed(EventExecutor executor) {
         super(executor);
+    }
+
+    public void add(int id, Channel channel) {
+        channelIdHashMap.put(id, channel);
+        super.add(channel);
     }
 }

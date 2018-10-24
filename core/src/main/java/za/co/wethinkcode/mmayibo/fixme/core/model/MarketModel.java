@@ -21,11 +21,15 @@ public class MarketModel {
     @XmlElement(name =  "Username")
     private String userName;
 
+    @XmlElement(name =  "NetworkId")
+    private int networkId;
+
     @XmlElementWrapper(name="Instruments")
     @XmlElement(name="Instrument")
     @ManyToMany(cascade = CascadeType.ALL)
     private Collection<InstrumentModel> instruments;
 
+    @Transient
     public ConcurrentHashMap<String, InstrumentModel> instrumentMao = new ConcurrentHashMap<>();
 
     @XmlElement(name =  "Name")
