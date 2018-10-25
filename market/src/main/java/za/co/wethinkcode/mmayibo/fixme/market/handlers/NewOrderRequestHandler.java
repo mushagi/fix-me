@@ -37,11 +37,8 @@ public class NewOrderRequestHandler implements IMessageHandler {
         new Thread(this::processRequest).start();
     }
 
-
-
     private void processRequest()  {
         orderStatus = "2";
-
         if (FixMessageValidator.isValidateNewOrderSingle()){
             instrument =
                     client.marketModel.instrumentMao.get(requestMessage.getSymbol());
@@ -53,7 +50,6 @@ public class NewOrderRequestHandler implements IMessageHandler {
         }
         else
             text = errorBuilder.toString();
-
         logger.info("Execution report of " + requestMessage.getClOrderId()
                 + ". Result : " + orderStatus +  ". Text = {" + text + "}");
 

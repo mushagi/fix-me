@@ -51,12 +51,12 @@ public class MainWindowController extends BrokerUI implements Initializable {
     private final XYChart.Series<Number, Number> marketDataSeries = new XYChart.Series<>();
     private Locale locale = new Locale("en", "za");
     private NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale );
+
     @FXML
     private TextField quantityText;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         marketLineChart.getData().add(marketDataSeries);
 
         instrumentDropDown.setItems(observableInstruments);
@@ -88,10 +88,11 @@ public class MainWindowController extends BrokerUI implements Initializable {
                 int quantity = Integer.parseInt(quantityText.getText());
                 broker.newOrderSingle(selectedMarket, selectedInstrument, "buy", quantity);
             }catch (NumberFormatException e) {
-
+                //
             }
         }
     }
+
     void updateSelectedMarket() {
         Platform.runLater(() -> {
             selectedMarket = marketListView.getSelectionModel().getSelectedItem();
@@ -141,6 +142,14 @@ public class MainWindowController extends BrokerUI implements Initializable {
     @Override
     public void update() {
         Platform.runLater(() -> {
+            if (selectedMarket != null) {
+                 if (selectedMarket.isOnline()) {
+                     
+                 }
+                 else{
+
+                 }
+            }
             if (selectedInstrument != null){
                 instrumentDetailTextInLine.setText(selectedInstrument.getName() +"\n" + numberFormat.format(selectedInstrument.getCostPrice()));
                 ArrayList<Double> pricesHistory = selectedInstrument.getPricesHistory();
@@ -180,6 +189,14 @@ public class MainWindowController extends BrokerUI implements Initializable {
     public void updateMarkets(Market market){
         Platform.runLater(() -> {
                 observableMarkets.putIfAbsent(market.getNetworkId(), market);
+                update();
+                forceListRefreshOn(marketListView);
         });
+    }
+
+    private <T> void forceListRefreshOn(ListView<T> lsv) {
+        ObservableList<T> items = lsv.<T>getItems();
+        lsv.<T>setItems(null);
+        lsv.<T>setItems(items);
     }
 }

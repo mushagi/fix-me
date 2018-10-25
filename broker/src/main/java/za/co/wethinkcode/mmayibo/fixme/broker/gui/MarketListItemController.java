@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
 
 import java.io.IOException;
@@ -54,6 +55,8 @@ class MarketListItemController extends ListCell<Market> {
 
         else {
             name.setText(item.getName());
+            status.setTextFill(item.isOnline()? Color.GREEN : Color.RED);
+
             status.setText(item.isOnline() ?  "online" : "offline");
         }
 

@@ -8,7 +8,7 @@
             <Instruments>
                 <Instrument>
                     <Id>zimbananas</Id>
-                    <Name>Zimbabwe Bananas</Name>
+                    <Name>Zimbabwe </Name>
                     <Price>12</Price>
                     <Quantity>50000</Quantity>
                 </Instrument>
@@ -35,20 +35,20 @@
             <NetworkId>-1</NetworkId>
             <Instruments>
                 <Instrument>
-                    <Id>coke</Id>
-                    <Name>Zimbabwe Bananas</Name>
+                    <Id>kidneys</Id>
+                    <Name>Kidneys</Name>
                     <Price>12</Price>
                     <Quantity>50000</Quantity>
                 </Instrument>
                 <Instrument>
-                    <Id>w</Id>
-                    <Name>China Bananas</Name>
+                    <Id>liver</Id>
+                    <Name>Liver</Name>
                     <Price>12</Price>
                     <Quantity>50000</Quantity>
                 </Instrument>
                 <Instrument>
-                    <Id>j</Id>
-                    <Name>Limpopo Bananas</Name>
+                    <Id>vibranium</Id>
+                    <Name>Vibranium</Name>
                     <Price>12</Price>
                     <Quantity>50000</Quantity>
                 </Instrument>
