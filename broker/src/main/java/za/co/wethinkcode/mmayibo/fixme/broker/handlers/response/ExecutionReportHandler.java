@@ -60,10 +60,6 @@ public class ExecutionReportHandler implements IMessageHandler {
         ownedInstrument.setQuantity(purchasedQuantity);
     }
 
-    private void saveTransactionToDatabase(TradeTransaction transaction) {
-        repository.create(transaction);
-    }
-
     private TradeTransaction createTransaction(FixMessage message) {
         TradeTransaction transaction = new TradeTransaction();
 
@@ -77,10 +73,9 @@ public class ExecutionReportHandler implements IMessageHandler {
         transaction.setQuantity(message.getOrderQuantity());
         transaction.setClient(user.getUserName());
 
-      //  saveTransactionToDatabase(transaction);
+        repository.create(transaction);
 
         return transaction;
-
     }
 
 

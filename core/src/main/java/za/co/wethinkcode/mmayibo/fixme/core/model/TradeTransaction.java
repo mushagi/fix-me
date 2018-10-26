@@ -2,6 +2,7 @@ package za.co.wethinkcode.mmayibo.fixme.core.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,8 +14,10 @@ import java.util.UUID;
 @Entity
 public class TradeTransaction {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    Long id;
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    String id;
+
 
     UUID clientOrderId;
     String client;

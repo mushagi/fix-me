@@ -124,6 +124,9 @@ public class FixDecoder {
             case 509:
                 fixMessage.authRequestType = value;
                 break;
+            case 510:
+                fixMessage.delay = Integer.parseInt(value);
+                break;
         }
     }
 

@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
 
-@XmlRootElement(name = "Instrument")
+@XmlRootElement(name = "Market")
 @XmlAccessorType(XmlAccessType.FIELD)
 
 @Getter @Setter

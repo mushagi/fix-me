@@ -176,5 +176,9 @@ public class FixMessageBuilder {
     }
 
 
-
+    public FixMessageBuilder withDelay(int value) {
+        fixMessage.delay = value;
+        tagsValuesMap.put(DELAY.tag, value);
+        return this;
+    }
 }

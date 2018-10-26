@@ -12,9 +12,4 @@ public class InitData {
     @XmlElementWrapper(name="Markets")
     @XmlElement(name="Market")
     public Collection<MarketModel> markets;
-
-
-    @XmlElementWrapper(name="Instruments")
-    @XmlElement(name="Instrument")
-    public List<InstrumentModel> instruments;
 }

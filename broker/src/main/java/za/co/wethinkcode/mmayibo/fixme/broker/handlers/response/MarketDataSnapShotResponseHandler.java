@@ -37,7 +37,7 @@ public class MarketDataSnapShotResponseHandler implements IMessageHandler {
         }
         else
             market.updateInstruments(instruments);
-        client.marketsUpdated(market);
+        client.marketsUpdated(market, false);
     }
 
 

@@ -52,7 +52,14 @@ public class NewOrderRequestHandler implements IMessageHandler {
             text = errorBuilder.toString();
         logger.info("Execution report of " + requestMessage.getClOrderId()
                 + ". Result : " + orderStatus +  ". Text = {" + text + "}");
-
+        if (requestMessage.delay != 0 && requestMessage.delay < 10000) {
+            logger.info("The response of this message is delayed by " +requestMessage.delay + " milliseconds");
+            try {
+                Thread.sleep(requestMessage.delay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         sendExecutionReport();
     }
 

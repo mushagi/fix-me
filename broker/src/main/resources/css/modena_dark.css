@@ -64,14 +64,13 @@
     -fx-background-color: -fx-mark-highlight-color, rgb(255, 255, 255);
 }
 
-#transactionListView .list-cell:odd {
+.list-cell:odd {
     -fx-control-inner-background: #3c3c3c;
 }
-
-#transactionListView .list-cell:even {
+.list-cell:even {
     -fx-control-inner-background: #3c3c3c;
 }
-#transactionListView {
+.list-view {
     -fx-background-color: #3c3c3c;
 }
 

@@ -50,13 +50,14 @@ public class Broker extends Client {
             userInterfaces.add(userInterface);
     }
 
-    public void newOrderSingle(Market market, Instrument instrument, String side, int quantity){
+    public void newOrderSingle(Market market, Instrument instrument, String side, int quantity, int delay){
         FixMessage requestFixMessage = new FixMessageBuilder()
                 .newFixMessage()
                 .withMessageType("D")
                 .withClOrderId(generateUUID())
                 .withPrice(instrument.costPrice)
                 .withSide(side)
+                .withDelay(delay)
                 .withOrderQuantity(quantity)
                 .withSenderCompId(networkId)
                 .withTargetCompId(market.getNetworkId())
@@ -82,9 +83,9 @@ public class Broker extends Client {
         return UUID.randomUUID().toString();
     }
 
-    public void marketsUpdated(Market market) {
+    public void marketsUpdated(Market market, boolean wasOnlineStatusChanged) {
         for (BrokerUI userInterface: userInterfaces)
-            userInterface.updateMarkets(market);
+            userInterface.updateMarkets(market, wasOnlineStatusChanged);
     }
 
     public void unregisterUi(BrokerUI brokerUI) {
@@ -127,7 +128,7 @@ public class Broker extends Client {
             boolean isMarketOnline = response != null && response.getTestReqId().equals("true");
             if (market.isOnline() != isMarketOnline) {
                 market.setOnline(isMarketOnline);
-                marketsUpdated(market);
+                marketsUpdated(market, true);
             }
         }
     }

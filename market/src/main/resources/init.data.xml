@@ -26,9 +26,7 @@
                 </Instrument>
             </Instruments>
         </Market>
-    </Markets>
 
-    <Markets>
         <Market>
             <Name>Black Market</Name>
             <Username>bmarket</Username>

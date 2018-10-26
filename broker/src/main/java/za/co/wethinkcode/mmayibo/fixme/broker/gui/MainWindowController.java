@@ -2,15 +2,11 @@ package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 
 import javafx.application.Platform;
 import javafx.collections.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Instrument;
@@ -19,10 +15,7 @@ import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
 import java.net.URL;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.*;
 
 
 public class MainWindowController extends BrokerUI implements Initializable {
@@ -55,6 +48,12 @@ public class MainWindowController extends BrokerUI implements Initializable {
     @FXML
     private TextField quantityText;
 
+    @FXML
+
+    private TextField errorLabel;
+    @FXML
+    private TextField delayText;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         marketLineChart.getData().add(marketDataSeries);
@@ -81,14 +80,15 @@ public class MainWindowController extends BrokerUI implements Initializable {
     }
 
     @FXML
-    void buyAction(ActionEvent event){
+    void buyAction(){
 
         if (selectedInstrument != null){
             try{
                 int quantity = Integer.parseInt(quantityText.getText());
-                broker.newOrderSingle(selectedMarket, selectedInstrument, "buy", quantity);
+                int delay =  Integer.parseInt(delayText.getText());
+                broker.newOrderSingle(selectedMarket, selectedInstrument, "buy", quantity, delay);
             }catch (NumberFormatException e) {
-                //
+
             }
         }
     }
@@ -110,24 +110,19 @@ public class MainWindowController extends BrokerUI implements Initializable {
         super.setUpUi(broker, stage);
 
         observableMarkets = FXCollections.observableMap(markets);
-
         observableTransactions = FXCollections.observableMap(transactions);
-
         marketListView.getItems().setAll(observableMarkets.values());
         transactionListView.getItems().setAll(observableTransactions.values());
 
         observableMarkets.addListener((MapChangeListener<String, Market>) change -> {
-
             if (change.wasAdded()) {
                 marketListView.getItems().add(change.getValueAdded());
             }
             else if (change.wasRemoved())
                 marketListView.getItems().remove(change.getValueRemoved());
-
         });
 
         observableTransactions.addListener((MapChangeListener<UUID, TradeTransaction>) change -> {
-
             if (change.wasAdded()) {
                 transactionListView.getItems().add(change.getValueAdded());
             }
@@ -135,21 +130,11 @@ public class MainWindowController extends BrokerUI implements Initializable {
                 transactionListView.getItems().remove(change.getValueRemoved());
 
         });
-
-
     }
 
     @Override
     public void update() {
         Platform.runLater(() -> {
-            if (selectedMarket != null) {
-                 if (selectedMarket.isOnline()) {
-                     
-                 }
-                 else{
-
-                 }
-            }
             if (selectedInstrument != null){
                 instrumentDetailTextInLine.setText(selectedInstrument.getName() +"\n" + numberFormat.format(selectedInstrument.getCostPrice()));
                 ArrayList<Double> pricesHistory = selectedInstrument.getPricesHistory();
@@ -158,39 +143,41 @@ public class MainWindowController extends BrokerUI implements Initializable {
 
                 if (size >= 19){
                     marketDataSeries.getData().remove(0);
-                    for (XYChart.Data<Number, Number> data: marketDataSeries.getData()) {
+                    for (XYChart.Data<Number, Number> data: marketDataSeries.getData())
                         data.setXValue(data.getXValue().intValue() - 1);
-                    }
                 }
                 marketDataSeries.getData().add(new XYChart.Data<>(size,firstValue));
-
             }
             else
                 instrumentDetailTextInLine.setText("");
-
         });
     }
 
     @FXML
-    public void sellAction(ActionEvent actionEvent) {
-        int quantity = Integer.parseInt(quantityText.getText());
-        if (selectedInstrument != null)
-            broker.newOrderSingle(selectedMarket, selectedInstrument, "sell", quantity);
+    public void sellAction() {
+        if (selectedInstrument != null){
+            try{
+                int quantity = Integer.parseInt(quantityText.getText());
+                int delay =  Integer.parseInt(delayText.getText());
+                broker.newOrderSingle(selectedMarket, selectedInstrument, "sell", quantity, delay);
+            }catch (NumberFormatException e) {
+
+            }
+        }
     }
 
     @Override
     public void updateTransactions(final TradeTransaction tradeTransaction){
-        Platform.runLater(() -> {
-            observableTransactions.put(tradeTransaction.getClientOrderId(), tradeTransaction);
-        });
+        Platform.runLater(() -> observableTransactions.put(tradeTransaction.getClientOrderId(), tradeTransaction));
     }
 
     @Override
-    public void updateMarkets(Market market){
+    public void updateMarkets(final Market market, boolean wasOnlineStatusChanged){
         Platform.runLater(() -> {
                 observableMarkets.putIfAbsent(market.getNetworkId(), market);
                 update();
-                forceListRefreshOn(marketListView);
+                if (wasOnlineStatusChanged)
+                    forceListRefreshOn(marketListView);
         });
     }
 
@@ -198,5 +185,6 @@ public class MainWindowController extends BrokerUI implements Initializable {
         ObservableList<T> items = lsv.<T>getItems();
         lsv.<T>setItems(null);
         lsv.<T>setItems(items);
+        marketListView.getSelectionModel().select(selectedMarket);
     }
 }

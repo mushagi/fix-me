@@ -37,5 +37,6 @@ public class FixMessage {
     String messageId;
     String refMsgType;
     String testReqId;
+    public long delay;
 
 }

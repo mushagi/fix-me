@@ -27,7 +27,8 @@ public enum FixTags {
     AUTH_STATUS(507),
     MSG_ID(508),
     AUTH_REQUEST_TYPE(509),
-    REF_MSG_TYPE(372);
+    REF_MSG_TYPE(372),
+    DELAY(510);
 
     public final int tag;
 

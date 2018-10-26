@@ -28,7 +28,7 @@ public abstract class Client implements Runnable {
 
     protected Channel channel;
     private final Logger logger = Logger.getLogger(getClass().getName());
-    Timer timer = new Timer();
+
 
      FixMessageBuilder existingBuilder = new FixMessageBuilder();
 

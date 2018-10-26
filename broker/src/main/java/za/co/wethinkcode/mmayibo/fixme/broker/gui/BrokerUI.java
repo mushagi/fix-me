@@ -28,7 +28,7 @@ public abstract class BrokerUI {
         broker.unregisterUi(this);
     }
 
-    public abstract void updateMarkets(Market market);
+    public abstract void updateMarkets(Market market, boolean wasOnlineStatusChanged);
 
     public abstract void updateTransactions(TradeTransaction tradeTransaction);
 }

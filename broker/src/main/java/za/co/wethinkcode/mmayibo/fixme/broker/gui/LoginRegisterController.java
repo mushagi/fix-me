@@ -103,7 +103,7 @@ public class LoginRegisterController extends BrokerUI {
     }
 
     @Override
-    public void updateMarkets(Market market) {
+    public void updateMarkets(Market market, boolean wasOnlineStatusChanged) {
 
     }
 
