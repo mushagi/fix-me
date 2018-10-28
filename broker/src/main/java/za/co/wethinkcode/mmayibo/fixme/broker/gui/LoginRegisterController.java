@@ -79,6 +79,8 @@ public class LoginRegisterController extends BrokerUI {
                 stage.setTitle(title);
                 BrokerUI controller = loader.getController();
                 controller.setUpUi(broker, stage);
+                stage.setOnCloseRequest(event -> controller.onClose());
+
                 this.unregisterFromBroker();
 
             } catch (IOException e) {
@@ -111,4 +113,5 @@ public class LoginRegisterController extends BrokerUI {
     public void updateTransactions(TradeTransaction tradeTransaction) {
 
     }
+
 }

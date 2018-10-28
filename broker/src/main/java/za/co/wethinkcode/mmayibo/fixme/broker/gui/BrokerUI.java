@@ -31,4 +31,8 @@ public abstract class BrokerUI {
     public abstract void updateMarkets(Market market, boolean wasOnlineStatusChanged);
 
     public abstract void updateTransactions(TradeTransaction tradeTransaction);
+
+    void onClose(){
+        broker.stop();
+    }
 }

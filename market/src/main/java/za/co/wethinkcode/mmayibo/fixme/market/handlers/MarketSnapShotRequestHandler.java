@@ -2,6 +2,7 @@ package za.co.wethinkcode.mmayibo.fixme.market.handlers;
 
 import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageTools;
 import za.co.wethinkcode.mmayibo.fixme.market.MarketClient;
 
 import java.util.logging.Logger;
@@ -23,6 +24,6 @@ public class MarketSnapShotRequestHandler implements IMessageHandler {
     public void processMessage() {
         logger.info("Fix message read : " + rawFixMessage);
 
-        client.sendMarketDataSnapShot(requestMessage.getSenderCompId());
+        client.sendMarketDataSnapShot(requestMessage.getSenderCompId(), requestMessage.getMessageId());
     }
 }

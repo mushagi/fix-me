@@ -59,8 +59,10 @@ public class GeneralMessageHandler implements IMessageHandler {
     private void sendConnectivityStatus(boolean status) {
         if (channel != null){
             String messageId = FixMessageTools.getTagValueByRegex(rawFixMessage, FixTags.MSG_ID.tag);
+            String senderCompId = FixMessageTools.getTagValueByRegex(rawFixMessage, FixTags.SENDER_COMP_ID.tag);
             builder.withTestReqId(String.valueOf(status));
             builder.withMessageId(messageId);
+            builder.withSenderCompId(senderCompId);
             builder.withTargetCompId(targetCompId);
             String offlineResponse = FixEncode.encode(builder.getFixMessage());
             channel.writeAndFlush(offlineResponse+"\r\n");

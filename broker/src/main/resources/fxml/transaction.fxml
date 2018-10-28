@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ListCell?>
 <?import javafx.scene.control.Separator?>
-<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
    <graphic>
       <VBox fx:id="box">
           <children>
-              <Label id="heading" fx:id="heading"/>
-              <Label id="subheading" fx:id="subheading"/>
+              <HBox alignment="CENTER">
+                  <children>
+                      <Label id="heading" fx:id="heading" alignment="CENTER" contentDisplay="CENTER" />
+                      <Label id="heading" fx:id="status" alignment="CENTER" contentDisplay="CENTER" textAlignment="RIGHT" />
+                  </children>
+              </HBox>
+              <Label id="subheading" fx:id="subheading" textAlignment="CENTER" />
               <Separator prefHeight="5.0" prefWidth="219.0" />
           </children>
       </VBox>
    </graphic>
 </fx:root>
-

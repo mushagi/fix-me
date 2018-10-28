@@ -7,8 +7,10 @@ import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.BrokerUser;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Instrument;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
 import za.co.wethinkcode.mmayibo.fixme.core.client.Client;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageTools;
 import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ public class Broker extends Client {
         FixMessage requestFixMessage = new FixMessageBuilder()
                 .newFixMessage()
                 .withMessageType("D")
-                .withClOrderId(generateUUID())
+                .withClOrderId(FixMessageTools.generateMessageId())
                 .withPrice(instrument.costPrice)
                 .withSide(side)
                 .withDelay(delay)
@@ -79,9 +81,6 @@ public class Broker extends Client {
         sendRequest(requestFixMessage, true);
     }
 
-    private String generateUUID() {
-        return UUID.randomUUID().toString();
-    }
 
     public void marketsUpdated(Market market, boolean wasOnlineStatusChanged) {
         for (BrokerUI userInterface: userInterfaces)
@@ -122,18 +121,20 @@ public class Broker extends Client {
 
     private void checkMarketHeartBeatRequest() throws InterruptedException {
         for (Market market: markets.values()) {
-            heartBeatFixMessage.withTestReqId(generateUUID())
+            heartBeatRequest.withTestReqId(FixMessageTools.generateMessageId())
                     .withTargetCompId(market.getNetworkId());
-            FixMessage response = sendMessageWaitForResponse(heartBeatFixMessage.getFixMessage(), false);
-            boolean isMarketOnline = response != null && response.getTestReqId().equals("true");
-            if (market.isOnline() != isMarketOnline) {
-                market.setOnline(isMarketOnline);
-                marketsUpdated(market, true);
-            }
+            sendRequest(heartBeatRequest.getFixMessage(), false);
         }
     }
 
-    private FixMessageBuilder heartBeatFixMessage = new FixMessageBuilder()
+    private FixMessageBuilder heartBeatRequest = new FixMessageBuilder()
             .newFixMessage()
             .withMessageType("0");
+
+    @Override
+    public void stop() {
+        timer.cancel();
+        super.stop();
+
+    }
 }

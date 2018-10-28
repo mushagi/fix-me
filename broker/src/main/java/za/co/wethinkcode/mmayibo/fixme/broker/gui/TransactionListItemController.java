@@ -20,7 +20,8 @@ class TransactionListItemController extends ListCell<TradeTransaction> {
     @FXML
     private Label subheading;
 
-
+    @FXML
+    private Label status;
     private Label detailed;
 
     @FXML
@@ -47,17 +48,14 @@ class TransactionListItemController extends ListCell<TradeTransaction> {
     @Override
     public void updateSelected(boolean selected) {
         super.updateSelected(selected);
+        System.out.println("selected");
         Platform.runLater(() -> {
             if (selected)
-                box.getChildren().add(2, detailed);
+                box.getChildren().add(1, detailed);
             else{
                 box.getChildren().remove(detailed);
             }
         });
-
-
-;
-
     }
 
     @Override
@@ -71,14 +69,15 @@ class TransactionListItemController extends ListCell<TradeTransaction> {
 
         else {
             String transactionHead = item.getSide().equals("buy") ? "Bought" : "Sold";
-            heading.setText("Stock "+transactionHead+
-                    "\tInstrument : " + item.getSymbol());
-            subheading.setText("Price : "+ item.getPrice() + " \t"
-                    + "Quantity " + item.getQuantity());
-            detailed.setText("Market bought from"
-                    + "\nClient order : " + item.getClientOrderId() +
-                    "\nText : " + item.getText());
+            heading.setText("Stock "+transactionHead);
+            //status.setText("Status : " + (item.getOrderStatus().equals("7") ? "Success" : "Rejected"));
+            subheading.setText("Symbol : " + item.getSymbol());
 
+            detailed.setText("Market bought from"+
+                    "Price : "+ item.getPrice() + " \t"
+                    + "Quantity " + item.getQuantity() +
+                    "\nClient order : " + item.getClientOrderId() +
+                    "\nText : " + item.getText());
         }
 
 

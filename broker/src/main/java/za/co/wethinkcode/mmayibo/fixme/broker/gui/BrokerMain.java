@@ -11,7 +11,10 @@ public class BrokerMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Broker broker = new Broker("localhost", 5001 );
-        new Thread(broker).start();
+
+        Thread brokerThread = new Thread(broker);
+        brokerThread.start();
+        brokerThread.join();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/auth-controller.fxml"));
         Parent root = loader.load();
@@ -21,6 +24,7 @@ public class BrokerMain extends Application {
 
         BrokerUI controller = loader.getController();
         controller.setUpUi(broker, primaryStage);
+        primaryStage.setOnCloseRequest(event -> controller.onClose());
     }
 
     public static void main(String args[]) {

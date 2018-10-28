@@ -1,6 +1,10 @@
 package za.co.wethinkcode.mmayibo.fixme.core.fixprotocol;
 
 import java.util.HashMap;
+import java.util.UUID;
+
+import static za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixTags.CHECK_SUM;
+import static za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixTags.MSG_ID;
 
 public class FixEncode {
     public static String encode(FixMessage fixMessage)
@@ -10,10 +14,30 @@ public class FixEncode {
         return fixString.toString();
     }
 
-    private static void addLine(StringBuilder fixString, FixMessage fixMessage) {
-        HashMap<Integer, Object> tagsValuesMap = fixMessage.getTagsValuesMap();
+    private static void addLine(StringBuilder builder, FixMessage message) {
+        HashMap<Integer, Object> tagsValuesMap = message.getTagsValuesMap();
+
+        String messageId = generateMessageId();
+
+        appendTagToString(MSG_ID.tag, messageId, builder, false);
+
         for (Integer tag: tagsValuesMap.keySet())
-            if (tagsValuesMap.get(tag) != null)
-                fixString.append(tag).append("=").append(tagsValuesMap.get(tag)).append("|");
+            if (tagsValuesMap.get(tag) != null )
+                appendTagToString(tag, tagsValuesMap.get(tag), builder, false);
+
+        String checksum = createCheckSum(builder);
+        appendTagToString(CHECK_SUM.tag, checksum, builder, true);
+    }
+
+    private static String createCheckSum(StringBuilder builder) {
+        return String.valueOf(builder.toString().hashCode());
+    }
+
+    private static String generateMessageId() {
+        return UUID.randomUUID().toString();
+    }
+
+    private static void appendTagToString(int tag, Object value, StringBuilder builder, boolean withPipeline) {
+        builder.append(tag).append("=").append(value).append(withPipeline ? "": "|");
     }
 }

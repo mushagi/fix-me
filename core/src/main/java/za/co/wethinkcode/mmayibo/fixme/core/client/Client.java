@@ -10,8 +10,6 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
 import za.co.wethinkcode.mmayibo.fixme.core.persistence.HibernateRepository;
 import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
 
-import java.util.Timer;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -25,6 +23,8 @@ public abstract class Client implements Runnable {
     public String networkId = "-1";
     final ResponseFuture responseFuture = new ResponseFuture();
     private  Bootstrap bootstrap;
+    EventLoopGroup group = new NioEventLoopGroup();
+    protected boolean isBeingShutdown = false;
 
     protected Channel channel;
     private final Logger logger = Logger.getLogger(getClass().getName());
@@ -46,7 +46,6 @@ public abstract class Client implements Runnable {
     }
 
     private void initBootstrap() {
-        EventLoopGroup group = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
@@ -65,7 +64,6 @@ public abstract class Client implements Runnable {
                 else{
                     channel = f.channel();
                     connectionEstablished();
-
                 }
             });
         }
@@ -92,20 +90,19 @@ public abstract class Client implements Runnable {
     }
 
     public void stop() {
-        try {
-            if (channel != null)
-                channel.closeFuture().sync();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        new Thread(() -> {
+            logger.info("Shutting down client connection...");
+            isBeingShutdown = true;
+            group.shutdownGracefully().syncUninterruptibly();
+            logger.info("Shutting down successfully");
+        }).start();
     }
 
     protected void sendRequest(FixMessage message, boolean logging){
         if (channel != null && channel.isActive()){
             existingBuilder
                     .existingMessage(message)
-                    .withSenderCompId(networkId)
-                    .withMessageId(generateMessageId());
+                    .withSenderCompId(networkId);
 
             String encodedFixMessage = FixEncode.encode(message);
             channel.writeAndFlush(encodedFixMessage + "\r\n");
@@ -133,9 +130,7 @@ public abstract class Client implements Runnable {
         return responseFuture.get(message.getMessageId());
     }
 
-    private String generateMessageId() {
-        return UUID.randomUUID().toString();
-    }
+
 
     public abstract void messageRead(FixMessage message, String rawFixMessage);
     public abstract void channelActive();

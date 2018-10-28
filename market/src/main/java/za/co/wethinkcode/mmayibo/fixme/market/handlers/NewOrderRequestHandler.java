@@ -163,6 +163,8 @@ public class NewOrderRequestHandler implements IMessageHandler {
         FixMessage responseFixMessage = new FixMessageBuilder()
                 .newFixMessage()
                 .withMessageType("8")
+                .withPrice(requestMessage.getPrice())
+                .withOrderQuantity(requestMessage.getOrderQuantity())
                 .withSide(requestMessage.getSide())
                 .withMessageId(requestMessage.getMessageId())
                 .withClientIId(requestMessage.getClientId())

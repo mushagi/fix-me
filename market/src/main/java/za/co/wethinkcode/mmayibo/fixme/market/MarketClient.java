@@ -5,6 +5,7 @@ import za.co.wethinkcode.mmayibo.fixme.core.client.Client;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageTools;
 import za.co.wethinkcode.mmayibo.fixme.core.model.InitData;
 import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
@@ -41,19 +42,23 @@ public class MarketClient extends Client {
 
     private final TimerTask broadcastMarket = new TimerTask() {
         public void run() {
-            generatePriceForInstruments();
-            sendMarketDataSnapShot("all");
+            generateValuesForInstruments();
+            generateQuantityForInstruments();
+            sendMarketDataSnapShot("all", FixMessageTools.generateMessageId());
         }
     };
 
-    private void generatePriceForInstruments() {
-        for (InstrumentModel instrument : marketModel.getInstruments())
-            generateRandomPrice(instrument);
+    private void generateQuantityForInstruments() {
     }
 
-    private void generateRandomPrice(InstrumentModel instrument) {
-        double randomValue = 0 + (100- 1) * random.nextDouble();
-        instrument.setPrice(randomValue);
+    private void generateValuesForInstruments() {
+        double randomPrice = 0 + (100- 1) * random.nextDouble();
+        int randomQuantity = random.nextInt(1000000);
+
+        for (InstrumentModel instrument : marketModel.getInstruments()){
+            instrument.setPrice(randomPrice);
+            instrument.setQuantity(randomQuantity);
+        }
     }
 
 
@@ -107,7 +112,7 @@ public class MarketClient extends Client {
         return null;
     }
 
-    public void sendMarketDataSnapShot(String senderCompId) {
+    public void sendMarketDataSnapShot(String senderCompId, String messageId) {
         String symbol = encodeInstruments();
 
         FixMessage responseMessage = new FixMessageBuilder()
@@ -131,7 +136,4 @@ public class MarketClient extends Client {
 
         return builder.toString();
     }
-
-
-
 }

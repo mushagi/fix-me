@@ -139,33 +139,10 @@ public class FixMessageBuilder {
         return this;
     }
 
-    public FixMessageBuilder withDbTransactionType(String value) {
-        fixMessage.dbTransactionType = value;
-        tagsValuesMap.put(DB_TRANSACTION_TYPE.tag, value);
-        return this;
-    }
-
-    public FixMessageBuilder withAuthStatus(String value) {
-        fixMessage.authStatus = value;
-        tagsValuesMap.put(AUTH_STATUS.tag, value);
-        return this;
-    }
 
     public FixMessageBuilder withMessageId(String value) {
         fixMessage.messageId = value;
         tagsValuesMap.put(MSG_ID.tag, value);
-        return this;
-    }
-
-    public FixMessageBuilder withAuthRequestType(String value) {
-        fixMessage.authRequestType = value;
-        tagsValuesMap.put(AUTH_REQUEST_TYPE.tag, value);
-        return this;
-    }
-
-    public FixMessageBuilder withRefMsgType	(String value) {
-        fixMessage.authRequestType = value;
-        tagsValuesMap.put(REF_MSG_TYPE.tag, value);
         return this;
     }
 

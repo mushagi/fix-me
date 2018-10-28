@@ -36,8 +36,7 @@ public class ExecutionReportHandler implements IMessageHandler {
         );
 
         TradeTransaction transaction = createTransaction(responseMessage);
-       // client.transactions.put(transaction.getClientOrderId(), transaction);
-
+        
         createUpdatePurchasedInstrument();
         repository.update(client.user);
 

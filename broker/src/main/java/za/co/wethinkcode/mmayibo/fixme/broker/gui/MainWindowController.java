@@ -171,6 +171,7 @@ public class MainWindowController extends BrokerUI implements Initializable {
         Platform.runLater(() -> observableTransactions.put(tradeTransaction.getClientOrderId(), tradeTransaction));
     }
 
+
     @Override
     public void updateMarkets(final Market market, boolean wasOnlineStatusChanged){
         Platform.runLater(() -> {

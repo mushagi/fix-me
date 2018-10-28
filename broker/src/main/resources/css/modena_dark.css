@@ -63,11 +63,16 @@
 .scroll-bar > .decrement-button:pressed > .decrement-arrow {
     -fx-background-color: -fx-mark-highlight-color, rgb(255, 255, 255);
 }
-
-.list-cell:odd {
+#transaction-list .list-cell:odd {
     -fx-control-inner-background: #3c3c3c;
 }
-.list-cell:even {
+#transaction-list .list-cell:even {
+    -fx-control-inner-background: #3c3c3c;
+}
+#market-list .list-cell:odd {
+    -fx-control-inner-background: #3c3c3c;
+}
+#market-list .list-cell:even {
     -fx-control-inner-background: #3c3c3c;
 }
 .list-view {
@@ -79,7 +84,7 @@
     -fx-font-weight: bold;
 }
 #subheading #detailed {
-    -fx-font-size: 11;
+    -fx-font-size: 9;
 }
 
 #detailed {
