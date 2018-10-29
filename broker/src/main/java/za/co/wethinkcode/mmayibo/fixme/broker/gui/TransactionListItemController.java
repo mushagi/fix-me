@@ -66,6 +66,7 @@ class TransactionListItemController extends ListCell<TradeTransaction> {
             heading.setText("");
             subheading.setText("");
             detailed.setText("");
+            status.setText("");
         }
 
         else {

@@ -9,12 +9,10 @@ endef
 all : router market broker
 
 market :
-	mvn
-	
+    $(call generate_mvn_jar, $(MARKET_DIR))
 router :
-	javac 
-
+    $(call generate_mvn_jar, $(ROUTER_DIR))
 broker : 
-	javac
+    $(call generate_mvn_jar, $(BROKER_DIR))
 
 

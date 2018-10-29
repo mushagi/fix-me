@@ -17,12 +17,20 @@ public class FixEncode {
     private static void addLine(StringBuilder builder, FixMessage message) {
         HashMap<Integer, Object> tagsValuesMap = message.getTagsValuesMap();
 
-        String messageId = generateMessageId();
+        String messageId;
+
+        if (message.getMessageId() != null){
+            messageId = message.getMessageId();
+            message.tagsValuesMap.remove(MSG_ID.tag);
+            message.messageId = null;
+        }
+        else
+            messageId = generateMessageId();
 
         appendTagToString(MSG_ID.tag, messageId, builder, false);
 
         for (Integer tag: tagsValuesMap.keySet())
-            if (tagsValuesMap.get(tag) != null )
+            if (tagsValuesMap.get(tag) != null)
                 appendTagToString(tag, tagsValuesMap.get(tag), builder, false);
 
         String checksum = createCheckSum(builder);

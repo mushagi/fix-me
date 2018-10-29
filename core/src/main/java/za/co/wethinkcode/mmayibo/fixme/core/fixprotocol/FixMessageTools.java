@@ -17,8 +17,8 @@ public class FixMessageTools {
     }
 
     public static boolean isValidMessage(String rawFixMessage){
-
         Matcher m = fixProtocolPattern.matcher(rawFixMessage);
+
         if (m.find()){
             String messageWithoutChecksum = m.group(1);
             double generateChecksum = messageWithoutChecksum.hashCode();

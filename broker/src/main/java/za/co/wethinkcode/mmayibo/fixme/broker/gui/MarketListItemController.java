@@ -51,6 +51,7 @@ class MarketListItemController extends ListCell<Market> {
 
         if(empty || item == null) {
             name.setText("");
+            status.setText("");
         }
 
         else {

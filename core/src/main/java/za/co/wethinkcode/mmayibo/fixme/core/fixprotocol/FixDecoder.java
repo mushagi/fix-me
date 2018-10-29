@@ -7,17 +7,14 @@ import java.util.logging.Logger;
 public class FixDecoder {
     private static final Logger logger = Logger.getLogger(FixDecoder.class.getName());
 
-    public static FixMessage decode(String message)
-    {
+    public static FixMessage decode(String message) {
         FixMessage fixMessage = new FixMessage();
         fixMessage.setTagsValuesMap(new HashMap<>());
 
         String[] fixStrings = message.split("\\|");
 
-        for (String tagAndValue : fixStrings) {
-            validateTagAndValue();
+        for (String tagAndValue : fixStrings)
             addLine(fixMessage, tagAndValue);
-        }
 
         return fixMessage;
     }
@@ -128,9 +125,5 @@ public class FixDecoder {
                 fixMessage.delay = Integer.parseInt(value);
                 break;
         }
-    }
-
-    private static void validateTagAndValue() {
-
     }
 }

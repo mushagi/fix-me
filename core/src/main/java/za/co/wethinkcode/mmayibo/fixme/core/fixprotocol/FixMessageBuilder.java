@@ -28,17 +28,6 @@ public class FixMessageBuilder {
         return  this;
     }
 
-    public FixMessageBuilder withBeginString(String value) {
-        fixMessage.beginString = value;
-        tagsValuesMap.put(BEGIN_STRING.tag, value);
-
-        return  this;
-    }
-    public FixMessageBuilder withBodyLength(String value) {
-        fixMessage.bodyLength = value;
-        tagsValuesMap.put(BODY_LENGTH.tag, value);
-        return  this;
-    }
     public FixMessageBuilder withSenderCompId(String value) {
         fixMessage.senderCompId = value;
         tagsValuesMap.put(SENDER_COMP_ID.tag, value);
@@ -50,11 +39,7 @@ public class FixMessageBuilder {
         tagsValuesMap.put(TARGET_COMP_ID.tag, value);
         return  this;
     }
-    public FixMessageBuilder withSendingTime(String value) {
-        fixMessage.sendingTime = value;
-        tagsValuesMap.put(SENDING_TIME.tag, value);
-        return  this;
-    }
+
     public FixMessageBuilder withOrderQuantity(int value) {
         fixMessage.orderQuantity = value;
         tagsValuesMap.put(ORDER_QUANTITY.tag, value);
@@ -66,16 +51,13 @@ public class FixMessageBuilder {
         tagsValuesMap.put(CL_ORDER_ID.tag, value);
         return  this;
     }
+
     public FixMessageBuilder withSide(String value) {
         fixMessage.side = value;
         tagsValuesMap.put(SIDE.tag, value);
         return  this;
     }
-    public FixMessageBuilder withCheckSum(String value) {
-        fixMessage.checkSum = value;
-        tagsValuesMap.put(CHECK_SUM.tag, value);
-        return  this;
-    }
+
     public FixMessageBuilder withPrice(double value) {
         fixMessage.price = value;
         tagsValuesMap.put(PRICE.tag, value);
@@ -112,33 +94,12 @@ public class FixMessageBuilder {
         tagsValuesMap.put(CLIENTID.tag, value);
         return this;
     }
-    public FixMessageBuilder withWallet(String value) {
-        fixMessage.walletResponse = value;
-        tagsValuesMap.put(WALLET.tag, value);
-        return this;
-    }
+
     public FixMessageBuilder withOrdStatus(String value) {
         fixMessage.ordStatus = value;
         tagsValuesMap.put(ORD_STATUS.tag, value);
         return this;
     }
-    public FixMessageBuilder withDbStatus(String value) {
-        fixMessage.dbStatus = value;
-        tagsValuesMap.put(DBSTATUS.tag, value);
-        return this;
-    }
-    public FixMessageBuilder withDbTable(String value) {
-        fixMessage.dbTableName = value;
-        tagsValuesMap.put(DBTABLE.tag, value);
-        return this;
-    }
-
-    public FixMessageBuilder withDbData(String value) {
-        fixMessage.dbData = value;
-        tagsValuesMap.put(DBDATA.tag, value);
-        return this;
-    }
-
 
     public FixMessageBuilder withMessageId(String value) {
         fixMessage.messageId = value;
@@ -151,8 +112,6 @@ public class FixMessageBuilder {
         tagsValuesMap.put(TEST_REQ_ID.tag, value);
         return this;
     }
-
-
     public FixMessageBuilder withDelay(int value) {
         fixMessage.delay = value;
         tagsValuesMap.put(DELAY.tag, value);

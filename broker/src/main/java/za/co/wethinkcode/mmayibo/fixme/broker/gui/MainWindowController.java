@@ -42,6 +42,8 @@ public class MainWindowController extends BrokerUI implements Initializable {
     private ObservableMap<UUID, TradeTransaction> observableTransactions;
 
     private final XYChart.Series<Number, Number> marketDataSeries = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> marketPredictionDataSeries = new XYChart.Series<>();
+
     private Locale locale = new Locale("en", "za");
     private NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale );
 
@@ -56,7 +58,7 @@ public class MainWindowController extends BrokerUI implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        marketLineChart.getData().add(marketDataSeries);
+        marketLineChart.getData().addAll(marketDataSeries, marketPredictionDataSeries);
 
         instrumentDropDown.setItems(observableInstruments);
 
@@ -73,8 +75,12 @@ public class MainWindowController extends BrokerUI implements Initializable {
         Platform.runLater(() -> {
             if (selectedInstrument != null) {
                 marketDataSeries.getData().clear();
+                marketPredictionDataSeries.getData().clear();
                 for (int i = 0; i < selectedInstrument.getPricesHistory().size(); i++)
                     marketDataSeries.getData().add(new XYChart.Data<>(i, selectedInstrument.getPricesHistory().get(i)));
+                for (int i = 0; i < selectedInstrument.getPredictionHistory().size(); i++)
+                    marketPredictionDataSeries.getData().add(new XYChart.Data<>(i, selectedInstrument.getPredictionHistory().get(i)));
+
             }
         });
     }
@@ -138,19 +144,25 @@ public class MainWindowController extends BrokerUI implements Initializable {
             if (selectedInstrument != null){
                 instrumentDetailTextInLine.setText(selectedInstrument.getName() +"\n" + numberFormat.format(selectedInstrument.getCostPrice()));
                 ArrayList<Double> pricesHistory = selectedInstrument.getPricesHistory();
-                int size = pricesHistory.size()  - 1;
-                Double firstValue = selectedInstrument.getPricesHistory().get(size);
-
-                if (size >= 19){
-                    marketDataSeries.getData().remove(0);
-                    for (XYChart.Data<Number, Number> data: marketDataSeries.getData())
-                        data.setXValue(data.getXValue().intValue() - 1);
-                }
-                marketDataSeries.getData().add(new XYChart.Data<>(size,firstValue));
+                ArrayList<Double> pricesPredictionHistory = selectedInstrument.getPricesHistory();
+                setMarketDataSeries(pricesHistory, marketDataSeries, 19);
+                setMarketDataSeries(pricesPredictionHistory, marketPredictionDataSeries, 20);
             }
             else
                 instrumentDetailTextInLine.setText("");
         });
+    }
+
+    private  void setMarketDataSeries(ArrayList<Double> history, XYChart.Series<Number, Number> seriesData, int maxSize) {
+        int size = history.size()  - 1;
+        Double firstValue = history.get(size);
+
+        if (size >= maxSize){
+            seriesData.getData().remove(0);
+            for (XYChart.Data<Number, Number> data: seriesData.getData())
+                data.setXValue(data.getXValue().intValue() - 1);
+        }
+        seriesData.getData().add(new XYChart.Data<>(size,firstValue));
     }
 
     @FXML
