@@ -60,6 +60,7 @@ public class NewOrderRequestHandler implements IMessageHandler {
                 e.printStackTrace();
             }
         }
+        saveTransactionToDatabase();
         sendExecutionReport();
     }
 
@@ -86,7 +87,7 @@ public class NewOrderRequestHandler implements IMessageHandler {
         } else
             text = "Rejected : " + errorBuilder.toString();
 
-        saveTransactionToDatabase();
+
     }
 
     private void processBuyRequest() {
@@ -95,8 +96,6 @@ public class NewOrderRequestHandler implements IMessageHandler {
             text = "Filled : Transaction a success";
         } else
             text = "Rejected : " + errorBuilder.toString();
-
-        saveTransactionToDatabase();
     }
 
     private boolean marketCanBuyWithQuantity() {
@@ -138,18 +137,19 @@ public class NewOrderRequestHandler implements IMessageHandler {
     }
 
     private void saveTransactionToDatabase() {
-        TradeTransaction tradeTransaction = new TradeTransaction();
+        TradeTransaction transaction = new TradeTransaction();
 
-        tradeTransaction.setClient(requestMessage.getClientId());
-        tradeTransaction.setClientOrderId(UUID.fromString(requestMessage.getClOrderId()));
-        tradeTransaction.setSide(requestMessage.getSide());
-        tradeTransaction.setSymbol(instrument.getId());
-        tradeTransaction.setOrderStatus(orderStatus);
-        tradeTransaction.setText(text);
-        tradeTransaction.setPrice(requestMessage.getPrice());
-        tradeTransaction.setQuantity(requestMessage.getOrderQuantity());
+        transaction.setClient(requestMessage.getClientId());
+        transaction.setClientOrderId(UUID.fromString(requestMessage.getClOrderId()));
+        transaction.setSide(requestMessage.getSide());
+        transaction.setSymbol(requestMessage.getSymbol());
+        transaction.setOrderStatus(requestMessage.getOrdStatus());
+        transaction.setText(requestMessage.getText());
+        transaction.setPrice(requestMessage.getPrice());
+        transaction.setQuantity(requestMessage.getOrderQuantity());
+        transaction.setClient("client");
 
-        repository.create(tradeTransaction);
+        repository.create(transaction);
     }
 
     private boolean brokerCanBuyInstrumentAtCost() {

@@ -22,6 +22,7 @@ class TransactionListItemController extends ListCell<TradeTransaction> {
 
     @FXML
     private Label status;
+
     private Label detailed;
 
     @FXML
@@ -51,7 +52,7 @@ class TransactionListItemController extends ListCell<TradeTransaction> {
         System.out.println("selected");
         Platform.runLater(() -> {
             if (selected)
-                box.getChildren().add(1, detailed);
+                box.getChildren().add(2, detailed);
             else{
                 box.getChildren().remove(detailed);
             }
@@ -70,7 +71,7 @@ class TransactionListItemController extends ListCell<TradeTransaction> {
         else {
             String transactionHead = item.getSide().equals("buy") ? "Bought" : "Sold";
             heading.setText("Stock "+transactionHead);
-            //status.setText("Status : " + (item.getOrderStatus().equals("7") ? "Success" : "Rejected"));
+            status.setText("Status : " + (item.getOrderStatus().equals("7") ? "Success" : "Rejected"));
             subheading.setText("Symbol : " + item.getSymbol());
 
             detailed.setText("Market bought from"+

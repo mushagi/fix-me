@@ -18,7 +18,6 @@ public class TradeTransaction {
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     String id;
 
-
     UUID clientOrderId;
     String client;
     String side;
