@@ -1,36 +1,38 @@
 package za.co.wethinkcode.mmayibo.fixme.core.client;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import za.co.wethinkcode.mmayibo.fixme.core.ResponseFuture;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
+import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.*;
 import za.co.wethinkcode.mmayibo.fixme.core.persistence.HibernateRepository;
 import za.co.wethinkcode.mmayibo.fixme.core.persistence.IRepository;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public abstract class Client implements Runnable {
+    final ResponseFuture responseFuture = new ResponseFuture();
+    public final IRepository repository;
+    public final ConcurrentHashMap<String, String> unSentMessages = new ConcurrentHashMap<>();
 
     private final String HOST;
     private final int PORT;
-
-    public final IRepository repository;
     boolean isActive;
+
     public String networkId = "-1";
-    final ResponseFuture responseFuture = new ResponseFuture();
     private  Bootstrap bootstrap;
-    EventLoopGroup group = new NioEventLoopGroup();
-    protected boolean isBeingShutdown = false;
+
+    private EventLoopGroup group = new NioEventLoopGroup();
+    boolean isBeingShutdown = false;
 
     protected Channel channel;
     private final Logger logger = Logger.getLogger(getClass().getName());
 
 
-     FixMessageBuilder existingBuilder = new FixMessageBuilder();
+     private FixMessageBuilder existingBuilder = new FixMessageBuilder();
 
     protected Client(String host, int port) {
         this.repository = new HibernateRepository();
@@ -81,10 +83,6 @@ public abstract class Client implements Runnable {
         sendRequest(registerIdMessage, true);
     }
 
-    private void connectionLost() {
-        logger.info("Connection lost");
-    }
-
     private void connectionEstablished() {
         logger.info("Connection established");
     }
@@ -105,9 +103,16 @@ public abstract class Client implements Runnable {
                     .withSenderCompId(networkId);
 
             String encodedFixMessage = FixEncode.encode(message);
+            String messageId = FixMessageTools.getTagValueByRegex(encodedFixMessage, FixTags.MSG_ID.tag);
+
+            if (messageId != null)
+                unSentMessages.put(messageId, encodedFixMessage);
+
             channel.writeAndFlush(encodedFixMessage + "\r\n");
             if (logging)
                 logger.info("Fix Message request : " + encodedFixMessage);
+
+
         }
         else
             if (logging)
@@ -120,17 +125,21 @@ public abstract class Client implements Runnable {
             String encodedFixMessage = FixEncode.encode(responseMessage);
             channel.writeAndFlush(encodedFixMessage + "\r\n");
             logger.info("Fix Message response : " + encodedFixMessage);
+
+            String messageId = FixMessageTools.getTagValueByRegex(encodedFixMessage, FixTags.MSG_ID.tag);
+
+            if (messageId != null)
+                unSentMessages.put(messageId, encodedFixMessage);
+
         }
         else
             logger.info("Cannot send response. Server can't be reached");
     }
 
-    public FixMessage sendMessageWaitForResponse(FixMessage message, boolean logging) throws InterruptedException {
+    public FixMessage  sendMessageWaitForResponse(FixMessage message, boolean logging) throws InterruptedException {
         sendRequest(message, logging);
         return responseFuture.get(message.getMessageId());
     }
-
-
 
     public abstract void messageRead(FixMessage message, String rawFixMessage);
     public abstract void channelActive();

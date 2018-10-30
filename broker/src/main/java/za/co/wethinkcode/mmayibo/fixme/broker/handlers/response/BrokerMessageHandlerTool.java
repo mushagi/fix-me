@@ -17,7 +17,7 @@ public class BrokerMessageHandlerTool {
                 case "W":
                     return new MarketDataSnapShotResponseHandler(broker, message, rawFixMessage);
                 case "400":
-                    return new HeartBeatResponseHandler(broker, message, rawFixMessage);
+                    return new SentMessageStatusResponseHandler(broker, message, rawFixMessage);
             }
         }
         return new InvalidResponseRequestHandler(rawFixMessage);

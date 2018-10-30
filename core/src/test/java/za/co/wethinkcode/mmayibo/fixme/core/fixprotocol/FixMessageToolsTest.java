@@ -18,9 +18,9 @@ class FixMessageToolsTest {
 
     @Test
     void getTagValueByRegex1() {
-        String fixString = "508=fsd|16=555|";
+        String fixString = "508=fsd|16=555";
         double hash = fixString.hashCode();
-        fixString += "10=" + hash;
+        fixString += "10=" + hash + "|";
         boolean s = FixMessageTools.isValidMessage(fixString);
 
         assertEquals(true,s );

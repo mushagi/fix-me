@@ -7,8 +7,7 @@ import static za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixTags.CHECK_SUM
 import static za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixTags.MSG_ID;
 
 public class FixEncode {
-    public static String encode(FixMessage fixMessage)
-    {
+    public static String encode(FixMessage fixMessage) {
         StringBuilder fixString = new StringBuilder();
         addLine(fixString, fixMessage);
         return fixString.toString();

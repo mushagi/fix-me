@@ -33,7 +33,7 @@ public class Broker extends Client {
     public Broker(String host, int port) {
         super(host, port);
         networkId = "-1";
-        startMarketHeartConnectivityCheck();
+      //  startMarketHeartConnectivityCheck();
     }
 
     @Override
@@ -101,8 +101,7 @@ public class Broker extends Client {
 
     }
 
-    private void startMarketHeartConnectivityCheck()
-    {
+    private void startMarketHeartConnectivityCheck() {
         long delay  = 1000L;
         long period = 1000L;
         timer.scheduleAtFixedRate(checkMarketHeartBeatTask, delay, period);

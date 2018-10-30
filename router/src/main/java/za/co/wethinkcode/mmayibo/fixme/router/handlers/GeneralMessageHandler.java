@@ -35,19 +35,20 @@ public class GeneralMessageHandler implements IMessageHandler {
             logger.info("Raw Fix Message read : " + rawFixMessage + "" +
                     "\nTarget computer {" + targetCompId +"}");
 
-            if (targetCompId.equals("all"))
-                responseChannels.writeAndFlush(  rawFixMessage + "\r\n");
+            if (targetCompId.equals("all")){
+                responseChannels.writeAndFlush(  rawFixMessage + "\r\n").addListener(future -> {
+                    sendConnectivityStatus(true);
+                });
+
+            }
             else {
                 Channel respondChannel = responseChannels.findById(Integer.valueOf(targetCompId));
 
                 if (respondChannel != null)
                     respondChannel.writeAndFlush(  rawFixMessage + "\r\n")
-                            .addListener(future -> {
-                                sendConnectivityStatus(future.isSuccess());
-                            });
-                else {
+                            .addListener(future -> sendConnectivityStatus(future.isSuccess()));
+                else
                     logger.info("Target channel doesn't exist ");
-                }
             }
         }
     }
@@ -68,6 +69,4 @@ public class GeneralMessageHandler implements IMessageHandler {
             channel.writeAndFlush(offlineResponse+"\r\n");
         }
     }
-
-
 }

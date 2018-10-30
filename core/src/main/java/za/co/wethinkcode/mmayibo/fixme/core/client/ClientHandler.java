@@ -22,11 +22,22 @@ class ClientHandler extends SimpleChannelInboundHandler<String> {
     public void channelRead0(ChannelHandlerContext ctx, String rawFixMessage){
         if (FixMessageTools.isValidMessage(rawFixMessage)) {
             FixMessage decodeFixMessage = FixDecoder.decode(rawFixMessage);
+            updateUnsentMessages(decodeFixMessage);
             responseFuture.set(decodeFixMessage.getMessageId(), decodeFixMessage);
             client.messageRead(decodeFixMessage, rawFixMessage);
         }
         else
             sendRejectedInvalidFixMessage(ctx, rawFixMessage);
+    }
+
+    private void updateUnsentMessages(FixMessage message) {
+        if (message.getMessageId() != null){
+            String unsentMessage = client.unSentMessages.get(message.getMessageId());
+            if (unsentMessage != null){
+                client.unSentMessages.remove(message.getMessageId());
+                logger.info("removed message" + message.getMessageId());
+            }
+        }
     }
 
     private void sendRejectedInvalidFixMessage(ChannelHandlerContext ctx, String rawFixMessage) {

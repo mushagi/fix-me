@@ -32,7 +32,7 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <archive>
-                        <manifest>, m
+                        <manifest>
                             <mainClass>
                                 za.co.wethinkcode.mmayibo.fixme.broker.gui.BrokerMain
                             </mainClass>
@@ -51,4 +51,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
