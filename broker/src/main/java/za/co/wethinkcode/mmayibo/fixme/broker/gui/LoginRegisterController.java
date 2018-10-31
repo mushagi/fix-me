@@ -43,20 +43,20 @@ public class LoginRegisterController extends BrokerUI {
                     logger.info("Could not find the market on the database");
                     logger.info("Creating a new a market");
                     user = new BrokerUser(username);
-                    user.setNetworkId(Integer.parseInt(broker.networkId));
+                    user.setNetworkId(-1);
                     broker.repository.create(user);
                     broker.user = user;
                 }
                 else
                     broker.networkId = String.valueOf(user.getNetworkId());
-
+                broker.user = user;
                 logger.info("Market "+ broker.user.getUserName()+" has been received");
-                showMainWindow(username);
+                showMainWindow();
                 return null;
             }
         }).start();
     }
-    private void showMainWindow(String username) {
+    private void showMainWindow() {
         setSceneToMainWindowStage(stage, "Broker", "/fxml/main-window.fxml");
     }
 

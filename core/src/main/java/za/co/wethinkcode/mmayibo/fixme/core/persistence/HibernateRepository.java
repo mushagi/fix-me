@@ -42,9 +42,11 @@ public class HibernateRepository implements IRepository {
 
         TEntity entity = null;
         try {
-            Transaction transaction = session.beginTransaction();
-            entity = session.get(type, id);
-            transaction.commit();
+            if (!session.getTransaction().isActive()){
+                Transaction transaction = session.beginTransaction();
+                entity = session.get(type, id);
+                transaction.commit();
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -66,13 +68,18 @@ public class HibernateRepository implements IRepository {
 
     @Override
     public <T> T create(T entity) {
+
         try {
-            Transaction transaction = session.beginTransaction();
-            session.save(entity);
-            transaction.commit();
+            if (!session.getTransaction().isActive()) {
+                Transaction transaction = session.beginTransaction();
+                session.save(entity);
+                transaction.commit();
+            }
+;
         }
         catch (Exception e) {
             e.printStackTrace();
+
             return null;
         }
         return entity;

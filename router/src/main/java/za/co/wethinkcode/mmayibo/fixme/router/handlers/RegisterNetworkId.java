@@ -37,6 +37,7 @@ public class RegisterNetworkId implements IMessageHandler {
             if (idToBeRemovedString != null) {
                 int idToBeRemoved = Integer.parseInt(idToBeRemovedString);
                 channels.replaceIds(idToBeRemoved, Integer.valueOf(senderCompId), channel);
+                server.sendMessageStatus(channel, true, rawFixMessage);
             }
         }
     }

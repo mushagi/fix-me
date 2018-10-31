@@ -176,6 +176,6 @@ public class NewOrderRequestHandler implements IMessageHandler {
                 .withSenderCompId(requestMessage.getTargetCompId())
                 .getFixMessage();
 
-        client.sendResponse(responseFixMessage);
+        client.sendRequest(responseFixMessage, true, false);
     }
 }

@@ -5,10 +5,12 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import za.co.wethinkcode.mmayibo.fixme.core.ChannelGroupHashed;
+import za.co.wethinkcode.mmayibo.fixme.core.FixMeChannelInitializer;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
@@ -23,12 +25,14 @@ public abstract class Server implements Runnable{
 
     public final ChannelGroupHashed channels;
     public final ChannelGroupHashed responseChannels;
+    private final ServerHandler serverHandler;
 
     protected Server(String host, int port, ChannelGroupHashed channels, ChannelGroupHashed responseChannels) {
         HOST = System.getProperty("host", host);
         PORT = Integer.parseInt(System.getProperty("port", String.valueOf(port)));
         this.channels = channels;
         this.responseChannels = responseChannels;
+        serverHandler = new ServerHandler(this);
     }
 
     @Override
@@ -45,7 +49,7 @@ public abstract class Server implements Runnable{
 
             bootstrap.group(bossGroup, workerGroup);
             bootstrap.channel(NioServerSocketChannel.class)
-                    .childHandler(new ServerInitializer(channels, this))
+                    .childHandler(new FixMeChannelInitializer( serverHandler))
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .option(ChannelOption.TCP_NODELAY, true)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
@@ -56,7 +60,7 @@ public abstract class Server implements Runnable{
         }
 
    }
-    public void sendIdToClient(Channel channel, int id) {
+    void sendIdToClient(Channel channel, int id) {
         FixMessage responseIdBackToChannelFixMessage = new FixMessageBuilder()
                 .newFixMessage()
                 .withMessageType("1")
@@ -66,8 +70,20 @@ public abstract class Server implements Runnable{
         String fixStringResponseBackToChannel = FixEncode.encode(responseIdBackToChannelFixMessage);
         channel.writeAndFlush(fixStringResponseBackToChannel + "\r\n");
     }
-    public abstract int generateId();
 
-   public abstract void messageRead(String rawFixMessage, ChannelHandlerContext ctx);
+    public void sendMessage(Channel senderChannel, Channel targetChannel, String rawFixMessage) {
+        serverHandler.sendMessage(senderChannel, targetChannel, rawFixMessage);
+    }
+
+    public void sendMessage(Channel senderChannel, ChannelGroup channels, String rawFixMessage) {
+        serverHandler.sendMessage(senderChannel, channels, rawFixMessage);
+
+    }
+
+    public void sendMessageStatus(Channel channel, boolean status, String rawFixMessage) {
+        serverHandler.sendMessageStatus(channel, status, rawFixMessage);
+    }
+    public abstract int generateId();
+    public abstract void messageRead(String rawFixMessage, ChannelHandlerContext ctx);
     protected abstract void channelActive(ChannelHandlerContext ctx, int id);
 }

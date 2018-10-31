@@ -18,6 +18,7 @@ public class MarketSnapShotRequestHandler implements IMessageHandler {
         this.requestMessage = requestMessage;
         this.client = client;
         this.rawFixMessage = rawFixMessage;
+
     }
 
     @Override
@@ -25,5 +26,6 @@ public class MarketSnapShotRequestHandler implements IMessageHandler {
         logger.info("Fix message read : " + rawFixMessage);
 
         client.sendMarketDataSnapShot(requestMessage.getSenderCompId(), requestMessage.getMessageId());
+        client.sendUnsentMessages(requestMessage.getTargetCompId());
     }
 }

@@ -25,12 +25,19 @@ public class SentMessageStatusResponseHandler implements IMessageHandler {
 
     @Override
     public void processMessage() {
-        boolean isMarketOnline = responseMessage.getTestReqId() != null && responseMessage.getTestReqId().equals("true");
-        Market market = client.markets.get(responseMessage.getTargetCompId());
+        if (responseMessage.getTargetCompId() != null){
+            boolean isMarketOnline = responseMessage.getTestReqId() != null && responseMessage.getTestReqId().equals("true");
 
-        if (market != null && market.isOnline() != isMarketOnline) {
-            market.setOnline(isMarketOnline);
-            client.marketsUpdated(market, true);
+            if (isMarketOnline)
+                client.sendUnsentMessages(responseMessage.getTargetCompId());
+
+            Market market = client.markets.get(responseMessage.getTargetCompId());
+
+            if (market != null && market.isOnline() != isMarketOnline) {
+                market.setOnline(isMarketOnline);
+
+                client.marketsUpdated(market, true);
+            }
         }
     }
 }

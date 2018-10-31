@@ -9,7 +9,7 @@
         <property name="dialect">org.hibernate.dialect.SQLiteDialect</property>
         <property name="connection.driver_class">org.sqlite.JDBC</property>
         <property name="connection.url">jdbc:sqlite:market_data.db</property>
-        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
 
         <mapping class="za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel"/>
         <mapping class="za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel"/>

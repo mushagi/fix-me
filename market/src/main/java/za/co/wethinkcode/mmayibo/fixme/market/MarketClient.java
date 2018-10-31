@@ -124,8 +124,7 @@ public class MarketClient extends Client {
                 .withTargetCompId(senderCompId)
                 .withSymbol(symbol)
                 .getFixMessage();
-        if (channel != null)
-            channel.writeAndFlush(FixEncode.encode(responseMessage) + "\r\n");
+        sendResponse(responseMessage, false, true);
     }
 
     private String encodeInstruments() {
