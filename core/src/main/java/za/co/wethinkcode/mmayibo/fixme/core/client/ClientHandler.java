@@ -121,10 +121,10 @@ class ClientHandler extends SimpleChannelInboundHandler<String> {
             logger.info("Cannot send response. Server can't be reached");
     }
 
-    public void sendUnsentMessages(String targetCompId) {
+    public void sendUnsentMessages(String senderCompId) {
         for (String message: unSentMessages.values()) {
             String messageTargetCompId = FixMessageTools.getTagValueByRegex(message, FixTags.TARGET_COMP_ID.tag);
-            if (targetCompId.equals(messageTargetCompId))
+            if (senderCompId.equals(messageTargetCompId))
                 sendRawFixMessage(message, true);
         }
     }

@@ -102,8 +102,8 @@ public abstract class Client implements Runnable {
         }).start();
     }
 
-    public void sendUnsentMessages(String targetCompId){
-        clientHandler.sendUnsentMessages(targetCompId);
+    public void sendUnsentMessages(String senderCompId){
+        clientHandler.sendUnsentMessages(senderCompId);
     }
 
     public FixMessage  sendMessageWaitForResponse(FixMessage message, boolean logging) throws InterruptedException {

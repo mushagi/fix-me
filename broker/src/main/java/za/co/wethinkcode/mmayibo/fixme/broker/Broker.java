@@ -1,5 +1,9 @@
 package za.co.wethinkcode.mmayibo.fixme.broker;
 
+import javafx.beans.InvalidationListener;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import za.co.wethinkcode.mmayibo.fixme.broker.gui.BrokerUI;
 import za.co.wethinkcode.mmayibo.fixme.broker.handlers.response.BrokerMessageHandlerTool;
 import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
@@ -12,16 +16,14 @@ import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageTools;
 import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class Broker extends Client {
     public final ConcurrentHashMap<String, Market> markets = new ConcurrentHashMap<>();
-    public final ConcurrentHashMap<UUID, TradeTransaction>  transactions = new ConcurrentHashMap<>();
+
+    public final ObservableMap<UUID, TradeTransaction> transactions = FXCollections.observableMap(new ConcurrentHashMap<>());
     private final Logger logger = Logger.getLogger(getClass().getName());
     public BrokerUser user;
     private final ArrayList<BrokerUI> userInterfaces = new ArrayList<>();
@@ -88,9 +90,9 @@ public class Broker extends Client {
         userInterfaces.remove(brokerUI);
     }
 
-    public void updateTransactions(TradeTransaction tradeTransaction) {
+    public void updateTransactions() {
         for (BrokerUI userInterface: userInterfaces)
-            userInterface.updateTransactions(tradeTransaction);
+            userInterface.updateTransactions();
     }
 
     public void initialize() {

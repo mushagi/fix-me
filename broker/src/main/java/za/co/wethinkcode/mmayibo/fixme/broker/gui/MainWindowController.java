@@ -39,7 +39,6 @@ public class MainWindowController extends BrokerUI implements Initializable {
 
     private Market selectedMarket;
     private Instrument selectedInstrument;
-    private ObservableMap<UUID, TradeTransaction> observableTransactions;
 
     private final XYChart.Series<Number, Number> marketDataSeries = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> marketPredictionDataSeries = new XYChart.Series<>();
@@ -116,25 +115,28 @@ public class MainWindowController extends BrokerUI implements Initializable {
         super.setUpUi(broker, stage);
 
         observableMarkets = FXCollections.observableMap(markets);
-        observableTransactions = FXCollections.observableMap(transactions);
         marketListView.getItems().setAll(observableMarkets.values());
-        transactionListView.getItems().setAll(observableTransactions.values());
+        transactionListView.getItems().setAll(transactions.values());
 
         observableMarkets.addListener((MapChangeListener<String, Market>) change -> {
-            if (change.wasAdded()) {
-                marketListView.getItems().add(change.getValueAdded());
-            }
-            else if (change.wasRemoved())
-                marketListView.getItems().remove(change.getValueRemoved());
+
+            Platform.runLater(() -> {
+                if (change.wasAdded()) {
+                    marketListView.getItems().add(change.getValueAdded());
+                }
+                else if (change.wasRemoved())
+                    marketListView.getItems().remove(change.getValueRemoved());
+            });
         });
 
-        observableTransactions.addListener((MapChangeListener<UUID, TradeTransaction>) change -> {
-            if (change.wasAdded()) {
-                transactionListView.getItems().add(change.getValueAdded());
-            }
-            else if (change.wasRemoved())
-                transactionListView.getItems().remove(change.getValueRemoved());
-
+        transactions.addListener((MapChangeListener<UUID, TradeTransaction>) change -> {
+                Platform.runLater(() -> {
+                    if (change.wasAdded()) {
+                        transactionListView.getItems().add(change.getValueAdded());
+                    }
+                    else if (change.wasRemoved())
+                        transactionListView.getItems().remove(change.getValueRemoved());
+                });
         });
     }
 
@@ -179,8 +181,8 @@ public class MainWindowController extends BrokerUI implements Initializable {
     }
 
     @Override
-    public void updateTransactions(final TradeTransaction tradeTransaction){
-        Platform.runLater(() -> observableTransactions.put(tradeTransaction.getClientOrderId(), tradeTransaction));
+    public void updateTransactions(){
+
     }
 
     @Override

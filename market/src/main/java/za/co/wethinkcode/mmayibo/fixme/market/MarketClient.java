@@ -122,7 +122,7 @@ public class MarketClient extends Client {
                 .withTargetCompId(senderCompId)
                 .withSymbol(symbol)
                 .getFixMessage();
-        sendResponse(responseMessage, withLogging, true);
+        sendResponse(responseMessage, withLogging, false);
     }
 
     private String encodeInstruments() {

@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.BrokerUser;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
-import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -50,17 +49,21 @@ public class LoginRegisterController extends BrokerUI {
                 else
                     broker.networkId = String.valueOf(user.getNetworkId());
                 broker.user = user;
-                logger.info("Market "+ broker.user.getUserName()+" has been received");
+                logger.info("Broker "+ broker.user.getUserName()+" has been received");
                 showMainWindow();
                 return null;
             }
         }).start();
     }
-    private void showMainWindow() {
+    private void showMainWindow() throws InterruptedException {
         setSceneToMainWindowStage(stage, "Broker", "/fxml/main-window.fxml");
     }
 
-    private void setSceneToMainWindowStage(Stage stage, String title, String fxmlResource) {
+    private void setSceneToMainWindowStage(Stage stage, String title, String fxmlResource) throws InterruptedException {
+        Thread brokerThread = new Thread(broker);
+        brokerThread.start();
+        brokerThread.join();
+
         Platform.runLater(() -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlResource));
@@ -78,7 +81,12 @@ public class LoginRegisterController extends BrokerUI {
                 }
                 stage.setTitle(title);
                 BrokerUI controller = loader.getController();
+
+
                 controller.setUpUi(broker, stage);
+
+
+
                 stage.setOnCloseRequest(event -> controller.onClose());
 
                 this.unregisterFromBroker();
@@ -110,7 +118,7 @@ public class LoginRegisterController extends BrokerUI {
     }
 
     @Override
-    public void updateTransactions(TradeTransaction tradeTransaction) {
+    public void updateTransactions() {
 
     }
 

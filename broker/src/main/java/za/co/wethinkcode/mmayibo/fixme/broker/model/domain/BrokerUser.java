@@ -17,11 +17,10 @@ public class BrokerUser {
 
     int networkId;
     @Transient
-    ConcurrentHashMap<String, OwnedInstrument> instruments;
+    ConcurrentHashMap<String, OwnedInstrument> instruments = new ConcurrentHashMap<>();
 
     public BrokerUser(String userName) {
         this.userName = userName;
-        instruments = new ConcurrentHashMap<>();
     }
 
     public Collection <OwnedInstrument> getInstrumentsCollection(){

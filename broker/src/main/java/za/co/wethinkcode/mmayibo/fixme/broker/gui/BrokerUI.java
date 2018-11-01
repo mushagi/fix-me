@@ -1,5 +1,6 @@
 package za.co.wethinkcode.mmayibo.fixme.broker.gui;
 
+import javafx.collections.ObservableMap;
 import javafx.stage.Stage;
 import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 import za.co.wethinkcode.mmayibo.fixme.broker.model.domain.Market;
@@ -11,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class BrokerUI {
     Broker broker;
     ConcurrentHashMap<String, Market> markets;
-    ConcurrentHashMap<UUID, TradeTransaction> transactions;
+    ObservableMap<UUID, TradeTransaction> transactions;
     Stage stage;
 
     public abstract void update();
@@ -30,7 +31,7 @@ public abstract class BrokerUI {
 
     public abstract void updateMarkets(Market market, boolean wasOnlineStatusChanged);
 
-    public abstract void updateTransactions(TradeTransaction tradeTransaction);
+    public abstract void updateTransactions();
 
     void onClose(){
         broker.stop();

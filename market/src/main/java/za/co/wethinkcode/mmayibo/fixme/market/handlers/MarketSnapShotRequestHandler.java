@@ -25,6 +25,6 @@ public class MarketSnapShotRequestHandler implements IMessageHandler {
         logger.info("Fix message read : " + rawFixMessage);
 
         client.sendMarketDataSnapShot(requestMessage.getSenderCompId(), requestMessage.getMessageId(), true);
-        client.sendUnsentMessages(requestMessage.getTargetCompId());
+        client.sendUnsentMessages(requestMessage.getSenderCompId());
     }
 }

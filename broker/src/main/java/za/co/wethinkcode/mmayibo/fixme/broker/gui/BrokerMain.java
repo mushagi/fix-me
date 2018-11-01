@@ -12,9 +12,6 @@ public class BrokerMain extends Application {
     public void start(Stage primaryStage) throws Exception {
         Broker broker = new Broker("localhost", 5001 );
 
-        Thread brokerThread = new Thread(broker);
-        brokerThread.start();
-        brokerThread.join();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/auth-controller.fxml"));
         Parent root = loader.load();
