@@ -6,14 +6,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import za.co.wethinkcode.mmayibo.fixme.core.model.TradeTransaction;
 
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 class TransactionListItemController extends ListCell<TradeTransaction> {
 
     private final MainWindowController mainWindowController;
-
+    static private Locale locale = new Locale("en", "za");
+    static private NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
     @FXML
     private Label heading;
 
@@ -49,7 +53,6 @@ class TransactionListItemController extends ListCell<TradeTransaction> {
     @Override
     public void updateSelected(boolean selected) {
         super.updateSelected(selected);
-        System.out.println("selected");
         Platform.runLater(() -> {
             if (selected)
                 box.getChildren().add(2, detailed);
@@ -68,20 +71,17 @@ class TransactionListItemController extends ListCell<TradeTransaction> {
             detailed.setText("");
             status.setText("");
         }
-
         else {
-            String transactionHead = item.getSide().equals("buy") ? "Bought" : "Sold";
-            heading.setText("Stock "+transactionHead);
-            status.setText("Status : " + (item.getOrderStatus().equals("7") ? "Success" : "Rejected"));
+            heading.setText("New order :  "+ item.getSide());
+            status.setText((item.getOrderStatus().equals("7") ? "Success" : "Rejected"));
+            status.setTextFill(item.getOrderStatus().equals("7") ? Color.GREEN : Color.RED);
             subheading.setText("Symbol : " + item.getSymbol());
 
-            detailed.setText("Market bought from"+
-                    "Price : "+ item.getPrice() + " \t"
-                    + "Quantity " + item.getQuantity() +
+            detailed.setText("Market bought from "+ item.getMarket() +
+                    "\nPrice : "+ numberFormat.format(item.getPrice()) +
+                    "\nQuantity " + item.getQuantity() +
                     "\nClient order : " + item.getClientOrderId() +
                     "\nText : " + item.getText());
         }
-
-
     }
 }

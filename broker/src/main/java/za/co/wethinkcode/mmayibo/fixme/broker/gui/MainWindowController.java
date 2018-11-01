@@ -58,7 +58,7 @@ public class MainWindowController extends BrokerUI implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        marketLineChart.getData().addAll(marketDataSeries, marketPredictionDataSeries);
+        marketLineChart.getData().addAll(marketPredictionDataSeries, marketDataSeries);
 
         instrumentDropDown.setItems(observableInstruments);
 
@@ -144,7 +144,7 @@ public class MainWindowController extends BrokerUI implements Initializable {
             if (selectedInstrument != null){
                 instrumentDetailTextInLine.setText(selectedInstrument.getName() +"\n" + numberFormat.format(selectedInstrument.getCostPrice()));
                 ArrayList<Double> pricesHistory = selectedInstrument.getPricesHistory();
-                ArrayList<Double> pricesPredictionHistory = selectedInstrument.getPricesHistory();
+                ArrayList<Double> pricesPredictionHistory = selectedInstrument.getPredictionHistory();
                 setMarketDataSeries(pricesHistory, marketDataSeries, 19);
                 setMarketDataSeries(pricesPredictionHistory, marketPredictionDataSeries, 20);
             }
@@ -158,7 +158,7 @@ public class MainWindowController extends BrokerUI implements Initializable {
         Double firstValue = history.get(size);
 
         if (size >= maxSize){
-            seriesData.getData().remove(0);
+             seriesData.getData().remove(0);
             for (XYChart.Data<Number, Number> data: seriesData.getData())
                 data.setXValue(data.getXValue().intValue() - 1);
         }
@@ -183,12 +183,14 @@ public class MainWindowController extends BrokerUI implements Initializable {
         Platform.runLater(() -> observableTransactions.put(tradeTransaction.getClientOrderId(), tradeTransaction));
     }
 
-
     @Override
     public void updateMarkets(final Market market, boolean wasOnlineStatusChanged){
         Platform.runLater(() -> {
                 observableMarkets.putIfAbsent(market.getNetworkId(), market);
                 update();
+                if (selectedMarket == null){
+                    marketListView.getSelectionModel().select(market);
+                }
                 if (wasOnlineStatusChanged)
                     forceListRefreshOn(marketListView);
         });

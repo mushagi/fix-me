@@ -63,6 +63,7 @@ public abstract class Server implements Runnable{
     void sendIdToClient(Channel channel, int id) {
         FixMessage responseIdBackToChannelFixMessage = new FixMessageBuilder()
                 .newFixMessage()
+                .withSenderCompId("router")
                 .withMessageType("1")
                 .withText(String.valueOf(id))
                 .getFixMessage();

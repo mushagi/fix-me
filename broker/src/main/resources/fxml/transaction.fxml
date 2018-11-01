@@ -11,7 +11,7 @@
       <VBox fx:id="box">
           <children>
               <Label id="heading" fx:id="heading" />
-              <Label id="heading" fx:id="status" textAlignment="RIGHT" />
+              <Label id="status" fx:id="status" textAlignment="RIGHT" />
               <Label id="subheading" fx:id="subheading" textAlignment="CENTER" />
               <Separator prefHeight="5.0" prefWidth="219.0" />
           </children>

@@ -61,7 +61,7 @@ public class ExecutionReportHandler implements IMessageHandler {
 
     private TradeTransaction createTransaction(FixMessage message) {
         TradeTransaction transaction = new TradeTransaction();
-
+        transaction.setMarket(message.getMDReqID());
         transaction.setClient(message.getClientId());
         transaction.setClientOrderId(UUID.fromString(message.getClOrderId()));
         transaction.setSide(message.getSide());

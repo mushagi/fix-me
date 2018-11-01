@@ -32,9 +32,9 @@ public class Instrument {
     }
 
     private void addToPredictionHistory(double price){
-        if (pricesHistory.size() == 21)
-            pricesHistory.remove(0);
-        pricesHistory.add(price);
+        if (predictionHistory.size() == 21)
+            predictionHistory.remove(0);
+        predictionHistory.add(price);
     }
 
 
@@ -52,7 +52,7 @@ public class Instrument {
         this.costPrice = costPrice;
         addToHistory(costPrice);
         addToPredictionHistory(costPrice);
-        addToPredictionHistory(predictHistory());
+        addToPredictionHistory(costPrice);
     }
 
     private double predictHistory() {
@@ -69,5 +69,4 @@ public class Instrument {
         addToHistory(costPrice);
         addToPredictionHistory(predictHistory());
     }
-
 }

@@ -26,5 +26,6 @@ public class TradeTransaction {
     String text;
     double price;
     int quantity;
+    String market;
 
 }

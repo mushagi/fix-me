@@ -48,7 +48,10 @@ class ClientHandler extends SimpleChannelInboundHandler<String> {
 
     private void sendRejectedInvalidFixMessage(ChannelHandlerContext ctx, String rawFixMessage) {
         FixMessage rejectedMessage = new FixMessageBuilder()
-                .withText(rawFixMessage)
+                .newFixMessage()
+                .withMessageType("3")
+                .withSenderCompId("router")
+                .withText("Invalid message")
                 .getFixMessage();
 
         String encodedFix = FixEncode.encode(rejectedMessage);

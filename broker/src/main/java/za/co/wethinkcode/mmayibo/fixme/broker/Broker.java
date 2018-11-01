@@ -129,8 +129,8 @@ public class Broker extends Client {
 
     @Override
     public void stop() {
-        timer.cancel();
         super.stop();
+        timer.cancel();
 
     }
 }

@@ -171,6 +171,7 @@ public class NewOrderRequestHandler implements IMessageHandler {
                 .withClOrderId(requestMessage.getClOrderId())
                 .withOrdStatus(orderStatus)
                 .withSymbol(requestMessage.getSymbol())
+                .withMDReqID(client.marketModel.getUserName())
                 .withText(text)
                 .withTargetCompId(requestMessage.getSenderCompId())
                 .withSenderCompId(requestMessage.getTargetCompId())

@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FixMessageTools {
-    private static final String FIX_PROTOCOL_VALIDATOR_REGEX = "(" + FixTags.MSG_ID.tag+"=(.+)\\|(.+)\\|)"+FixTags.CHECK_SUM.tag+"=(.+)$";
+    private static final String FIX_PROTOCOL_VALIDATOR_REGEX = "(" + FixTags.SENDER_COMP_ID.tag+"=(.+)\\|(.+)\\|)"+FixTags.CHECK_SUM.tag+"=(.+)$";
     private static final Pattern fixProtocolPattern = Pattern.compile(FIX_PROTOCOL_VALIDATOR_REGEX);
 
     public static String getTagValueByRegex(String rawFixmessage, int tag) {

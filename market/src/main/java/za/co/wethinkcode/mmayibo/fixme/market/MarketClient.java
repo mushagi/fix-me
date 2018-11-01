@@ -2,10 +2,8 @@ package za.co.wethinkcode.mmayibo.fixme.market;
 
 import za.co.wethinkcode.mmayibo.fixme.core.IMessageHandler;
 import za.co.wethinkcode.mmayibo.fixme.core.client.Client;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixEncode;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessage;
 import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageBuilder;
-import za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixMessageTools;
 import za.co.wethinkcode.mmayibo.fixme.core.model.InitData;
 import za.co.wethinkcode.mmayibo.fixme.core.model.InstrumentModel;
 import za.co.wethinkcode.mmayibo.fixme.core.model.MarketModel;
@@ -44,7 +42,7 @@ public class MarketClient extends Client {
         public void run() {
             generateValuesForInstruments();
             generateQuantityForInstruments();
-            sendMarketDataSnapShot("all", FixMessageTools.generateMessageId());
+            sendMarketDataSnapShot("all", null, false);
         }
     };
 
@@ -112,7 +110,7 @@ public class MarketClient extends Client {
         return null;
     }
 
-    public void sendMarketDataSnapShot(String senderCompId, String messageId) {
+    public void sendMarketDataSnapShot(String senderCompId, String messageId, boolean withLogging) {
         String symbol = encodeInstruments();
 
         FixMessage responseMessage = new FixMessageBuilder()
@@ -124,7 +122,7 @@ public class MarketClient extends Client {
                 .withTargetCompId(senderCompId)
                 .withSymbol(symbol)
                 .getFixMessage();
-        sendResponse(responseMessage, false, true);
+        sendResponse(responseMessage, withLogging, true);
     }
 
     private String encodeInstruments() {

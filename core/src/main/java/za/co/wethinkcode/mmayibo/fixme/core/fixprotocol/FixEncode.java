@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import static za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixTags.CHECK_SUM;
 import static za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixTags.MSG_ID;
+import static za.co.wethinkcode.mmayibo.fixme.core.fixprotocol.FixTags.SENDER_COMP_ID;
 
 public class FixEncode {
     public static String encode(FixMessage fixMessage) {
@@ -16,17 +17,11 @@ public class FixEncode {
     private static void addLine(StringBuilder builder, FixMessage message) {
         HashMap<Integer, Object> tagsValuesMap = message.getTagsValuesMap();
 
-        String messageId;
+        if (message.getMessageId() == null)
+            message.tagsValuesMap.put(FixTags.MSG_ID.tag, generateMessageId());
 
-        if (message.getMessageId() != null){
-            messageId = message.getMessageId();
-            message.tagsValuesMap.remove(MSG_ID.tag);
-            message.messageId = null;
-        }
-        else
-            messageId = generateMessageId();
-
-        appendTagToString(MSG_ID.tag, messageId, builder, false);
+        appendTagToString(SENDER_COMP_ID.tag, message.getSenderCompId(), builder, false);
+        message.tagsValuesMap.remove(SENDER_COMP_ID.tag);
 
         for (Integer tag: tagsValuesMap.keySet())
             if (tagsValuesMap.get(tag) != null)

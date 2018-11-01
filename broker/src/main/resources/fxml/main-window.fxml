@@ -25,7 +25,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox stylesheets="@../css/modena_dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.wethinkcode.mmayibo.fixme.broker.gui.MainWindowController">
+<VBox stylesheets="@../css/modena_dark.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.wethinkcode.mmayibo.fixme.broker.gui.MainWindowController">
   <children>
     <MenuBar>
       <menus>
@@ -81,7 +81,7 @@
             </AnchorPane>
           </content>
         </ScrollPane>
-            <AnchorPane maxWidth="-Infinity" minHeight="-Infinity" prefWidth="300.0" SplitPane.resizableWithParent="false">
+            <AnchorPane maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0" SplitPane.resizableWithParent="false">
                <children>
                   <VBox alignment="CENTER" fillWidth="false" layoutY="14.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
                      <children>

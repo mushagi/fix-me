@@ -98,6 +98,7 @@ public abstract class Client implements Runnable {
             isBeingShutdown = true;
             group.shutdownGracefully().syncUninterruptibly();
             logger.info("Shutting down successfully");
+            System.exit(0);
         }).start();
     }
 
