@@ -32,8 +32,8 @@ public abstract class Client implements Runnable {
 
 
 
-    protected Client(String host, int port) {
-        this.repository = new HibernateRepository();
+    protected Client(String host, int port, String username) {
+        this.repository = new HibernateRepository(username);
 
         HOST = System.getProperty("host", host);
         PORT = Integer.parseInt(System.getProperty("port", String.valueOf(port)));
@@ -50,7 +50,6 @@ public abstract class Client implements Runnable {
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
                 .handler(new FixMeChannelInitializer(clientHandler))
-                .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_KEEPALIVE, true);
     }
 

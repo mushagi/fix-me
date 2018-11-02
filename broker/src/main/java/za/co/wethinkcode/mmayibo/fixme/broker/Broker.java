@@ -1,8 +1,6 @@
 package za.co.wethinkcode.mmayibo.fixme.broker;
 
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import za.co.wethinkcode.mmayibo.fixme.broker.gui.BrokerUI;
 import za.co.wethinkcode.mmayibo.fixme.broker.handlers.response.BrokerMessageHandlerTool;
@@ -29,8 +27,8 @@ public class Broker extends Client {
     private final ArrayList<BrokerUI> userInterfaces = new ArrayList<>();
     private Timer timer = new Timer();
 
-    public Broker(String host, int port) {
-        super(host, port);
+    public Broker(String host, int port, String username) {
+        super(host, port, username);
         networkId = "-1";
         startMarketHeartConnectivityCheck();
     }

@@ -12,12 +12,14 @@ import java.util.Collection;
 public class HibernateRepository implements IRepository {
     private final Session session;
 
-    public HibernateRepository() {
-        session =  new HibernateUtil().getSession();
+    public HibernateRepository(String username) {
+        session =  new HibernateUtil(username).getSession();
     }
 
     @Override
     public <T> Collection<T> getAll(Class<T> type)  {
+
+
         Collection<T> entities = null;
         try {
 
@@ -28,7 +30,6 @@ public class HibernateRepository implements IRepository {
             Root<T> root = criteria.from(type);
             criteria.select(root);
             entities = session.createQuery(criteria).getResultList();
-
             transaction.commit();
         }
         catch (Exception e) {
@@ -62,7 +63,7 @@ public class HibernateRepository implements IRepository {
             transaction.commit();
         }
         catch (Exception e) {
-            e.printStackTrace();
+           //
         }
     }
 
@@ -75,11 +76,9 @@ public class HibernateRepository implements IRepository {
                 session.save(entity);
                 transaction.commit();
             }
-;
+
         }
         catch (Exception e) {
-            e.printStackTrace();
-
             return null;
         }
         return entity;

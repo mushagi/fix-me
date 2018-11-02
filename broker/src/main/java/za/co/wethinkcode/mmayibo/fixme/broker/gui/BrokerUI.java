@@ -18,11 +18,14 @@ public abstract class BrokerUI {
     public abstract void update();
 
     void setUpUi(Broker broker, Stage stage) {
-        this.broker = broker;
-        this.markets = broker.markets;
-        this.transactions = broker.transactions;
+        if (broker != null){
+            this.broker = broker;
+            this.markets = broker.markets;
+            this.transactions = broker.transactions;
+            broker.register(this);
+        }
+
         this.stage = stage;
-        broker.register(this);
     }
 
     void unregisterFromBroker() {

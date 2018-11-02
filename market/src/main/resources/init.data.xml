@@ -7,7 +7,7 @@
             <NetworkId>-1</NetworkId>
             <Instruments>
                 <Instrument>
-                    <Id>zimbananas</Id>
+                    <Id>zimbananas bananas</Id>
                     <Name>Zimbabwe </Name>
                     <Price>12</Price>
                     <Quantity>50000</Quantity>
@@ -47,6 +47,61 @@
                 <Instrument>
                     <Id>vibranium</Id>
                     <Name>Vibranium</Name>
+                    <Price>12</Price>
+                    <Quantity>50000</Quantity>
+                </Instrument>
+                <Instrument>
+                    <Id>heart</Id>
+                    <Name>Heart</Name>
+                    <Price>12</Price>
+                    <Quantity>50000</Quantity>
+                </Instrument>
+                <Instrument>
+                    <Id>Lung</Id>
+                    <Name>lung</Name>
+                    <Price>12</Price>
+                    <Quantity>50000</Quantity>
+                </Instrument>
+            </Instruments>
+        </Market>
+        <Market>
+            <Name>Infinity Stones</Name>
+            <Username>istones</Username>
+            <NetworkId>-1</NetworkId>
+            <Instruments>
+                <Instrument>
+                    <Id>soul</Id>
+                    <Name>Soul Stone</Name>
+                    <Price>12</Price>
+                    <Quantity>50000</Quantity>
+                </Instrument>
+                <Instrument>
+                    <Id>reality</Id>
+                    <Name>Reality Stone</Name>
+                    <Price>12</Price>
+                    <Quantity>50000</Quantity>
+                </Instrument>
+                <Instrument>
+                    <Id>mind</Id>
+                    <Name>Mind Stone</Name>
+                    <Price>12</Price>
+                    <Quantity>50000</Quantity>
+                </Instrument>
+                <Instrument>
+                    <Id>stone</Id>
+                    <Name>Space Stone</Name>
+                    <Price>12</Price>
+                    <Quantity>50000</Quantity>
+                </Instrument>
+                <Instrument>
+                    <Id>power</Id>
+                    <Name>Power Stone</Name>
+                    <Price>12</Price>
+                    <Quantity>50000</Quantity>
+                </Instrument>
+                <Instrument>
+                    <Id>time</Id>
+                    <Name>Time Stone</Name>
                     <Price>12</Price>
                     <Quantity>50000</Quantity>
                 </Instrument>

@@ -10,7 +10,7 @@ import za.co.wethinkcode.mmayibo.fixme.broker.Broker;
 public class BrokerMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Broker broker = new Broker("localhost", 5001 );
+        Broker broker = new Broker("localhost", 5001, "broker");
 
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/auth-controller.fxml"));

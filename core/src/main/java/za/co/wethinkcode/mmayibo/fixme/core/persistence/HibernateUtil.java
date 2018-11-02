@@ -16,10 +16,12 @@ class HibernateUtil {
     @Getter
     private final Session session;
 
-    public HibernateUtil() {
+    public HibernateUtil(String username) {
         Logger log = Logger.getLogger("org.hibernate");
         log.setLevel(Level.OFF);
-        sessionFactory = new Configuration().configure().buildSessionFactory();
+        sessionFactory = new Configuration().configure().setProperty(
+                "hibernate.connection.url", "jdbc:sqlite:"+username+".db"
+        ).buildSessionFactory();
         session = sessionFactory.openSession();
 
     }

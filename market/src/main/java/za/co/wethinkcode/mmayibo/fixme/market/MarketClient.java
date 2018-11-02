@@ -26,7 +26,7 @@ public class MarketClient extends Client {
 
     MarketClient(String host, int
             port, String marketUserName) {
-        super(host, port);
+        super(host, port, marketUserName);
         this.marketUserName = marketUserName;
         login();
     }

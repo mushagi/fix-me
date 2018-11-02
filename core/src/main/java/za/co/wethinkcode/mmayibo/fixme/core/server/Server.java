@@ -51,9 +51,9 @@ public abstract class Server implements Runnable{
             bootstrap.channel(NioServerSocketChannel.class)
                     .childHandler(new FixMeChannelInitializer( serverHandler))
                     .option(ChannelOption.SO_BACKLOG, 128)
-                    .option(ChannelOption.TCP_NODELAY, true)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
             bootstrap.bind(HOST, PORT).sync().channel();
+            logger.info("Router started. Host " + HOST + ". Port " + PORT );
 
         } catch (InterruptedException e) {
             e.printStackTrace();
