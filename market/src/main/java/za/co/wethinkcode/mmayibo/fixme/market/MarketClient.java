@@ -79,6 +79,8 @@ public class MarketClient extends Client {
             logger.info("Could not find the market on the database");
             logger.info("Creating a new a market");
             marketModel = loadMarketFromXML();
+            if (marketModel == null)
+                System.exit(0);
             marketModel = repository.create(marketModel);
         }
         networkId = String.valueOf(marketModel.getNetworkId());
